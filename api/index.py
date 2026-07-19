@@ -28,71 +28,23 @@ class handler(BaseHTTPRequestHandler):
             sb_url = os.environ.get('SUPABASE_URL')
             sb_key = os.environ.get('SUPABASE_SERVICE_KEY')
 
-            # -------------------------------------------------------------
-            # AÇÃO 1: Validar USER_SENHA (master.html)
-            # -------------------------------------------------------------
-            if action == 'verificar_senha':
+            if action == 'verificar_senha_master':
                 senha_digitada = dados.get('senha')
                 senha_correta = os.environ.get('USER_SENHA')
-
-                if senha_digitada == senha_correta:
-                    resposta = {"autorizado": True}
-                else:
-                    resposta = {"autorizado": False, "mensagem": "Senha incorreta."}
-                
-                self.wfile.write(json.dumps(resposta).encode('utf-8'))
+                autorizado = senha_digitada == senha_correta
+                self.wfile.write(json.dumps({"autorizado": autorizado}).encode('utf-8'))
                 return
 
-            # -------------------------------------------------------------
-            # AÇÃO 2: Verificar Status da Unidade (admin.html)
-            # -------------------------------------------------------------
-            elif action == 'verificar_status_unidade':
-                url = f"{sb_url}/rest/v1/configuracoes?chave=eq.unidade_ativa&select=valor"
-                req = urllib.request.Request(url, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'}, method='GET')
-                
-                try:
-                    with urllib.request.urlopen(req) as response:
-                        res_data = json.loads(response.read().decode('utf-8'))
-                        ativo = res_data[0]['valor'] == 'true' if res_data else True
-                        resposta = {"ativo": ativo}
-                except:
-                    resposta = {"ativo": True} # Fallback seguro
-                
-                self.wfile.write(json.dumps(resposta).encode('utf-8'))
-                return
-
-            # -------------------------------------------------------------
-            # AÇÃO 3: Alterar Status da Unidade (master.html)
-            # -------------------------------------------------------------
-            elif action == 'alterar_status_unidade':
-                novo_status = dados.get('status')
-                url = f"{sb_url}/rest/v1/configuracoes?chave=eq.unidade_ativa"
-                payload = json.dumps({"valor": str(novo_status)}).encode('utf-8')
-                
-                req = urllib.request.Request(
-                    url, data=payload, 
-                    headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json'},
-                    method='PATCH'
-                )
-                
-                with urllib.request.urlopen(req) as response:
-                    resposta = {"sucesso": True}
-                
-                self.wfile.write(json.dumps(resposta).encode('utf-8'))
-                return
-
-            # -------------------------------------------------------------
-            # AÇÃO 4: Salvar Novo Apoiador (index.html)
-            # -------------------------------------------------------------
-            elif action == 'salvar_apoiador':
-                url = f"{sb_url}/rest/v1/eleitores"
+            elif action == 'cadastrar_gestor':
+                url = f"{sb_url}/rest/v1/gestores"
                 payload = json.dumps({
-                    "nome": dados.get('nome'),
+                    "nome_gestor": dados.get('nome_gestor'),
+                    "nome_campanha_gabinete": dados.get('nome_gabinete'),
                     "whatsapp": dados.get('whatsapp'),
-                    "bairro": dados.get('bairro'),
-                    "titulo_eleitor": dados.get('titulo'),
-                    "demanda_inicial": dados.get('demanda'),
-                    "origem_cadastro": "Portal Público"
+                    "senha_admin": dados.get('senha_admin'),
+                    "cor_layout": dados.get('cor_layout'),
+                    "url_logo": dados.get('url_logo'),
+                    "status": "Ativo"
                 }).encode('utf-8')
                 
                 req = urllib.request.Request(
@@ -101,29 +53,30 @@ class handler(BaseHTTPRequestHandler):
                     method='POST'
                 )
                 with urllib.request.urlopen(req) as response:
-                    resposta = {"sucesso": True}
-                
-                self.wfile.write(json.dumps(resposta).encode('utf-8'))
+                    pass
+                self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
                 return
 
-            # -------------------------------------------------------------
-            # AÇÃO 5: Buscar Dados Consolidados (master.html)
-            # -------------------------------------------------------------
-            elif action == 'buscar_dados_master':
-                # Puxa Eleitores
-                url_e = f"{sb_url}/rest/v1/eleitores?select=bairro"
-                req_e = urllib.request.Request(url_e, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'}, method='GET')
-                with urllib.request.urlopen(req_e) as r_e:
-                    eleitores = json.loads(r_e.read().decode('utf-8'))
+            elif action == 'dados_dashboard_master':
+                url = f"{sb_url}/rest/v1/gestores?select=id,nome_gestor,nome_campanha_gabinete,status,cor_layout,url_logo"
+                req = urllib.request.Request(url, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'}, method='GET')
+                with urllib.request.urlopen(req) as response:
+                    gestores = json.loads(response.read().decode('utf-8'))
+                self.wfile.write(json.dumps({"gestores": gestores}).encode('utf-8'))
+                return
 
-                # Puxa Financeiro
-                url_f = f"{sb_url}/rest/v1/financeiro?select=*"
-                req_f = urllib.request.Request(url_f, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'}, method='GET')
-                with urllib.request.urlopen(req_f) as r_f:
-                    financeiro = json.loads(r_f.read().decode('utf-8'))
-
-                resposta = {"eleitores": eleitores, "financeiro": financeiro}
-                self.wfile.write(json.dumps(resposta).encode('utf-8'))
+            elif action == 'verificar_login_gestor':
+                senha_input = dados.get('senha')
+                url = f"{sb_url}/rest/v1/gestores?senha_admin=eq.{senha_input}&status=eq.Ativo&select=id,nome_campanha_gabinete,cor_layout,url_logo"
+                req = urllib.request.Request(url, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'}, method='GET')
+                
+                with urllib.request.urlopen(req) as response:
+                    res_data = json.loads(response.read().decode('utf-8'))
+                
+                if res_data:
+                    self.wfile.write(json.dumps({"autorizado": True, "gestor": res_data[0]}).encode('utf-8'))
+                else:
+                    self.wfile.write(json.dumps({"autorizado": False, "mensagem": "Senha inválida ou gestor inativo."}).encode('utf-8'))
                 return
 
         except Exception as e:

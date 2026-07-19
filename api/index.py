@@ -3,6 +3,7 @@ import json
 import os
 import urllib.request
 import urllib.error
+import mimetypes
 
 class handler(BaseHTTPRequestHandler):
 
@@ -28,6 +29,7 @@ class handler(BaseHTTPRequestHandler):
             sb_url = os.environ.get('SUPABASE_URL')
             sb_key = os.environ.get('SUPABASE_SERVICE_KEY')
 
+            # --- AÇÃO 1: Validar USER_SENHA (master.html) ---
             if action == 'verificar_senha_master':
                 senha_digitada = dados.get('senha')
                 senha_correta = os.environ.get('USER_SENHA')
@@ -35,6 +37,41 @@ class handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"autorizado": autorizado}).encode('utf-8'))
                 return
 
+            # --- NOVA AÇÃO: Upload da Logo para o Storage ---
+            elif action == 'upload_logo':
+                file_base64 = dados.get('file_base64') # String base64
+                filename = dados.get('filename')
+                
+                import base64
+                file_bytes = base64.b64decode(file_base64.split(",")[-1])
+                
+                # Envia o binário para o Storage do Supabase
+                url_storage = f"{sb_url}/storage/v1/object/logos/{filename}"
+                
+                content_type = mimetypes.guess_type(filename)[0] or 'application/octet-stream'
+                
+                req = urllib.request.Request(
+                    url_storage, data=file_bytes,
+                    headers={
+                        'apikey': sb_key,
+                        'Authorization': f'Bearer {sb_key}',
+                        'Content-Type': content_type
+                    },
+                    method='POST'
+                )
+                
+                try:
+                    with urllib.request.urlopen(req) as response:
+                        pass
+                except urllib.error.HTTPError as e:
+                    # Se o arquivo já existir, ignora o erro e pega a URL existente
+                    if e.code != 400: raise e
+
+                url_publica = f"{sb_url}/storage/v1/object/public/logos/{filename}"
+                self.wfile.write(json.dumps({"sucesso": True, "url_logo": url_publica}).encode('utf-8'))
+                return
+
+            # --- AÇÃO 2: Cadastrar Novo Gestor ---
             elif action == 'cadastrar_gestor':
                 url = f"{sb_url}/rest/v1/gestores"
                 payload = json.dumps({
@@ -57,6 +94,7 @@ class handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
                 return
 
+            # --- AÇÃO 3: Listar Gestores ---
             elif action == 'dados_dashboard_master':
                 url = f"{sb_url}/rest/v1/gestores?select=id,nome_gestor,nome_campanha_gabinete,status,cor_layout,url_logo"
                 req = urllib.request.Request(url, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'}, method='GET')
@@ -65,11 +103,11 @@ class handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"gestores": gestores}).encode('utf-8'))
                 return
 
+            # --- AÇÃO 4: Validar Login do Gestor (admin.html) ---
             elif action == 'verificar_login_gestor':
                 senha_input = dados.get('senha')
                 url = f"{sb_url}/rest/v1/gestores?senha_admin=eq.{senha_input}&status=eq.Ativo&select=id,nome_campanha_gabinete,cor_layout,url_logo"
                 req = urllib.request.Request(url, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'}, method='GET')
-                
                 with urllib.request.urlopen(req) as response:
                     res_data = json.loads(response.read().decode('utf-8'))
                 

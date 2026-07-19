@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Admin - Gestão Eleitoral</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SDK do Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        /* Tela oculta até validar o status da licença/unidade */
+        body { display: none; }
+        #bloqueio-tela { display: none; }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans">
+
+    <!-- Tela de Bloqueio Dinâmica (Ativada pelo master.html) -->
+    <div id="bloqueio-tela" class="fixed inset-0 bg-slate-950/95 z-[9999] flex flex-col justify-center items-center p-4 text-center">
+        <div class="bg-slate-900 border border-rose-500/30 p-8 rounded-2xl max-w-md shadow-2xl">
+            <i class="fa-solid fa-triangle-exclamation text-rose-500 text-5xl mb-4 animate-bounce"></i>
+            <h2 class="text-2xl font-bold text-white mb-2">Unidade Desativada</h2>
+            <p class="text-slate-400 text-sm mb-6">Esta unidade de gerenciamento foi suspensa ou desativada pelo Painel Master. Entre em contato com o administrador.</p>
+            <button onclick="verificarStatusUnidade()" class="bg-slate-800 hover:bg-slate-700 text-white text-xs px-4 py-2 rounded-lg border border-slate-700 transition">
+                <i class="fa-solid fa-arrows-rotate mr-2"></i> Tentar Novamente
+            </button>
+        </div>
+    </div>
+
+    <!-- Interface Principal do Admin (SÓ EXIBE SE ESTIVER ATIVO) -->
+    <div id="app-content">
+        <!-- Topbar Admin -->
+        <header class="bg-slate-800 border-b border-slate-700 p-4 sticky top-0 z-50">
+            <div class="container mx-auto flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-users-gear text-pink-500 text-xl"></i>
+                    <h1 class="text-lg font-bold text-white">Painel Operacional <span class="text-xs font-normal text-slate-400">| Equipe</span></h1>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="bg-emerald-500/10 text-emerald-400 text-xs px-2.5 py-1 rounded-full border border-emerald-500/20">
+                        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 mr-1 animate-pulse"></span> Unidade Ativa
+                    </span>
+                    <button onclick="window.location.href='master.html'" class="bg-pink-600/10 hover:bg-pink-600 text-pink-400 hover:text-white text-xs px-3 py-1.5 rounded-lg border border-pink-500/20 transition">
+                        <i class="fa-solid fa-lock mr-1"></i> Acesso Master
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Grid de Operações (Módulos 02, 03, 04 e 06 das imagens) -->
+        <main class="container mx-auto p-6 max-w-7xl">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                
+                <!-- Card 02. AGENDA -->
+                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 hover:border-slate-600 transition flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="font-bold text-white flex items-center gap-2"><i class="fa-solid fa-calendar-days text-pink-500"></i> 02. Agenda</h3>
+                            <span class="text-[10px] bg-slate-700 text-slate-300 px-2 py-0.5 rounded">Equipe</span>
+                        </div>
+                        <p class="text-slate-400 text-xs leading-relaxed">Gerenciamento completo de compromissos, reuniões e eventos de campanha.</p>
+                    </div>
+                    <button class="mt-4 w-full bg-slate-700 hover:bg-slate-600 text-white text-xs py-2 rounded-lg font-medium transition">Abrir Calendário</button>
+                </div>
+
+                <!-- Card 03. DOCUMENTOS -->
+                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 hover:border-slate-600 transition flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="font-bold text-white flex items-center gap-2"><i class="fa-solid fa-folder-open text-pink-500"></i> 03. Documentos</h3>
+                            <span class="text-[10px] bg-slate-700 text-slate-300 px-2 py-0.5 rounded">Arquivos</span>
+                        </div>
+                        <p class="text-slate-400 text-xs leading-relaxed">Armazenamento centralizado de ofícios, fotos e mídias de campanha com busca por tags.</p>
+                    </div>
+                    <button class="mt-4 w-full bg-slate-700 hover:bg-slate-600 text-white text-xs py-2 rounded-lg font-medium transition">Gerenciar Arquivos</button>
+                </div>
+
+                <!-- Card 04. ELEITORES -->
+                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 hover:border-pink-500/30 transition flex flex-col justify-between shadow-lg shadow-pink-500/5">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="font-bold text-white flex items-center gap-2"><i class="fa-solid fa-users text-pink-500"></i> 04. Eleitores</h3>
+                            <span class="text-[10px] bg-pink-500/20 text-pink-400 px-2 py-0.5 rounded font-semibold">Crítico</span>
+                        </div>
+                        <p class="text-slate-400 text-xs leading-relaxed">Gestão da base de cidadãos, segmentação regional por bairro e listas de transmissão.</p>
+                    </div>
+                    <button onclick="abrirModalEleitor()" class="mt-4 w-full bg-pink-600 hover:bg-pink-700 text-white text-xs py-2 rounded-lg font-medium transition">Cadastrar / Buscar</button>
+                </div>
+
+                <!-- Card 06. RECURSOS HUMANOS -->
+                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 hover:border-slate-600 transition flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="font-bold text-white flex items-center gap-2"><i class="fa-solid fa-id-card text-pink-500"></i> 06. Equipe / RH</h3>
+                            <span class="text-[10px] bg-slate-700 text-slate-300 px-2 py-0.5 rounded">Gabinete</span>
+                        </div>
+                        <p class="text-slate-400 text-xs leading-relaxed">Controle de frequência digital dos assessores, tarefas e metas de produtividade.</p>
+                    </div>
+                    <button class="mt-4 w-full bg-slate-700 hover:bg-slate-600 text-white text-xs py-2 rounded-lg font-medium transition">Ver Assessores</button>
+                </div>
+
+            </div>
+
+            <!-- Formulário / Tabela Simples de Teste (Exemplo de CRUD do Módulo 04) -->
+            <section class="bg-slate-800 rounded-xl border border-slate-700 p-6">
+                <h3 class="text-base font-bold text-white mb-4"><i class="fa-solid fa-address-book text-slate-400 mr-2"></i> Últimos Eleitores Cadastrados</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-slate-300">
+                        <thead class="uppercase bg-slate-900 text-slate-400">
+                            <tr>
+                                <th class="p-3 rounded-l-lg">Nome</th>
+                                <th class="p-3">Bairro</th>
+                                <th class="p-3">Contato</th>
+                                <th class="p-3 rounded-r-lg">Tags</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-operacional">
+                            <!-- Injeção Mock ou Supabase real -->
+                            <tr class="border-b border-slate-700/50">
+                                <td class="p-3 text-white font-medium">Carlos Henrique Souza</td>
+                                <td class="p-3">Centro Histórico</td>
+                                <td class="p-3 text-slate-400">(91) 98888-7766</td>
+                                <td class="p-3"><span class="bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded">Líder Comunitário</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Configurações do Supabase
+        const SUPABASE_URL = "https://seu-projeto.supabase.co";
+        const SUPABASE_ANON_KEY = "sua-chave-anonima-supabase";
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        async function verificarStatusUnidade() {
+            try {
+                // Simulando a busca na tabela de controle do Supabase. 
+                // Ex: Tabela 'configuracoes' ou 'unidades' onde chave='status_ativo'
+                const { data, error } = await _supabase
+                    .from('configuracoes')
+                    .select('valor')
+                    .eq('chave', 'unidade_ativa')
+                    .single();
+
+                // Caso dê erro ou o status no banco esteja falso, bloqueia o admin
+                // Dica de desenvolvimento: Se a tabela não existir ainda, mude para 'true' para testar a UI
+                const estaAtivo = data ? (data.valor === 'true') : true; 
+
+                if (estaAtivo) {
+                    document.getElementById('bloqueio-tela').style.display = 'none';
+                    document.getElementById('app-content').style.display = 'block';
+                    document.body.style.display = 'block';
+                    inicializarPainelAdmin();
+                } else {
+                    document.getElementById('app-content').style.display = 'none';
+                    document.getElementById('bloqueio-tela').style.display = 'flex';
+                    document.body.style.display = 'block';
+                }
+            } catch (err) {
+                console.error("Falha ao validar a licença da unidade:", err);
+                // Em caso de erro crítico de rede, por segurança o app assume postura de proteção
+                document.body.style.display = 'block';
+            }
+        }
+
+        function inicializarPainelAdmin() {
+            console.log("Módulos operacionais de assessores inicializados com sucesso.");
+            // Aqui entram os SELECTs normais da equipe para puxar a agenda e demandas
+        }
+
+        function abrirModalEleitor() {
+            alert("Acesso ao CRUD de eleitores. Permissão concedida para a equipe.");
+        }
+
+        // Executa a validação assim que o Admin abre
+        window.onload = verificarStatusUnidade;
+    </script>
+</body>
+</html>

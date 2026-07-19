@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel Master - Gestão Eleitoral</title>
+    <!-- Incluir SDK do Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { font-family: Arial, sans-serif; background: #0f172a; color: #fff; display: none; }
+        .master-container { padding: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="master-container">
+        <h1>📊 Dashboard Master & Controle Financeiro</h1>
+        <!-- O conteúdo dos módulos 05 (Financeiro) e relatórios avançados entra aqui -->
+    </div>
+
+    <script>
+        // Configuração do Supabase (Substitua pelas suas credenciais da Vercel)
+        const SUPABASE_URL = "https://seu-projeto.supabase.co";
+        const SUPABASE_ANON_KEY = "sua-chave-anonima";
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        async function verificarAcesso() {
+            const senhaDigitada = prompt("Digite a senha master para acessar os dados restritos:");
+
+            if (!senhaDigitada) {
+                window.location.href = "admin.html";
+                return;
+            }
+
+            try {
+                // Chamada para uma função RPC no Supabase que valida a senha criptografada
+                // ou uma Edge Function da Vercel que lê process.env.MASTER_PASSWORD
+                const { data, error } = await supabase.rpc('verificar_senha_master', {
+                    senha_input: senhaDigitada
+                });
+
+                if (data && data.autorizado) {
+                    // Exibe a página caso a senha esteja correta
+                    document.body.style.display = "block";
+                    inicializarDashboardMaster();
+                } else {
+                    alert("Senha incorreta. Acesso negado.");
+                    window.location.href = "admin.html";
+                }
+            } catch (err) {
+                console.error(err);
+                window.location.href = "admin.html";
+            }
+        }
+
+        function inicializarDashboardMaster() {
+            // Lógica para carregar os gráficos financeiros e dados do TRE
+            console.log("Painel carregado com sucesso.");
+        }
+
+        // Executa a validação logo no carregamento
+        window.onload = verificarAcesso;
+    </script>
+</body>
+</html>

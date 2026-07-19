@@ -17,7 +17,7 @@
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans flex h-screen overflow-hidden">
 
-    <!-- MENU LATERAL (Padrão Escuro SaaS) -->
+    <!-- MENU LATERAL (Padrão Escuro sisFarma) -->
     <aside class="w-64 bg-[#0b1426] text-slate-300 flex flex-col justify-between flex-shrink-0">
         <div>
             <!-- Branding com Logo e Nome Dinâmico -->
@@ -73,7 +73,6 @@
             
             <!-- ABA 02: AGENDA -->
             <div id="aba-agenda" class="tab-op space-y-6">
-                <!-- Formulário de Cadastro (Estilo Wide) -->
                 <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 no-print">
                     <h3 class="text-sm font-bold text-slate-800 mb-4">Adicionar Compromisso</h3>
                     <form onsubmit="cadastrarCompromisso(event)" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
@@ -89,7 +88,6 @@
                     </form>
                 </div>
                 
-                <!-- Tabela de Registros -->
                 <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden print-area">
                     <div class="p-5 border-b border-slate-100 flex justify-between items-center no-print">
                         <h3 class="text-base font-bold text-slate-800">Compromissos Agendados</h3>
@@ -162,7 +160,6 @@
 
             <!-- ABA 06: GESTÃO DE EQUIPE (RH) -->
             <div id="aba-rh" class="tab-op hidden space-y-6">
-                <!-- Idêntico ao Print: Formulário horizontal em cima e tabela larga em baixo -->
                 <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 no-print">
                     <h3 class="text-sm font-bold text-slate-800 mb-4">Cadastrar Novo Colaborador</h3>
                     <form onsubmit="cadastrarAssessor(event)" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
@@ -273,20 +270,15 @@
             if(btnAtivo && dadosGestorLogado) {
                 btnAtivo.classList.add('bg-slate-800', 'text-white');
                 btnAtivo.classList.remove('text-slate-400');
-                // Borda lateral na cor do cliente
                 btnAtivo.style.borderLeft = `4px solid ${dadosGestorLogado.cor_layout || '#10b981'}`;
             }
 
-            // Carregamentos
             if(idAba === 'aba-agenda') carregarAgenda();
             if(idAba === 'aba-documentos') carregarDocs();
             if(idAba === 'aba-eleitores') carregarEleitores();
             if(idAba === 'aba-rh') carregarFuncionarios();
         }
 
-        // =========================================================================
-        // MÓDULO: RH E EQUIPE (ESTILO PRINT)
-        // =========================================================================
         async function carregarFuncionarios() {
             const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_funcionarios', gestor_id: dadosGestorLogado.id }) });
             const d = await res.json();
@@ -322,9 +314,6 @@
             document.getElementById('func-nome').value = ''; document.getElementById('func-cargo').value = ''; carregarFuncionarios();
         }
 
-        // =========================================================================
-        // DEMAIS MÓDULOS (AGENDA, DOCS, ELEITORES) ADAPTADOS AO NOVO LAYOUT
-        // =========================================================================
         async function carregarEleitores() {
             const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_eleitores_gestor', gestor_id: dadosGestorLogado.id }) });
             const d = await res.json();
@@ -356,7 +345,7 @@
                     <tr class="hover:bg-slate-50 transition">
                         <td class="py-4 px-4 font-mono font-semibold text-slate-600">${new Date(a.data_evento).toLocaleDateString('pt-BR')}</td>
                         <td class="py-4 px-4 font-bold text-slate-800">${a.titulo}</td>
-                        <td class="py-4 px-4 text-center"><span class="bg-blue-50 text-blue-600 px-2.5 py-1 rounded-md text-[10px] font-bold border border-blue-100">${a.tipo}</span></td>
+                        <td class="py-4 px-4 text-center"><span class="bg-blue-50 text-blue-600 px-2.5 py-1 rounded-md text-[10px] font-bold border border-blue-100">Evento</span></td>
                         <td class="py-4 px-4 flex justify-center gap-2 no-print">
                             <button class="border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition"><i class="fa-regular fa-trash-can text-rose-400"></i> Excluir</button>
                         </td>
@@ -366,8 +355,8 @@
 
         async function cadastrarCompromisso(e) {
             e.preventDefault();
-            await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'cadastrar_agenda', titulo: document.getElementById('age-titulo').value, tipo: document.getElementById('age-tipo').value, data: document.getElementById('age-data').value, gestor_id: dadosGestorLogado.id }) });
-            document.getElementById('age-titulo').value = ''; document.getElementById('age-tipo').value = ''; document.getElementById('age-data').value = ''; carregarAgenda();
+            await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'cadastrar_agenda', titulo: document.getElementById('age-titulo').value, tipo: 'Evento', data: document.getElementById('age-data').value, gestor_id: dadosGestorLogado.id }) });
+            document.getElementById('age-titulo').value = ''; document.getElementById('age-data').value = ''; carregarAgenda();
         }
 
         async function carregarDocs() {

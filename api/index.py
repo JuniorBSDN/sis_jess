@@ -19,7 +19,6 @@ class handler(BaseHTTPRequestHandler):
         self._set_headers()
 
     def _obter_url_supabase(self):
-        """Força e garante o formato correto da URL baseado no seu Project ID 'scotyvkhwptckrvrjzdi'"""
         return "https://scotyvkhwptckrvrjzdi.supabase.co"
 
     def do_POST(self):
@@ -30,18 +29,15 @@ class handler(BaseHTTPRequestHandler):
             dados = json.loads(post_data.decode('utf-8'))
             action = dados.get('action')
 
-            # Obtém a URL corrigida automaticamente e a Service Key protegida
             sb_url = self._obter_url_supabase()
             sb_key = os.environ.get('SUPABASE_SERVICE_KEY')
             senha_mestra = os.environ.get('USER_SENHA')
 
-            # --- AÇÃO 1: Autenticação Master ---
             if action == 'verificar_senha_master':
                 senha_digitada = dados.get('senha')
                 self.wfile.write(json.dumps({"autorizado": senha_digitada == senha_mestra}).encode('utf-8'))
                 return
 
-            # --- AÇÃO 2: Upload da Logo ---
             elif action == 'upload_logo':
                 file_base64 = dados.get('file_base64')
                 filename = dados.get('filename')
@@ -51,8 +47,7 @@ class handler(BaseHTTPRequestHandler):
                 content_type = mimetypes.guess_type(filename)[0] or 'application/octet-stream'
                 
                 req = urllib.request.Request(url_storage, data=file_bytes, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': content_type}, method='POST')
-                try:
-                    with urllib.request.urlopen(req): pass
+                try: with urllib.request.urlopen(req): pass
                 except urllib.error.HTTPError as e:
                     if e.code != 400: raise e
                 
@@ -60,7 +55,6 @@ class handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"sucesso": True, "url_logo": url_publica}).encode('utf-8'))
                 return
 
-            # --- AÇÃO 3: Cadastrar Gestor ---
             elif action == 'cadastrar_gestor':
                 url = f"{sb_url}/rest/v1/gestores"
                 payload = json.dumps({
@@ -76,13 +70,11 @@ class handler(BaseHTTPRequestHandler):
                     "url_logo": dados.get('url_logo'),
                     "status": "Ativo"
                 }).encode('utf-8')
-                
                 req = urllib.request.Request(url, data=payload, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json'}, method='POST')
                 with urllib.request.urlopen(req): pass
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
                 return
 
-            # --- AÇÃO 4: Listar Gestores ---
             elif action == 'dados_dashboard_master':
                 url = f"{sb_url}/rest/v1/gestores?select=id,nome_gestor,nome_campanha_gabinete,status,cor_layout,url_logo,whatsapp,email,documento,data_inicio,endereco,senha_admin&order=id.desc"
                 req = urllib.request.Request(url, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'}, method='GET')
@@ -91,7 +83,6 @@ class handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"gestores": gestores}).encode('utf-8'))
                 return
 
-            # --- AÇÃO 5: Editar Gestor ---
             elif action == 'editar_gestor':
                 gid = dados.get('id')
                 url = f"{sb_url}/rest/v1/gestores?id=eq.{gid}"
@@ -106,25 +97,21 @@ class handler(BaseHTTPRequestHandler):
                     "cor_layout": dados.get('cor_layout')
                 }
                 if dados.get('url_logo'): body["url_logo"] = dados.get('url_logo')
-                    
                 payload = json.dumps(body).encode('utf-8')
                 req = urllib.request.Request(url, data=payload, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json'}, method='PATCH')
                 with urllib.request.urlopen(req): pass
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
                 return
 
-            # --- AÇÃO 6: Alternar Status ---
             elif action == 'alterar_status_gestor':
                 gid = dados.get('id')
-                novo_status = dados.get('status')
                 url = f"{sb_url}/rest/v1/gestores?id=eq.{gid}"
-                payload = json.dumps({"status": novo_status}).encode('utf-8')
+                payload = json.dumps({"status": dados.get('status')}).encode('utf-8')
                 req = urllib.request.Request(url, data=payload, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json'}, method='PATCH')
                 with urllib.request.urlopen(req): pass
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
                 return
 
-            # --- AÇÃO 7: Excluir Gestor ---
             elif action == 'excluir_gestor':
                 gid = dados.get('id')
                 url = f"{sb_url}/rest/v1/gestores?id=eq.{gid}"
@@ -133,7 +120,6 @@ class handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
                 return
 
-            # --- AÇÃO 8: Login do Gestor (admin.html) ---
             elif action == 'verificar_login_gestor':
                 senha_input = dados.get('senha')
                 url = f"{sb_url}/rest/v1/gestores?senha_admin=eq.{senha_input}&status=eq.Ativo&select=id,nome_campanha_gabinete,cor_layout,url_logo"
@@ -144,6 +130,29 @@ class handler(BaseHTTPRequestHandler):
                     self.wfile.write(json.dumps({"autorizado": True, "gestor": res_data[0]}).encode('utf-8'))
                 else:
                     self.wfile.write(json.dumps({"autorizado": False, "mensagem": "Acesso suspenso ou inválido."}).encode('utf-8'))
+                return
+
+            # --- NOVAS RONTAS OPERACIONAIS PARA O ADMIN.HTML ---
+            elif action == 'listar_funcionarios':
+                gestor_id = dados.get('gestor_id')
+                url = f"{sb_url}/rest/v1/funcionarios?gestor_id=eq.{gestor_id}&order=id.desc"
+                req = urllib.request.Request(url, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'}, method='GET')
+                with urllib.request.urlopen(req) as response:
+                    funcs = json.loads(response.read().decode('utf-8'))
+                self.wfile.write(json.dumps({"funcionarios": funcs}).encode('utf-8'))
+                return
+
+            elif action == 'cadastrar_funcionario':
+                url = f"{sb_url}/rest/v1/funcionarios"
+                payload = json.dumps({
+                    "nome": dados.get('nome'),
+                    "cargo": dados.get('cargo'),
+                    "whatsapp": dados.get('whatsapp'),
+                    "gestor_id": dados.get('gestor_id')
+                }).encode('utf-8')
+                req = urllib.request.Request(url, data=payload, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json'}, method='POST')
+                with urllib.request.urlopen(req): pass
+                self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
                 return
 
         except Exception as e:

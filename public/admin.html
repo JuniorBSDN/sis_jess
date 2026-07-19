@@ -8,46 +8,117 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style> body { display: none; } </style>
 </head>
-<body class="bg-slate-900 text-slate-100 font-sans">
+<body class="bg-slate-900 text-slate-100 font-sans flex h-screen overflow-hidden">
 
-    <div id="app-content">
-        <header class="bg-slate-800 border-b border-slate-700 p-4 sticky top-0 z-50">
-            <div class="container mx-auto flex justify-between items-center max-w-7xl">
-                <div class="flex items-center gap-3">
-                    <!-- Elemento Dinâmico de Logo -->
-                    <div id="container-logo" class="w-8 h-8 rounded bg-slate-700 flex items-center justify-center overflow-hidden">
-                        <i id="icone-padrao" class="fa-solid fa-users-gear text-pink-500"></i>
-                    </div>
-                    <h1 id="titulo-sistema" class="text-lg font-bold text-white">Carregando Gabinete...</h1>
+    <!-- MENU LATERAL OPERACIONAL DINÂMICO -->
+    <aside class="w-64 bg-slate-950 text-slate-300 flex flex-col justify-between flex-shrink-0 border-r border-slate-800">
+        <div>
+            <!-- Branding com Logo e Nome Dinâmico -->
+            <div class="p-5 flex items-center gap-3 border-b border-slate-800">
+                <div id="container-logo" class="w-9 h-9 rounded-xl bg-slate-800 flex items-center justify-center overflow-hidden border border-slate-700">
+                    <i id="icone-padrao" class="fa-solid fa-users-gear text-lg"></i>
                 </div>
-                <button onclick="window.location.href='master.html'" class="bg-slate-700 text-slate-300 text-xs px-3 py-1.5 rounded-lg border border-slate-600 transition">Acesso Master</button>
+                <div>
+                    <h1 id="titulo-sistema" class="text-white font-bold text-sm tracking-wide leading-tight">Carregando...</h1>
+                    <span class="text-[10px] text-slate-500 font-bold uppercase">Painel Equipe</span>
+                </div>
             </div>
+            <!-- Abas Operacionais baseadas nas imagens -->
+            <nav class="p-4 space-y-1">
+                <button onclick="navegarOperacional('aba-agenda')" id="btn-aba-agenda" class="btn-menu w-full flex items-center gap-3 px-4 py-3 text-xs font-semibold rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition">
+                    <i class="fa-solid fa-calendar-days text-base"></i> 02. Agenda Geral
+                </button>
+                <button onclick="navegarOperacional('aba-documentos')" id="btn-aba-documentos" class="btn-menu w-full flex items-center gap-3 px-4 py-3 text-xs font-semibold rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition">
+                    <i class="fa-solid fa-folder-open text-base"></i> 03. Documentos
+                </button>
+                <button onclick="navegarOperacional('aba-eleitores')" id="btn-aba-eleitores" class="btn-menu w-full flex items-center gap-3 px-4 py-3 text-xs font-semibold rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition">
+                    <i class="fa-solid fa-users text-base"></i> 04. Eleitores / Base
+                </button>
+                <button onclick="navegarOperacional('aba-rh')" id="btn-aba-rh" class="btn-menu w-full flex items-center gap-3 px-4 py-3 text-xs font-semibold rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition">
+                    <i class="fa-solid fa-id-card text-base"></i> 06. Gestão de Equipe / RH
+                </button>
+            </nav>
+        </div>
+        <div class="p-4 border-t border-slate-800 flex justify-between items-center">
+            <button onclick="window.location.href='master.html'" class="text-[11px] text-slate-500 hover:text-white transition"><i class="fa-solid fa-lock mr-1"></i> Painel Master</button>
+            <button onclick="window.location.href='index.html'" class="text-[11px] text-rose-500 hover:text-rose-400 transition"><i class="fa-solid fa-power-off"></i> Sair</button>
+        </div>
+    </aside>
+
+    <!-- CONTAINER CONTEÚDO -->
+    <div class="flex-1 flex flex-col h-full overflow-hidden">
+        <header class="h-16 bg-slate-850 border-b border-slate-800 px-8 flex items-center justify-between flex-shrink-0">
+            <h2 id="titulo-pagina-op" class="font-bold text-white text-base">02. Agenda Geral</h2>
+            <span class="bg-emerald-500/10 text-emerald-400 text-[10px] font-bold px-2.5 py-1 rounded-full border border-emerald-500/20">
+                Unidade Conectada
+            </span>
         </header>
 
-        <main class="container mx-auto p-6 max-w-7xl">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <!-- Os botões operacionais mudam de cor conforme a cor_layout atribuída -->
-                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 flex flex-col justify-between">
-                    <div><h3 class="font-bold text-white mb-2">02. Agenda</h3><p class="text-slate-400 text-xs">Compromissos e reuniões.</p></div>
-                    <button class="btn-dinamico mt-4 w-full bg-pink-600 text-white text-xs py-2 rounded-lg font-bold">Abrir</button>
-                </div>
-                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 flex flex-col justify-between">
-                    <div><h3 class="font-bold text-white mb-2">03. Documentos</h3><p class="text-slate-400 text-xs">Arquivamento centralizado.</p></div>
-                    <button class="btn-dinamico mt-4 w-full bg-pink-600 text-white text-xs py-2 rounded-lg font-bold">Acessar</button>
-                </div>
-                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 flex flex-col justify-between">
-                    <div><h3 class="font-bold text-white mb-2">04. Eleitores</h3><p class="text-slate-400 text-xs">Base cadastral e regional.</p></div>
-                    <button class="btn-dinamico mt-4 w-full bg-pink-600 text-white text-xs py-2 rounded-lg font-bold">Gerenciar</button>
-                </div>
-                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 flex flex-col justify-between">
-                    <div><h3 class="font-bold text-white mb-2">06. Equipe / RH</h3><p class="text-slate-400 text-xs">Frequência e ponto digital.</p></div>
-                    <button class="btn-dinamico mt-4 w-full bg-pink-600 text-white text-xs py-2 rounded-lg font-bold">Ver Equipe</button>
+        <main class="flex-1 overflow-y-auto p-8 max-w-6xl w-full mx-auto">
+            
+            <!-- ABA 02: AGENDA (MOCK) -->
+            <div id="aba-agenda" class="tab-op space-y-4">
+                <p class="text-xs text-slate-400">Calendário interativo de reuniões, campanha e eventos públicos.</p>
+                <div class="bg-slate-800 border border-slate-700 p-6 rounded-2xl text-center italic text-sm text-slate-500">Módulo de Calendário Ativo. Sincronizado com index.html.</div>
+            </div>
+
+            <!-- ABA 03: DOCUMENTOS (MOCK) -->
+            <div id="aba-documentos" class="tab-op hidden space-y-4">
+                <p class="text-xs text-slate-400">Armazenamento centralizado de arquivos, ofícios e multimídias de campanha.</p>
+                <div class="bg-slate-800 border border-slate-700 p-6 rounded-2xl text-center italic text-sm text-slate-500">Repositório de mídias criptografado e seguro.</div>
+            </div>
+
+            <!-- ABA 04: ELEITORES (MOCK) -->
+            <div id="aba-eleitores" class="tab-op hidden space-y-4">
+                <p class="text-xs text-slate-400">Gestão da base de eleitores cadastrados via formulário público.</p>
+                <div class="bg-slate-800 border border-slate-700 p-6 rounded-2xl text-center italic text-sm text-slate-500">Validação e integração com dados do TRE ativa.</div>
+            </div>
+
+            <!-- ABA 06: GESTÃO DE EQUIPE (RH COMPLETO E FUNCIONAL) -->
+            <div id="aba-rh" class="tab-op hidden space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Cadastrar Funcionário -->
+                    <div class="bg-slate-800 border border-slate-700 p-5 rounded-2xl space-y-4 h-fit">
+                        <h3 class="text-sm font-bold text-white uppercase tracking-wider">Adicionar Funcionário / Assessor</h3>
+                        <form onsubmit="cadastrarAssessor(event)" class="space-y-3">
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Nome do Funcionário *</label>
+                                <input type="text" id="func-nome" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Cargo / Função *</label>
+                                <input type="text" id="func-cargo" placeholder="Ex: Assessor de Bairro" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">WhatsApp de Contato</label>
+                                <input type="tel" id="func-whats" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
+                            </div>
+                            <button type="submit" id="btn-salvar-func" class="btn-layout w-full text-white text-xs font-bold py-2.5 rounded-xl transition bg-pink-600">Salvar na Equipe</button>
+                        </form>
+                    </div>
+                    <!-- Listagem da Equipe Cadastrada -->
+                    <div class="lg:col-span-2 bg-slate-800 border border-slate-700 rounded-2xl p-5 overflow-hidden">
+                        <h3 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Membros da Equipe do Gabinete</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs text-slate-300">
+                                <thead class="uppercase bg-slate-900 text-slate-500 text-[10px] font-bold">
+                                    <tr><th class="p-3 rounded-l-lg">Nome</th><th class="p-3">Função / Cargo</th><th class="p-3 rounded-r-lg">Contato</th></tr>
+                                </thead>
+                                <tbody id="tabela-funcionarios" class="divide-y divide-slate-700/40">
+                                    <tr><td colspan="3" class="p-4 text-center text-slate-500 italic">Nenhum funcionário alocado.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
+
         </main>
     </div>
 
     <script>
+        let dadosGestorLogado = null;
+
         async function autenticarGestor() {
             const senhaDigitada = prompt("Digite a sua Chave de Acesso do Gabinete:");
             if (!senhaDigitada) { window.location.href = "index.html"; return; }
@@ -61,34 +132,123 @@
                 const dados = await resposta.json();
 
                 if (dados.autorizado) {
-                    document.body.style.display = "block";
+                    dadosGestorLogado = dados.gestor;
+                    document.body.style.display = "flex";
                     
-                    // 1. Injetar Nome do Gabinete
-                    document.getElementById('titulo-sistema').innerHTML = `${dados.gestor.nome_campanha_gabinete} <span class="text-xs text-slate-400 font-normal">| Operacional</span>`;
+                    // 1. Injetar Identidade Visual Dinâmica
+                    document.getElementById('titulo-sistema').innerText = dadosGestorLogado.nome_campanha_gabinete;
                     
-                    // 2. Injetar Logo Dinamicamente
-                    if (dados.gestor.url_logo) {
-                        document.getElementById('container-logo').innerHTML = `<img src="${dados.gestor.url_logo}" class="w-full h-full object-contain bg-white">`;
+                    if (dadosGestorLogado.url_logo) {
+                        document.getElementById('container-logo').innerHTML = `<img src="${dadosGestorLogado.url_logo}" class="w-full h-full object-contain bg-white">`;
                     }
 
-                    // 3. Aplicar Cor de Layout Customizada nos Botões Requisitados
-                    const corAtribuida = dados.gestor.cor_layout || '#db2777';
-                    document.querySelectorAll('.btn-dinamico').forEach(btn => {
-                        btn.style.backgroundColor = corAtribuida;
-                    });
+                    // Aplica a cor hex cadastrada nos elementos do layout do cliente
+                    const corCliente = dadosGestorLogado.cor_layout || '#db2777';
+                    document.getElementById('btn-salvar-func').style.backgroundColor = corCliente;
                     
-                    // Também atualiza a cor do ícone padrão caso a imagem não exista
-                    const icone = document.getElementById('icone-padrao');
-                    if(icone) icone.style.color = corAtribuida;
+                    const iconePadrao = document.getElementById('icone-padrao');
+                    if(iconePadrao) iconePadrao.style.color = corCliente;
+
+                    // Inicializa na aba padrão (Agenda)
+                    navegarOperacional('aba-agenda');
+                    carregarFuncionarios();
 
                 } else {
-                    alert(dados.mensagem);
-                    window.location.href = "index.html";
+                    alert(dados.mensagem); window.location.href = "index.html";
                 }
-            } catch (erro) {
-                document.body.style.display = "block";
+            } catch (erro) { document.body.style.display = "flex"; }
+        }
+
+        function navegarOperacional(idAba) {
+            document.querySelectorAll('.tab-op').forEach(el => el.classList.add('hidden'));
+            document.getElementById(idAba).classList.remove('hidden');
+
+            const titulos = {
+                'aba-agenda': '02. Agenda Geral e Compromissos',
+                'aba-documentos': '03. Repositório Central de Documentos',
+                'aba-eleitores': '04. Base de Dados de Eleitores Segmentados',
+                'aba-rh': '06. Recursos Humanos & Gestão de Assessores'
+            };
+            document.getElementById('titulo-pagina-op').innerText = titulos[idAba];
+
+            // Resetar estilo de botões do menu
+            document.querySelectorAll('.btn-menu').forEach(b => {
+                b.className = "btn-menu w-full flex items-center gap-3 px-4 py-3 text-xs font-semibold rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition";
+                b.style.backgroundColor = "transparent";
+                b.style.color = "";
+            });
+
+            // Ativar visual do botão clicado com a cor dinâmica do cliente
+            const btnAtivo = document.getElementById('btn-' + idAba);
+            if(btnAtivo && dadosGestorLogado) {
+                btnAtivo.style.backgroundColor = dadosGestorLogado.cor_layout || '#db2777';
+                btnAtivo.style.color = "#ffffff";
             }
         }
+
+        async function cadastrarAssessor(e) {
+            e.preventDefault();
+            if(!dadosGestorLogado) return;
+
+            const btn = document.getElementById('btn-salvar-func');
+            btn.innerText = "Salvando..."; btn.disabled = true;
+
+            try {
+                const res = await fetch('/api', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'cadastrar_funcionario',
+                        nome: document.getElementById('func-nome').value,
+                        cargo: document.getElementById('func-cargo').value,
+                        whatsapp: document.getElementById('func-whats').value,
+                        gestor_id: dadosGestorLogado.id
+                    })
+                });
+                const d = await res.json();
+                if(d.sucesso) {
+                    alert("Funcionário alocado à sua equipe!");
+                    document.getElementById('func-nome').value = '';
+                    document.getElementById('func-cargo').value = '';
+                    document.getElementById('func-whats').value = '';
+                    carregarFuncionarios();
+                }
+            } catch (err) { alert("Erro ao cadastrar funcionário."); }
+            finally { 
+                btn.innerText = "Salvar na Equipe"; 
+                btn.disabled = false;
+                btn.style.backgroundColor = dadosGestorLogado.cor_layout || '#db2777';
+            }
+        }
+
+        async function carregarFuncionarios() {
+            if(!dadosGestorLogado) return;
+            try {
+                const res = await fetch('/api', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'listar_funcionarios', gestor_id: dadosGestorLogado.id })
+                });
+                const d = await res.json();
+                const tbody = document.getElementById('tabela-funcionarios');
+                tbody.innerHTML = '';
+
+                if(!d.funcionarios || d.funcionarios.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-slate-500 italic">Nenhum funcionário alocado.</td></tr>`;
+                    return;
+                }
+
+                d.funcionarios.forEach(f => {
+                    tbody.innerHTML += `
+                        <tr class="border-b border-slate-700/30 hover:bg-slate-800/40 transition">
+                            <td class="p-3 font-semibold text-white">${f.nome}</td>
+                            <td class="p-3 text-slate-400">${f.cargo}</td>
+                            <td class="p-3 text-slate-500 font-mono">${f.whatsapp || '---'}</td>
+                        </tr>`;
+                });
+            } catch (e) {}
+        }
+
         window.onload = autenticarGestor;
     </script>
 </body>

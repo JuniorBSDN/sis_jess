@@ -3,134 +3,189 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Master - Gestão Eleitoral (sisJess)</title>
+    <title>sisJess Master - Gestor Multi-Empresas</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style> body { display: none; } </style>
 </head>
-<body class="bg-slate-900 text-slate-100 font-sans">
+<body class="bg-slate-50 text-slate-800 font-sans flex h-screen overflow-hidden">
 
-    <header class="bg-slate-800 border-b border-slate-700 p-4 sticky top-0 z-50">
-        <div class="container mx-auto flex justify-between items-center max-w-7xl">
-            <h1 class="text-xl font-bold text-white">GabineteDigital <span class="text-xs text-pink-500 font-normal">MASTER</span></h1>
-            <button onclick="window.location.href='admin.html'" class="text-slate-400 hover:text-white text-sm transition">Voltar ao Admin</button>
+    <aside class="w-64 bg-[#0f1e36] text-slate-300 flex flex-col justify-between flex-shrink-0">
+        <div>
+            <div class="p-5 flex items-center gap-3 border-b border-slate-700/40">
+                <div class="bg-emerald-500 text-white font-extrabold text-lg px-2.5 py-1.5 rounded-lg">sJ</div>
+                <div>
+                    <h1 class="text-white font-bold text-sm leading-tight tracking-wide">sisJess Master</h1>
+                    <span class="text-emerald-400 text-xs font-medium">Gestor Multi-Empresas</span>
+                </div>
+            </div>
+            <nav class="p-4 space-y-1">
+                <button onclick="navegarPara('aba-dashboard')" id="btn-aba-dashboard" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl bg-slate-700/40 text-white transition">
+                    <i class="fa-solid fa-chart-simple text-base"></i> Dashboard Geral
+                </button>
+                <button onclick="navegarPara('aba-cadastro')" id="btn-aba-cadastro" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl hover:bg-slate-700/20 hover:text-white transition text-slate-400">
+                    <i class="fa-solid fa-plus text-base"></i> Cadastrar Empresa
+                </button>
+                <button onclick="navegarPara('aba-parceiras')" id="btn-aba-parceiras" class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl hover:bg-slate-700/20 hover:text-white transition text-slate-400">
+                    <i class="fa-solid fa-table-list text-base"></i> Empresas Parceiras
+                </button>
+            </nav>
         </div>
-    </header>
+        <div class="p-4 text-center text-[11px] text-slate-500 border-t border-slate-700/20">
+            v1.0.0 Master
+        </div>
+    </aside>
 
-    <main class="container mx-auto p-6 max-w-7xl">
-        <section class="bg-slate-800 border border-slate-700 rounded-xl p-5 mb-8 flex justify-between items-center">
-            <div>
-                <h2 class="text-sm font-bold text-white uppercase tracking-wider">Status Operacional do Sistema</h2>
-                <p class="text-xs text-slate-400">Ative ou revogue o acesso da equipe no `admin.html`</p>
+    <div class="flex-1 flex flex-col h-full bg-[#f4f6f9]">
+        <header class="h-16 bg-white border-b border-slate-200 px-8 flex items-center justify-between flex-shrink-0">
+            <h2 id="titulo-pagina" class="font-bold text-slate-800 text-lg">Dashboard Geral</h2>
+            <div class="text-right text-xs font-bold text-slate-800">Administrador Global</div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-8 max-w-7xl w-full mx-auto">
+            
+            <!-- ABA 1 -->
+            <div id="aba-dashboard" class="tab-content grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-2xl border shadow-sm"><span class="text-[11px] text-slate-400 font-bold uppercase">Empresas</span><div id="card-total" class="text-3xl font-extrabold text-slate-800">0</div></div>
+                <div class="bg-white p-6 rounded-2xl border shadow-sm"><span class="text-[11px] text-slate-400 font-bold uppercase">Ativos</span><div id="card-ativos" class="text-3xl font-extrabold text-emerald-500">0</div></div>
+                <div class="bg-white p-6 rounded-2xl border shadow-sm"><span class="text-[11px] text-slate-400 font-bold uppercase">Inativos</span><div id="card-inativos" class="text-3xl font-extrabold text-slate-400">0</div></div>
             </div>
-            <div class="flex gap-2">
-                <button onclick="alternarStatusUnidade(true)" class="bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded-xl">Ativar Unidade</button>
-                <button onclick="alternarStatusUnidade(false)" class="bg-rose-600 text-white text-xs font-bold px-4 py-2 rounded-xl">Bloquear Unidade</button>
+
+            <!-- ABA 2: CADASTRAR COM VISUAL E IDENTIDADE -->
+            <div id="aba-cadastro" class="tab-content hidden max-w-xl bg-white p-6 rounded-2xl border shadow-sm">
+                <form onsubmit="realizarCadastro(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Nome do Gestor *</label>
+                        <input type="text" id="cad-nome" required class="w-full border rounded-xl px-4 py-2 text-sm bg-slate-50 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Nome da Empresa / Gabinete *</label>
+                        <input type="text" id="cad-gabinete" required class="w-full border rounded-xl px-4 py-2 text-sm bg-slate-50 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">WhatsApp</label>
+                        <input type="tel" id="cad-whats" class="w-full border rounded-xl px-4 py-2 text-sm bg-slate-50 focus:outline-none">
+                    </div>
+                    
+                    <!-- NOVOS REQUISITOS -->
+                    <div class="grid grid-cols-3 gap-4 border-t pt-4">
+                        <div class="col-span-1">
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Cor do Layout</label>
+                            <input type="color" id="cad-cor" value="#db2777" class="w-full h-10 border rounded-xl p-1 bg-slate-50 cursor-pointer">
+                        </div>
+                        <div class="col-span-2">
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">URL da Logo (Imagem)</label>
+                            <input type="url" id="cad-logo" placeholder="https://link.com/logo.png" class="w-full border rounded-xl px-4 py-2 text-sm bg-slate-50 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border">
+                        <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Chave Automática de Acesso</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="cad-senha" readonly class="flex-1 bg-white border rounded-lg px-3 py-2 text-sm font-mono text-emerald-600 font-bold text-center">
+                            <button type="button" onclick="gerarSenhaAleatoria()" class="bg-slate-800 text-white text-xs px-3 rounded-lg">Gerar</button>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-emerald-500 text-white text-sm font-bold py-3 rounded-xl transition">Gravar e Ativar Cliente</button>
+                </form>
             </div>
-        </section>
 
-        <!-- KPIs sisFarma -->
-        <section class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-            <div class="bg-slate-800 p-4 rounded-xl border border-slate-700"><div class="text-slate-400 text-xs mb-1">Total Eleitores</div><div id="kpi-eleitores" class="text-2xl font-bold">0</div></div>
-            <div class="bg-slate-800 p-4 rounded-xl border border-slate-700"><div class="text-slate-400 text-xs mb-1 text-emerald-400">Arrecadado</div><div id="kpi-receitas" class="text-2xl font-bold text-emerald-400">R$ 0,00</div></div>
-            <div class="bg-slate-800 p-4 rounded-xl border border-slate-700"><div class="text-slate-400 text-xs mb-1 text-rose-400">Despesas</div><div id="kpi-despesas" class="text-2xl font-bold text-rose-400">R$ 0,00</div></div>
-            <div class="bg-slate-800 p-4 rounded-xl border border-slate-700"><div class="text-slate-400 text-xs mb-1">Saldo Líquido</div><div id="kpi-saldo" class="text-2xl font-bold">R$ 0,00</div></div>
-        </section>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Tabela Financeira -->
-            <div class="bg-slate-800 rounded-xl border border-slate-700 p-6 lg:col-span-2">
-                <h3 class="text-sm font-bold text-white mb-4">05. Finanças & Prestação TRE</h3>
-                <table class="w-full text-left text-xs text-slate-300">
-                    <thead class="uppercase bg-slate-900 text-slate-400">
-                        <tr><th class="p-3">Origem/Destino</th><th class="p-3">Tipo</th><th class="p-3">Valor</th></tr>
+            <!-- ABA 3 -->
+            <div id="aba-parceiras" class="tab-content hidden bg-white rounded-2xl border shadow-sm overflow-hidden">
+                <table class="w-full text-left text-xs text-slate-600">
+                    <thead class="bg-slate-50 border-b text-slate-400 uppercase font-bold">
+                        <tr><th class="p-4">Logo</th><th class="p-4">Gestor</th><th class="p-4">Gabinete / Empresa</th><th class="p-4">Cor</th><th class="p-4">Status</th></tr>
                     </thead>
-                    <tbody id="tabela-financeira">
-                        <tr><td colspan="3" class="p-3 text-slate-500 italic">Carregando dados...</td></tr>
-                    </tbody>
+                    <tbody id="tabela-gestores" class="divide-y"></tbody>
                 </table>
             </div>
-            <!-- Segmentação Regional -->
-            <div class="bg-slate-800 rounded-xl border border-slate-700 p-6">
-                <h3 class="text-sm font-bold text-white mb-4">04. Apoiadores por Bairro</h3>
-                <div id="lista-bairros" class="space-y-4"></div>
-            </div>
-        </div>
-    </main>
+
+        </main>
+    </div>
 
     <script>
         async function autenticarMaster() {
-            const senhaDigitada = prompt("Chave de Segurança Master (USER_SENHA):");
-            if (!senhaDigitada) { window.location.href = "admin.html"; return; }
-
+            const senha = prompt("Chave de Segurança Master (USER_SENHA):");
+            if (!senha) { window.location.href = "index.html"; return; }
             try {
                 const res = await fetch('/api', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'verificar_senha', senha: senhaDigitada })
+                    body: JSON.stringify({ action: 'verificar_senha_master', senha: senha })
                 });
                 const d = await res.json();
+                if (d.autorizado) { document.body.style.display = "flex"; gerarSenhaAleatoria(); atualizarDashboard(); }
+                else { alert("Acesso negado."); window.location.href = "index.html"; }
+            } catch (e) { document.body.style.display = "flex"; }
+        }
 
-                if (d.autorizado) {
-                    document.body.style.display = "block";
-                    carregarDadosMaster();
-                } else {
-                    alert("Senha incorreta.");
-                    window.location.href = "admin.html";
+        function navegarPara(idAba) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(idAba).classList.remove('hidden');
+            const titulos = { 'aba-dashboard': 'Dashboard Geral', 'aba-cadastro': 'Cadastrar Empresa', 'aba-parceiras': 'Empresas Parceiras' };
+            document.getElementById('titulo-pagina').innerText = titulos[idAba];
+        }
+
+        function gerarSenhaAleatoria() {
+            document.getElementById('cad-senha').value = 'JESS-' + Math.floor(1000 + Math.random() * 9000);
+        }
+
+        async function realizarCadastro(e) {
+            e.preventDefault();
+            try {
+                const res = await fetch('/api', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'cadastrar_gestor',
+                        nome_gestor: document.getElementById('cad-nome').value,
+                        nome_gabinete: document.getElementById('cad-gabinete').value,
+                        whatsapp: document.getElementById('cad-whats').value,
+                        senha_admin: document.getElementById('cad-senha').value,
+                        cor_layout: document.getElementById('cad-cor').value,
+                        url_logo: document.getElementById('cad-logo').value
+                    })
+                });
+                const d = await res.json();
+                if(d.sucesso) {
+                    alert("Gestor cadastrado!");
+                    document.getElementById('cad-nome').value = '';
+                    document.getElementById('cad-gabinete').value = '';
+                    document.getElementById('cad-logo').value = '';
+                    gerarSenhaAleatoria(); atualizarDashboard(); navegarPara('aba-dashboard');
                 }
-            } catch (e) { alert("Erro de comunicação com a API."); }
+            } catch(err) { alert("Erro ao salvar."); }
         }
 
-        async function alternarStatusUnidade(ativar) {
+        async function atualizarDashboard() {
             try {
                 const res = await fetch('/api', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'alterar_status_unidade', status: activar ? 'true' : 'false' })
+                    body: JSON.stringify({ action: 'dados_dashboard_master' })
                 });
                 const d = await res.json();
-                if(d.sucesso) alert("Status da unidade atualizado!");
-            } catch (e) { alert("Erro ao atualizar status."); }
-        }
-
-        async function carregarDadosMaster() {
-            try {
-                const res = await fetch('/api', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'buscar_dados_master' })
-                });
-                const d = await res.json();
-
-                // Renderiza KPIs e tabelas
-                document.getElementById('kpi-eleitores').innerText = d.eleitores.length;
                 
-                let r = 0; let desp = 0;
-                const tbody = document.getElementById('tabela-financeira');
+                document.getElementById('card-total').innerText = d.gestores.length;
+                const ativos = d.gestores.filter(g => g.status === 'Ativo').length;
+                document.getElementById('card-ativos').innerText = ativos;
+                document.getElementById('card-inativos').innerText = d.gestores.length - ativos;
+
+                const tbody = document.getElementById('tabela-gestores');
                 tbody.innerHTML = '';
-                
-                d.financeiro.forEach(i => {
-                    const v = parseFloat(i.valor || 0);
-                    if(i.tipo === 'Receita') r += v; else desp += v;
-                    tbody.innerHTML += `<tr><td class="p-2">${i.origem_destino}</td><td class="p-2">${i.tipo}</td><td class="p-2">R$ ${v}</td></tr>`;
+                d.gestores.forEach(g => {
+                    const imgLogo = g.url_logo ? `<img src="${g.url_logo}" class="w-6 h-6 rounded border object-contain bg-white">` : `<i class="fa-solid fa-building text-slate-400 text-sm"></i>`;
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-50">
+                            <td class="p-4">${imgLogo}</td>
+                            <td class="p-4 font-semibold text-slate-800">${g.nome_gestor}</td>
+                            <td class="p-4 text-slate-500">${g.nome_campanha_gabinete}</td>
+                            <td class="p-4"><div class="w-5 h-5 rounded border shadow-sm" style="background-color: ${g.cor_layout || '#db2777'}"></div></td>
+                            <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-600">${g.status}</span></td>
+                        </tr>`;
                 });
-
-                document.getElementById('kpi-receitas').innerText = `R$ ${r}`;
-                document.getElementById('kpi-despesas').innerText = `R$ ${desp}`;
-                document.getElementById('kpi-saldo').innerText = `R$ ${r - desp}`;
-
-                // Processa bairros
-                const mapa = {};
-                d.eleitores.forEach(e => { if(e.bairro) mapa[e.bairro] = (mapa[e.bairro] || 0) + 1; });
-                const bContainer = document.getElementById('lista-bairros');
-                bContainer.innerHTML = '';
-                Object.keys(mapa).forEach(b => {
-                    bContainer.innerHTML += `<div class="text-xs">${b}: <b>${mapa[b]} eleitores</b></div>`;
-                });
-
-            } catch(e) {}
+            } catch (e) {}
         }
-
         window.onload = autenticarMaster;
     </script>
 </body>

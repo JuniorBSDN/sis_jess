@@ -18,6 +18,10 @@ class handler(BaseHTTPRequestHandler):
     def do_OPTIONS(self):
         self._set_headers()
 
+    def _obter_url_supabase(self):
+        """Força e garante o formato correto da URL baseado no seu Project ID 'scotyvkhwptckrvrjzdi'"""
+        return "https://scotyvkhwptckrvrjzdi.supabase.co"
+
     def do_POST(self):
         self._set_headers()
         try:
@@ -26,14 +30,18 @@ class handler(BaseHTTPRequestHandler):
             dados = json.loads(post_data.decode('utf-8'))
             action = dados.get('action')
 
-            sb_url = os.environ.get('SUPABASE_URL')
+            # Obtém a URL corrigida automaticamente e a Service Key protegida
+            sb_url = self._obter_url_supabase()
             sb_key = os.environ.get('SUPABASE_SERVICE_KEY')
+            senha_mestra = os.environ.get('USER_SENHA')
 
+            # --- AÇÃO 1: Autenticação Master ---
             if action == 'verificar_senha_master':
                 senha_digitada = dados.get('senha')
-                self.wfile.write(json.dumps({"autorizado": senha_digitada == os.environ.get('USER_SENHA')}).encode('utf-8'))
+                self.wfile.write(json.dumps({"autorizado": senha_digitada == senha_mestra}).encode('utf-8'))
                 return
 
+            # --- AÇÃO 2: Upload da Logo ---
             elif action == 'upload_logo':
                 file_base64 = dados.get('file_base64')
                 filename = dados.get('filename')
@@ -52,6 +60,7 @@ class handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"sucesso": True, "url_logo": url_publica}).encode('utf-8'))
                 return
 
+            # --- AÇÃO 3: Cadastrar Gestor ---
             elif action == 'cadastrar_gestor':
                 url = f"{sb_url}/rest/v1/gestores"
                 payload = json.dumps({
@@ -73,8 +82,8 @@ class handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
                 return
 
+            # --- AÇÃO 4: Listar Gestores ---
             elif action == 'dados_dashboard_master':
-                # Agora puxa todos os campos comerciais
                 url = f"{sb_url}/rest/v1/gestores?select=id,nome_gestor,nome_campanha_gabinete,status,cor_layout,url_logo,whatsapp,email,documento,data_inicio,endereco,senha_admin&order=id.desc"
                 req = urllib.request.Request(url, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'}, method='GET')
                 with urllib.request.urlopen(req) as response:
@@ -82,6 +91,7 @@ class handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"gestores": gestores}).encode('utf-8'))
                 return
 
+            # --- AÇÃO 5: Editar Gestor ---
             elif action == 'editar_gestor':
                 gid = dados.get('id')
                 url = f"{sb_url}/rest/v1/gestores?id=eq.{gid}"
@@ -103,6 +113,7 @@ class handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
                 return
 
+            # --- AÇÃO 6: Alternar Status ---
             elif action == 'alterar_status_gestor':
                 gid = dados.get('id')
                 novo_status = dados.get('status')
@@ -113,6 +124,7 @@ class handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
                 return
 
+            # --- AÇÃO 7: Excluir Gestor ---
             elif action == 'excluir_gestor':
                 gid = dados.get('id')
                 url = f"{sb_url}/rest/v1/gestores?id=eq.{gid}"
@@ -121,7 +133,7 @@ class handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
                 return
 
-            # Ação restrita do admin.html
+            # --- AÇÃO 8: Login do Gestor (admin.html) ---
             elif action == 'verificar_login_gestor':
                 senha_input = dados.get('senha')
                 url = f"{sb_url}/rest/v1/gestores?senha_admin=eq.{senha_input}&status=eq.Ativo&select=id,nome_campanha_gabinete,cor_layout,url_logo"

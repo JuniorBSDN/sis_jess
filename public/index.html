@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal do Cidadão - Gabinete Digital</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SDK do Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans minimal-scrollbar">
+
+    <!-- Navbar Simples -->
+    <nav class="bg-slate-900 border-b border-slate-800 p-4 sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center max-w-6xl">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-bullhorn text-pink-500 text-xl"></i>
+                <span class="font-bold text-white tracking-wide">GabineteDigital</span>
+            </div>
+            <a href="admin.html" class="text-xs text-slate-400 hover:text-white transition">
+                <i class="fa-solid fa-right-to-bracket mr-1"></i> Área Restrita
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero / Apresentação -->
+    <header class="container mx-auto text-center py-12 px-4 max-w-3xl">
+        <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-4">
+            Construindo o Futuro do Nosso Município Juntos
+        </h1>
+        <p class="text-slate-400 text-sm md:text-base leading-relaxed">
+            Deixe sua sugestão, apoie nossa caminhada ou acompanhe nossa agenda de eventos. Sua participação é o motor da nossa transformação regional.
+        </p>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="container mx-auto px-4 pb-16 max-w-6xl grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Formulário: Módulo 04 (Cadastro de Eleitores/Apoiadores) -->
+        <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 lg:col-span-2 shadow-xl">
+            <h2 class="text-lg font-bold text-white mb-6 flex items-center gap-2">
+                <i class="fa-solid fa-user-plus text-pink-500"></i> Cadastre-se como Apoiador / Envie uma Demanda
+            </h2>
+            
+            <form id="form-eleitor" class="space-y-4" onsubmit="salvarApoiador(event)">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 uppercase mb-1">Nome Completo *</label>
+                        <input type="text" id="nome" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-pink-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 uppercase mb-1">WhatsApp / Telefone *</label>
+                        <input type="tel" id="whatsapp" required placeholder="(00) 00000-0000" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-pink-500 transition">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 uppercase mb-1">Bairro *</label>
+                        <input type="text" id="bairro" required placeholder="Ex: Centro" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-pink-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 uppercase mb-1">Título de Eleitor (Opcional)</label>
+                        <input type="text" id="titulo" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-pink-500 transition">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase mb-1">Sua Mensagem ou Demanda para o Bairro</label>
+                    <textarea id="demanda" rows="3" placeholder="Como podemos melhorar a sua região? Descreva aqui..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-pink-500 transition"></textarea>
+                </div>
+
+                <!-- Termo LGPD Obrigatório -->
+                <div class="flex items-start gap-2 pt-2">
+                    <input type="checkbox" id="lgpd" required class="mt-1 accent-pink-500">
+                    <label for="lgpd" class="text-xs text-slate-400 leading-tight">
+                        Autorizo o armazenamento dos meus dados estritamente para comunicação de campanha e atividades parlamentares, em conformidade com a LGPD.
+                    </label>
+                </div>
+
+                <button type="submit" class="w-full bg-pink-600 hover:bg-pink-700 text-white font-semibold text-sm py-3 rounded-xl transition shadow-lg shadow-pink-600/20">
+                    <i class="fa-solid fa-paper-plane mr-2"></i> Enviar Cadastro
+                </button>
+            </form>
+        </section>
+
+        <!-- Agenda Pública: Módulo 02 -->
+        <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+            <h2 class="text-lg font-bold text-white mb-6 flex items-center gap-2">
+                <i class="fa-solid fa-calendar-check text-pink-500"></i> 02. Agenda Pública
+            </h2>
+            
+            <div id="lista-eventos-publicos" class="space-y-4">
+                <!-- Carregado do Supabase onde publico == true -->
+                <div class="bg-slate-950 border border-slate-850 p-4 rounded-xl">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="bg-pink-500/10 text-pink-400 text-[10px] uppercase font-bold px-2 py-0.5 rounded">Caminhada</span>
+                        <span class="text-slate-500 text-xs font-mono">22/07 às 19:00</span>
+                    </div>
+                    <h3 class="text-sm font-bold text-white mb-1">Grande Encontro no Bairro São José</h3>
+                    <p class="text-xs text-slate-400">Concentração na Praça Central. Venha conversar com a nossa equipe.</p>
+                </div>
+
+                <div class="bg-slate-950 border border-slate-850 p-4 rounded-xl">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="bg-blue-500/10 text-blue-400 text-[10px] uppercase font-bold px-2 py-0.5 rounded">Reunião</span>
+                        <span class="text-slate-500 text-xs font-mono">25/07 às 15:00</span>
+                    </div>
+                    <h3 class="text-sm font-bold text-white mb-1">Roda de Conversas: Educação e Cultura</h3>
+                    <p class="text-xs text-slate-400">Associação Comercial - Debate aberto com lideranças.</p>
+                </div>
+            </div>
+        </section>
+        
+    </main>
+
+    <!-- Script de Integração -->
+    <script>
+        // Configuração do Supabase
+        const SUPABASE_URL = "https://seu-projeto.supabase.co";
+        const SUPABASE_ANON_KEY = "sua-chave-anonima-supabase";
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        async function salvarApoiador(event) {
+            event.preventDefault();
+            
+            const nome = document.getElementById('nome').value;
+            const whatsapp = document.getElementById('whatsapp').value;
+            const bairro = document.getElementById('bairro').value;
+            const titulo = document.getElementById('titulo').value;
+            const demanda = document.getElementById('demanda').value;
+
+            try {
+                // Insere os dados diretamente na tabela 'eleitores' do Supabase
+                const { data, error } = await _supabase
+                    .from('eleitores')
+                    .insert([
+                        { 
+                            nome: nome, 
+                            whatsapp: whatsapp, 
+                            bairro: bairro, 
+                            titulo_eleitor: titulo, 
+                            demanda_inicial: demanda,
+                            origem_cadastro: 'Portal Público (index.html)'
+                        }
+                    ]);
+
+                if (error) throw error;
+
+                alert("Obrigado pelo apoio! Seu cadastro e demanda foram enviados com sucesso ao nosso gabinete.");
+                document.getElementById('form-eleitor').reset();
+
+            } catch (err) {
+                console.error("Erro ao salvar cadastro:", err);
+                alert("Ocorreu um problema ao enviar o cadastro. Tente novamente.");
+            }
+        }
+
+        async function carregarAgendaPublica() {
+            try {
+                // Busca eventos configurados como públicos no banco de dados
+                const { data: eventos, error } = await _supabase
+                    .from('agenda')
+                    .select('*')
+                    .eq('publico', true)
+                    .order('data_inicio', { ascending: true });
+
+                if (!error && eventos && eventos.length > 0) {
+                    const container = document.getElementById('lista-eventos-publicos');
+                    container.innerHTML = '';
+                    
+                    eventos.forEach(evt => {
+                        const dataFormatada = new Date(evt.data_inicio).toLocaleDateString('pt-BR');
+                        container.innerHTML += `
+                            <div class="bg-slate-950 border border-slate-850 p-4 rounded-xl">
+                                <div class="flex justify-between items-start mb-2">
+                                    <span class="bg-pink-500/10 text-pink-400 text-[10px] uppercase font-bold px-2 py-0.5 rounded">${evt.tipo || 'Evento'}</span>
+                                    <span class="text-slate-500 text-xs font-mono">${dataFormatada}</span>
+                                </div>
+                                <h3 class="text-sm font-bold text-white mb-1">${evt.titulo}</h3>
+                                <p class="text-xs text-slate-400">${evt.descricao || ''}</p>
+                            </div>
+                        `;
+                    });
+                }
+            } catch (e) {
+                console.log("Modo de demonstração ativado para a agenda.");
+            }
+        }
+
+        window.onload = carregarAgendaPublica;
+    </script>
+</body>
+</html>

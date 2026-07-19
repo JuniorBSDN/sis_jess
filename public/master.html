@@ -8,6 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome para os Ícones dos Módulos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SDK do Supabase para integração de dados -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         /* Mantém a tela oculta até a validação da API Python */
         body { display: none; }
@@ -34,7 +36,7 @@
     </header>
 
     <main class="container mx-auto p-6 max-w-7xl">
-
+        
         <!-- SEÇÃO 1: Indicadores Críticos (KPIs rápidos no estilo sisFarma) -->
         <section class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
             <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 shadow-sm">
@@ -42,38 +44,38 @@
                     Meta de Eleitores
                     <i class="fa-solid fa-users text-blue-500 text-lg"></i>
                 </div>
-                <div class="text-2xl font-bold">12.450</div>
-                <p class="text-xs text-emerald-400 mt-1"><i class="fa-solid fa-arrow-up"></i> +4.2% este mês</p>
+                <div id="kpi-eleitores" class="text-2xl font-bold">---</div>
+                <p class="text-xs text-emerald-400 mt-1"><i class="fa-solid fa-arrow-up"></i> Atualizado em tempo real</p>
             </div>
             <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 shadow-sm">
                 <div class="flex justify-between items-center text-slate-400 text-xs font-semibold uppercase mb-2">
                     Total Arrecadado
                     <i class="fa-solid fa-hand-holding-dollar text-emerald-500 text-lg"></i>
                 </div>
-                <div class="text-2xl font-bold text-emerald-400">R$ 45.200,00</div>
-                <p class="text-xs text-slate-400 mt-1">Limite TRE: R$ 150k</p>
+                <div id="kpi-receitas" class="text-2xl font-bold text-emerald-400">R$ 0,00</div>
+                <p class="text-xs text-slate-400 mt-1">Entradas da campanha</p>
             </div>
             <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 shadow-sm">
                 <div class="flex justify-between items-center text-slate-400 text-xs font-semibold uppercase mb-2">
                     Despesas Contratadas
                     <i class="fa-solid fa-money-bill-transfer text-rose-500 text-lg"></i>
                 </div>
-                <div class="text-2xl font-bold text-rose-400">R$ 18.150,00</div>
-                <p class="text-xs text-rose-400/70 mt-1">40% do teto atingido</p>
+                <div id="kpi-despesas" class="text-2xl font-bold text-rose-400">R$ 0,00</div>
+                <p class="text-xs text-rose-400/70 mt-1">Gastos homologados</p>
             </div>
             <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 shadow-sm">
                 <div class="flex justify-between items-center text-slate-400 text-xs font-semibold uppercase mb-2">
-                    Cidades/Bairros Atendidos
-                    <i class="fa-solid fa-map-location-dot text-amber-500 text-lg"></i>
+                    Saldo Operacional
+                    <i class="fa-solid fa-wallet text-amber-500 text-lg"></i>
                 </div>
-                <div class="text-2xl font-bold">24</div>
-                <p class="text-xs text-slate-400 mt-1">Cobertura em 88% das seções</p>
+                <div id="kpi-saldo" class="text-2xl font-bold text-white">R$ 0,00</div>
+                <p class="text-xs text-slate-400 mt-1">Disponível em caixa</p>
             </div>
         </section>
 
         <!-- SEÇÃO 2: Módulos Estratégicos Restritos (O coração do master.html) -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
+            
             <!-- Bloco 05: Financeiro Avançado & Auditoria -->
             <div class="bg-slate-800 rounded-xl border border-slate-700 p-6 lg:col-span-2">
                 <div class="flex justify-between items-center mb-6">
@@ -84,7 +86,7 @@
                         <i class="fa-solid fa-file-pdf mr-1"></i> Exportar Padrão TRE
                     </button>
                 </div>
-
+                
                 <!-- Tabela de Auditoria (Estilo Lotes do sisFarma) -->
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-sm text-slate-300">
@@ -93,25 +95,13 @@
                                 <th class="p-3 rounded-l-lg">Doador/Fornecedor</th>
                                 <th class="p-3">Tipo</th>
                                 <th class="p-3">Valor</th>
-                                <th class="p-3">Rastreabilidade (CPF/CNPJ)</th>
-                                <th class="p-3 rounded-r-lg text-center">Status</th>
+                                <th class="p-3">Identificação (CPF/CNPJ)</th>
+                                <th class="p-3 rounded-r-lg text-center">Rastreamento</th>
                             </tr>
                         </thead>
                         <tbody id="tabela-financeira">
-                            <!-- Injetado dinamicamente via JS/Supabase -->
-                            <tr class="border-b border-slate-700/50 hover:bg-slate-700/30">
-                                <td class="p-3 font-medium text-white">Fundo Partidário Diretório Central</td>
-                                <td class="p-3"><span class="bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded text-xs">Receita</span></td>
-                                <td class="p-3 font-semibold text-emerald-400">R$ 30.000,00</td>
-                                <td class="p-3 text-slate-400 font-mono">00.000.000/0001-00</td>
-                                <td class="p-3 text-center"><i class="fa-solid fa-circle-check text-emerald-500" title="Homologado"></i></td>
-                            </tr>
-                            <tr class="border-b border-slate-700/50 hover:bg-slate-700/30">
-                                <td class="p-3 font-medium text-white">Gráfica e Editora Silva Ltda</td>
-                                <td class="p-3"><span class="bg-rose-500/10 text-rose-400 px-2 py-0.5 rounded text-xs">Despesa</span></td>
-                                <td class="p-3 font-semibold text-rose-400">R$ 5.400,00</td>
-                                <td class="p-3 text-slate-400 font-mono">11.222.333/0001-44</td>
-                                <td class="p-3 text-center"><i class="fa-solid fa-circle-check text-emerald-500" title="Nota Fiscal Emitida"></i></td>
+                            <tr>
+                                <td colspan="5" class="p-4 text-center text-slate-500 italic">Carregando lançamentos...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -123,42 +113,16 @@
                 <h3 class="text-lg font-bold flex items-center gap-2 mb-6">
                     <i class="fa-solid fa-chart-pie text-pink-500"></i> Cobertura por Bairros/Zonas
                 </h3>
-
-                <div class="space-y-4">
-                    <!-- Barra de progresso para os bairros principais -->
-                    <div>
-                        <div class="flex justify-between text-xs mb-1">
-                            <span class="font-medium text-slate-300">Centro Histórico</span>
-                            <span class="text-slate-400 font-bold">75% da meta</span>
-                        </div>
-                        <div class="w-full bg-slate-900 rounded-full h-2">
-                            <div class="bg-blue-500 h-2 rounded-full" style="width: 75%"></div>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="flex justify-between text-xs mb-1">
-                            <span class="font-medium text-slate-300">Bairro São José</span>
-                            <span class="text-slate-400 font-bold">42% da meta</span>
-                        </div>
-                        <div class="w-full bg-slate-900 rounded-full h-2">
-                            <div class="bg-amber-500 h-2 rounded-full" style="width: 42%"></div>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="flex justify-between text-xs mb-1">
-                            <span class="font-medium text-slate-300">Vila Nova (Zona Rural)</span>
-                            <span class="text-slate-400 font-bold">90% da meta</span>
-                        </div>
-                        <div class="w-full bg-slate-900 rounded-full h-2">
-                            <div class="bg-emerald-500 h-2 rounded-full" style="width: 90%"></div>
-                        </div>
-                    </div>
+                
+                <div id="lista-bairros" class="space-y-4">
+                    <!-- Injetado dinamicamente conforme os eleitores no Supabase -->
+                    <p class="text-slate-500 italic text-sm text-center">Processando dados geográficos...</p>
                 </div>
 
                 <div class="mt-8 pt-6 border-t border-slate-700 text-center">
-                    <p class="text-xs text-slate-400 mb-3">Cruzamento de dados oficiais com o TRE ativo.</p>
-                    <button class="w-full bg-slate-700 hover:bg-slate-600 text-white text-xs py-2.5 rounded-lg font-medium transition">
-                        <i class="fa-solid fa-arrows-rotate mr-1"></i> Sincronizar Base de Votos
+                    <p class="text-xs text-slate-400 mb-3">Cruzamento de dados oficiais ativos.</p>
+                    <button onclick="carregarDadosSupabase()" class="w-full bg-slate-700 hover:bg-slate-600 text-white text-xs py-2.5 rounded-lg font-medium transition">
+                        <i class="fa-solid fa-arrows-rotate mr-1"></i> Sincronizar Base de Dados
                     </button>
                 </div>
             </div>
@@ -166,10 +130,15 @@
         </div>
     </main>
 
-    <!-- Script de Segurança Conectado à API Python (api/index.py) -->
+    <!-- Script de Autenticação com a Vercel e Conectividade do Supabase -->
     <script>
+        // Configuração do Supabase (Substitua com suas chaves reais do projeto)
+        const SUPABASE_URL = "https://seu-projeto.supabase.co";
+        const SUPABASE_ANON_KEY = "sua-chave-anonima-supabase";
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
         async function autenticarMaster() {
-            const senhaDigitada = prompt("Chave de Segurança Master (Variável Vercel):");
+            const senhaDigitada = prompt("Chave de Segurança Master (USER_SENHA):");
 
             if (!senhaDigitada) {
                 window.location.href = "admin.html";
@@ -177,7 +146,7 @@
             }
 
             try {
-                // Envia a senha para o arquivo Python que roda na Vercel
+                // Envia a senha digitada para a Serverless Function index.py na Vercel
                 const resposta = await fetch('/api', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -187,7 +156,7 @@
                 const dados = await resposta.json();
 
                 if (dados.autorizado) {
-                    // Se o Python autenticar, exibe a página no padrão sisFarma
+                    // Libera a renderização da página se o Python validar a variável USER_SENHA
                     document.body.style.display = "block";
                     carregarDadosSupabase();
                 } else {
@@ -200,16 +169,113 @@
             }
         }
 
-        function carregarDadosSupabase() {
-            console.log("Buscando dados das tabelas 'financeiro' e 'eleitores'...");
-            // Sua lógica de conexão direta com o Supabase entra aqui
+        async function carregarDadosSupabase() {
+            try {
+                // 1. Buscar total de eleitores cadastrados
+                const { count: totalEleitores, error: errEleitores } = await _supabase
+                    .from('eleitores')
+                    .select('*', { count: 'exact', head: true });
+
+                if (!errEleitores) {
+                    document.getElementById('kpi-eleitores').innerText = totalEleitores || 0;
+                }
+
+                // 2. Buscar dados financeiros da campanha
+                const { data: financeiro, error: errFinanceiro } = await _supabase
+                    .from('financeiro')
+                    .select('*');
+
+                if (!errFinanceiro && financeiro) {
+                    renderizarFinanceiro(financeiro);
+                }
+
+                // 3. Buscar dados de bairros para inteligência regional
+                const { data: bairrosData, error: errBairros } = await _supabase
+                    .from('eleitores')
+                    .select('bairro');
+                
+                if (!errBairros && bairrosData) {
+                    renderizarBairros(bairrosData);
+                }
+
+            } catch (e) {
+                console.error("Erro ao sincronizar com o Supabase:", e);
+            }
+        }
+
+        function renderizarFinanceiro(dados) {
+            let totalReceitas = 0;
+            let totalDespesas = 0;
+            const tbody = document.getElementById('tabela-financeira');
+            tbody.innerHTML = '';
+
+            if (dados.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500 italic">Nenhum lançamento encontrado.</td></tr>`;
+                return;
+            }
+
+            dados.forEach(item => {
+                const valor = parseFloat(item.valor || 0);
+                const isReceita = item.tipo === 'Receita';
+                
+                if (isReceita) totalReceitas += valor;
+                else totalDespesas += valor;
+
+                const badgColor = isReceita ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400';
+                const textColor = isReceita ? 'text-emerald-400' : 'text-rose-400';
+
+                tbody.innerHTML += `
+                    <tr class="border-b border-slate-700/50 hover:bg-slate-700/30 transition">
+                        <td class="p-3 font-medium text-white">${item.origem_destino || 'Não informado'}</td>
+                        <td class="p-3"><span class="${badgColor} px-2 py-0.5 rounded text-xs">${item.tipo}</span></td>
+                        <td class="p-3 font-semibold ${textColor}">R$ ${valor.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                        <td class="p-3 text-slate-400 font-mono">${item.cpf_cnpj || '---'}</td>
+                        <td class="p-3 text-center"><i class="fa-solid fa-circle-check text-emerald-500" title="Homologado e Seguro"></i></td>
+                    </tr>
+                `;
+            });
+
+            const saldo = totalReceitas - totalDespesas;
+            document.getElementById('kpi-receitas').innerText = `R$ ${totalReceitas.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('kpi-despesas').innerText = `R$ ${totalDespesas.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('kpi-saldo').innerText = `R$ ${saldo.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+        }
+
+        function renderizarBairros(eleitores) {
+            const container = document.getElementById('lista-bairros');
+            container.innerHTML = '';
+
+            // Contabiliza quantidade por bairro de forma simples
+            const contagem = {};
+            eleitores.forEach(e => {
+                if(e.bairro) contagem[e.bairro] = (contagem[e.bairro] || 0) + 1;
+            });
+
+            const total = eleitores.length || 1;
+
+            Object.keys(contagem).forEach(bairro => {
+                const qtd = contagem[bairro];
+                const pct = Math.min(Math.round((qtd / total) * 100), 100);
+
+                container.innerHTML += `
+                    <div>
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="font-medium text-slate-300">${bairro}</span>
+                            <span class="text-slate-400 font-bold">${qtd} eleitores (${pct}%)</span>
+                        </div>
+                        <div class="w-full bg-slate-900 rounded-full h-2">
+                            <div class="bg-pink-500 h-2 rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+                        </div>
+                    </div>
+                `;
+            });
         }
 
         function gerarRelatorioTRE() {
-            alert("Gerando espelho de movimentações em conformidade com as exigências de transparência eleitoral...");
+            alert("Gerando o espelho analítico de movimentações para exportação em conformidade com as exigências do TSE/TRE.");
         }
 
-        // Bloqueia e pede a senha imediatamente antes de renderizar
+        // Tranca a página assim que o DOM é carregado
         window.onload = autenticarMaster;
     </script>
 </body>

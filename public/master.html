@@ -10,6 +10,7 @@
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans flex h-screen overflow-hidden">
 
+    <!-- MENU LATERAL -->
     <aside class="w-64 bg-[#0f1e36] text-slate-300 flex flex-col justify-between flex-shrink-0">
         <div>
             <div class="p-5 flex items-center gap-3 border-b border-slate-700/40">
@@ -31,11 +32,10 @@
                 </button>
             </nav>
         </div>
-        <div class="p-4 text-center text-[11px] text-slate-500 border-t border-slate-700/20">
-            v1.0.0 Master
-        </div>
+        <div class="p-4 text-center text-[11px] text-slate-500 border-t border-slate-700/20">v1.0.0 Master</div>
     </aside>
 
+    <!-- PAINEL CONTEÚDO -->
     <div class="flex-1 flex flex-col h-full bg-[#f4f6f9]">
         <header class="h-16 bg-white border-b border-slate-200 px-8 flex items-center justify-between flex-shrink-0">
             <h2 id="titulo-pagina" class="font-bold text-slate-800 text-lg">Dashboard Geral</h2>
@@ -51,9 +51,9 @@
                 <div class="bg-white p-6 rounded-2xl border shadow-sm"><span class="text-[11px] text-slate-400 font-bold uppercase">Inativos</span><div id="card-inativos" class="text-3xl font-extrabold text-slate-400">0</div></div>
             </div>
 
-            <!-- ABA 2: CADASTRAR COM VISUAL E IDENTIDADE -->
+            <!-- ABA 2: FORMULÁRIO COM UPLOAD REAL DE IMAGEM -->
             <div id="aba-cadastro" class="tab-content hidden max-w-xl bg-white p-6 rounded-2xl border shadow-sm">
-                <form onsubmit="realizarCadastro(event)" class="space-y-4">
+                <form id="form-cadastro-gestor" onsubmit="realizarCadastro(event)" class="space-y-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Nome do Gestor *</label>
                         <input type="text" id="cad-nome" required class="w-full border rounded-xl px-4 py-2 text-sm bg-slate-50 focus:outline-none">
@@ -67,15 +67,14 @@
                         <input type="tel" id="cad-whats" class="w-full border rounded-xl px-4 py-2 text-sm bg-slate-50 focus:outline-none">
                     </div>
                     
-                    <!-- NOVOS REQUISITOS -->
                     <div class="grid grid-cols-3 gap-4 border-t pt-4">
                         <div class="col-span-1">
                             <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Cor do Layout</label>
                             <input type="color" id="cad-cor" value="#db2777" class="w-full h-10 border rounded-xl p-1 bg-slate-50 cursor-pointer">
                         </div>
                         <div class="col-span-2">
-                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">URL da Logo (Imagem)</label>
-                            <input type="url" id="cad-logo" placeholder="https://link.com/logo.png" class="w-full border rounded-xl px-4 py-2 text-sm bg-slate-50 focus:outline-none">
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Logo da Empresa (Upload)</label>
+                            <input type="file" id="cad-logo-file" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200">
                         </div>
                     </div>
 
@@ -86,7 +85,7 @@
                             <button type="button" onclick="gerarSenhaAleatoria()" class="bg-slate-800 text-white text-xs px-3 rounded-lg">Gerar</button>
                         </div>
                     </div>
-                    <button type="submit" class="w-full bg-emerald-500 text-white text-sm font-bold py-3 rounded-xl transition">Gravar e Ativar Cliente</button>
+                    <button type="submit" id="btn-gravar" class="w-full bg-emerald-500 text-white text-sm font-bold py-3 rounded-xl transition hover:bg-emerald-600">Gravar e Ativar Cliente</button>
                 </form>
             </div>
 
@@ -130,9 +129,45 @@
             document.getElementById('cad-senha').value = 'JESS-' + Math.floor(1000 + Math.random() * 9000);
         }
 
+        // Helper para ler arquivos locais em Base64
+        const toBase64 = file => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+
         async function realizarCadastro(e) {
             e.preventDefault();
+            
+            const btn = document.getElementById('btn-gravar');
+            btn.innerText = "Processando e Enviando Imagem...";
+            btn.disabled = true;
+
+            let urlLogoFinal = "";
+            const fileInput = document.getElementById('cad-logo-file');
+
             try {
+                // Se houver arquivo selecionado, faz o upload primeiro via API
+                if(fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    const base64Str = await toBase64(file);
+                    const nomeUnicoArquivo = Date.now() + "_" + file.name.replace(/\s+/g, '_');
+
+                    const uploadRes = await fetch('/api', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            action: 'upload_logo',
+                            file_base64: base64Str,
+                            filename: nomeUnicoArquivo
+                        })
+                    });
+                    const uploadData = await uploadRes.json();
+                    if(uploadData.url_logo) urlLogoFinal = uploadData.url_logo;
+                }
+
+                // Efetua a gravação do registro final no Supabase
                 const res = await fetch('/api', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -143,18 +178,24 @@
                         whatsapp: document.getElementById('cad-whats').value,
                         senha_admin: document.getElementById('cad-senha').value,
                         cor_layout: document.getElementById('cad-cor').value,
-                        url_logo: document.getElementById('cad-logo').value
+                        url_logo: urlLogoFinal
                     })
                 });
                 const d = await res.json();
+                
                 if(d.sucesso) {
-                    alert("Gestor cadastrado!");
-                    document.getElementById('cad-nome').value = '';
-                    document.getElementById('cad-gabinete').value = '';
-                    document.getElementById('cad-logo').value = '';
-                    gerarSenhaAleatoria(); atualizarDashboard(); navegarPara('aba-dashboard');
+                    alert("Gestor e logo cadastrados com sucesso no sisJess!");
+                    document.getElementById('form-cadastro-gestor').reset();
+                    gerarSenhaAleatoria(); 
+                    atualizarDashboard(); 
+                    navegarPara('aba-dashboard');
                 }
-            } catch(err) { alert("Erro ao salvar."); }
+            } catch(err) { 
+                alert("Erro operacional ao gravar."); 
+            } finally {
+                btn.innerText = "Gravar e Ativar Cliente";
+                btn.disabled = false;
+            }
         }
 
         async function atualizarDashboard() {
@@ -174,7 +215,7 @@
                 const tbody = document.getElementById('tabela-gestores');
                 tbody.innerHTML = '';
                 d.gestores.forEach(g => {
-                    const imgLogo = g.url_logo ? `<img src="${g.url_logo}" class="w-6 h-6 rounded border object-contain bg-white">` : `<i class="fa-solid fa-building text-slate-400 text-sm"></i>`;
+                    const imgLogo = g.url_logo ? `<img src="${g.url_logo}" class="w-6 h-6 rounded border object-contain bg-white">` : `<i class="fa-solid fa-building text-slate-400"></i>`;
                     tbody.innerHTML += `
                         <tr class="hover:bg-slate-50">
                             <td class="p-4">${imgLogo}</td>

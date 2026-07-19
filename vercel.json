@@ -6,6 +6,10 @@
       "use": "@vercel/python"
     },
     {
+      "src": "public/*.html",
+      "use": "@vercel/static"
+    },
+    {
       "src": "*.html",
       "use": "@vercel/static"
     }
@@ -14,6 +18,10 @@
     {
       "src": "/api(.*)",
       "dest": "api/index.py"
+    },
+    {
+      "src": "/",
+      "dest": "public/index.html"
     },
     {
       "handle": "filesystem"

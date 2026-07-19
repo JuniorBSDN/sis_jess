@@ -53,14 +53,14 @@
 
         <main class="flex-1 overflow-y-auto p-8 max-w-7xl w-full mx-auto">
             
-            <!-- ABA 1: DASHBOARD -->
+            <!-- DASHBOARD -->
             <div id="aba-dashboard" class="tab-content grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-white p-6 rounded-2xl border shadow-sm"><span class="text-[11px] text-slate-400 font-bold uppercase">Empresas</span><div id="card-total" class="text-3xl font-extrabold text-slate-800">0</div></div>
                 <div class="bg-white p-6 rounded-2xl border shadow-sm"><span class="text-[11px] text-slate-400 font-bold uppercase">Ativos</span><div id="card-ativos" class="text-3xl font-extrabold text-emerald-500">0</div></div>
                 <div class="bg-white p-6 rounded-2xl border shadow-sm"><span class="text-[11px] text-slate-400 font-bold uppercase">Inativos</span><div id="card-inativos" class="text-3xl font-extrabold text-slate-400">0</div></div>
             </div>
 
-            <!-- ABA 2: CADASTRO COMERCIAL COMPLETO -->
+            <!-- FORMULÁRIO DE CADASTRO -->
             <div id="aba-cadastro" class="tab-content hidden max-w-2xl bg-white p-6 rounded-2xl border shadow-sm">
                 <form id="form-cadastro-gestor" onsubmit="realizarCadastro(event)" class="space-y-4">
                     <div class="grid grid-cols-2 gap-4">
@@ -77,28 +77,28 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-slate-500 uppercase mb-1">CNPJ / CPF</label>
-                            <input type="text" id="cad-doc" placeholder="00.000.000/0001-00" class="w-full border rounded-xl px-4 py-2 text-sm bg-slate-50 focus:outline-none focus:border-emerald-500">
+                            <input type="text" id="cad-doc" placeholder="00.000.000/0001-00" class="w-full border rounded-xl px-4 py-2 text-sm bg-slate-50 focus:outline-none">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Data de Início (Contrato)</label>
-                            <input type="date" id="cad-data" class="w-full border rounded-xl px-4 py-2 text-sm bg-slate-50 focus:outline-none focus:border-emerald-500">
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Data de Início</label>
+                            <input type="date" id="cad-data" class="w-full border rounded-xl px-4 py-2 text-sm bg-slate-50 focus:outline-none">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-slate-500 uppercase mb-1">WhatsApp</label>
-                            <input type="tel" id="cad-whats" class="w-full border rounded-xl px-4 py-2 text-sm bg-slate-50 focus:outline-none focus:border-emerald-500">
+                            <input type="tel" id="cad-whats" class="w-full border rounded-xl px-4 py-2 text-sm bg-slate-50 focus:outline-none">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-500 uppercase mb-1">E-mail</label>
-                            <input type="email" id="cad-email" class="w-full border rounded-xl px-4 py-2 text-sm bg-slate-50 focus:outline-none focus:border-emerald-500">
+                            <input type="email" id="cad-email" class="w-full border rounded-xl px-4 py-2 text-sm bg-slate-50 focus:outline-none">
                         </div>
                     </div>
 
                     <div>
                         <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Endereço Completo</label>
-                        <input type="text" id="cad-endereco" class="w-full border rounded-xl px-4 py-2 text-sm bg-slate-50 focus:outline-none focus:border-emerald-500">
+                        <input type="text" id="cad-endereco" class="w-full border rounded-xl px-4 py-2 text-sm bg-slate-50 focus:outline-none">
                     </div>
 
                     <div class="grid grid-cols-3 gap-4 border-t pt-4">
@@ -123,7 +123,7 @@
                 </form>
             </div>
 
-            <!-- ABA 3: GESTÃO DE CONTRATOS E IMPRESSÃO -->
+            <!-- LISTAGEM -->
             <div id="aba-parceiras" class="tab-content hidden bg-white rounded-2xl border shadow-sm overflow-hidden print-area">
                 <div class="p-4 bg-slate-50 border-b flex justify-between items-center no-print">
                     <span class="text-xs text-slate-400 font-medium">Lista de Clientes Multi-Gabinetes</span>
@@ -151,7 +151,7 @@
         </main>
     </div>
 
-    <!-- MODAL DE EDIÇÃO DINÂMICA (no-print) -->
+    <!-- MODAL DE EDIÇÃO -->
     <div id="modal-edicao" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden no-print">
         <div class="bg-white rounded-2xl w-full max-w-2xl border p-6 shadow-2xl space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
@@ -265,13 +265,14 @@
                     if(uploadData.url_logo) urlLogoFinal = uploadData.url_logo;
                 }
 
+                // CORREÇÃO AQUI: Propriedade ajustada para 'nome_gabinete' batendo milimetricamente com o Python
                 const res = await fetch('/api', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         action: 'cadastrar_gestor',
                         nome_gestor: document.getElementById('cad-nome').value,
-                        nome_gabinete: document.getElementById('cad-gabinete').value,
+                        nome_gabinete: document.getElementById('cad-gabinete').value, 
                         whatsapp: document.getElementById('cad-whats').value,
                         email: document.getElementById('cad-email').value,
                         documento: document.getElementById('cad-doc').value,
@@ -287,8 +288,12 @@
                     alert("Cliente cadastrado com sucesso!");
                     document.getElementById('form-cadastro-gestor').reset();
                     gerarSenhaAleatoria(); atualizarDashboard(); navegarPara('aba-dashboard');
+                } else {
+                    alert("Erro retornado pelo servidor: " + (d.erro || "Falha desconhecida"));
                 }
-            } catch(err) { alert("Erro ao salvar."); }
+            } catch(err) { 
+                alert("Erro de comunicação com a rede ao tentar gravar."); 
+            }
             finally { btn.innerText = "Gravar e Ativar Cliente"; btn.disabled = false; }
         }
 
@@ -300,16 +305,16 @@
                     body: JSON.stringify({ action: 'dados_dashboard_master' })
                 });
                 const d = await res.json();
-                listaGestoresLocais = d.gestores;
+                listaGestoresLocais = d.gestores || [];
                 
-                document.getElementById('card-total').innerText = d.gestores.length;
-                const ativos = d.gestores.filter(g => g.status === 'Ativo').length;
+                document.getElementById('card-total').innerText = listaGestoresLocais.length;
+                const ativos = listaGestoresLocais.filter(g => g.status === 'Ativo').length;
                 document.getElementById('card-ativos').innerText = ativos;
-                document.getElementById('card-inativos').innerText = d.gestores.length - ativos;
+                document.getElementById('card-inativos').innerText = listaGestoresLocais.length - ativos;
 
                 const tbody = document.getElementById('tabela-gestores');
                 tbody.innerHTML = '';
-                d.gestores.forEach(g => {
+                listaGestoresLocais.forEach(g => {
                     const imgLogo = g.url_logo ? `<img src="${g.url_logo}" class="w-8 h-8 rounded border object-contain bg-white">` : `<i class="fa-solid fa-building text-slate-400"></i>`;
                     const statusText = g.status === 'Ativo' ? 'Suspender' : 'Ativar';
                     const badgeColor = g.status === 'Ativo' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600';
@@ -370,6 +375,7 @@
                     if(uploadData.url_logo) urlLogoFinal = uploadData.url_logo;
                 }
 
+                // CORREÇÃO AQUI TAMBÉM: Mapeamento da Edição ajustado para 'nome_gabinete'
                 const res = await fetch('/api', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -377,7 +383,7 @@
                         action: 'editar_gestor',
                         id: document.getElementById('edit-id').value,
                         nome_gestor: document.getElementById('edit-nome').value,
-                        nome_gabinete: document.getElementById('edit-gabinete').value,
+                        nome_gabinete: document.getElementById('edit-gabinete').value, 
                         whatsapp: document.getElementById('edit-whats').value,
                         email: document.getElementById('edit-email').value,
                         documento: document.getElementById('edit-doc').value,
@@ -419,7 +425,6 @@
             } catch (e) {}
         }
 
-        // Função de Geração de Recibo em nova janela formatada
         function gerarRecibo(id) {
             const item = listaGestoresLocais.find(g => g.id == id);
             if(!item) return;
@@ -451,35 +456,24 @@
                 </head>
                 <body onload="window.print()">
                     <div class="box">
-                        <div class="header">
-                            <h1>RECIBO DE PAGAMENTO</h1>
-                        </div>
+                        <div class="header"><h1>RECIBO DE PAGAMENTO</h1></div>
                         <div class="valor-box">R$ ${valorStr}</div>
-                        
                         <div class="content">
                             <p>Recebemos de <strong>${item.nome_gestor}</strong>, documento nº <strong>${item.documento || 'Não informado'}</strong>, a importância de <strong>R$ ${valorStr}</strong>, referente ao pagamento do licenciamento comercial e manutenção da plataforma sisJess (Gestor Multi-Gabinetes).</p>
-                            
                             <table class="info-table">
                                 <tr><th>Empresa/Gabinete:</th><td>${item.nome_campanha_gabinete}</td></tr>
                                 <tr><th>Endereço:</th><td>${item.endereco || 'Não informado'}</td></tr>
                                 <tr><th>E-mail:</th><td>${item.email || 'Não informado'}</td></tr>
                                 <tr><th>Início do Contrato:</th><td>${dataContrato}</td></tr>
                             </table>
-                            <p style="margin-top:20px">Para maior clareza e validade do documento, firmamos o presente recibo.</p>
                         </div>
-
                         <div class="footer">
-                            <p>Emitido em: ${dataAtual}</p>
-                            <br><br><br>
-                            <div class="assinatura">
-                                Departamento Financeiro<br>
-                                <span style="font-size:12px; font-weight:normal;">sisJess Tecnologia LTDA</span>
-                            </div>
+                            <p>Emitido em: ${dataAtual}</p><br><br><br>
+                            <div class="assinatura">Departamento Financeiro<br><span style="font-size:12px; font-weight:normal;">sisJess Tecnologia LTDA</span></div>
                         </div>
                     </div>
                 </body>
-                </html>
-            `;
+                </html>`;
 
             const win = window.open('', '_blank');
             win.document.write(reciboHTML);

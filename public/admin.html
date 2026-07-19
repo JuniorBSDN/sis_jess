@@ -3,201 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Administrativo - Gestão Local</title>
+    <title>sisJess LocalAdministrativo</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style> 
         body { display: none; } 
+        /* Esconde elementos na impressão */
         @media print {
-            aside, header, form, .no-print, button { display: none !important; }
+            aside, header, .no-print { display: none !important; }
             body { display: block !important; background: white !important; }
-            .print-area { display: block !important; width: 100% !important; border: none !important; box-shadow: none !important; }
+            .print-area { display: block !important; width: 100% !important; border: none !important; box-shadow: none !important; margin: 0 !important; padding: 0 !important; }
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans flex h-screen overflow-hidden">
+<body class="bg-[#f4f7f9] text-slate-800 font-sans flex h-screen overflow-hidden">
 
-    <!-- MENU LATERAL (Padrão Escuro sisFarma) -->
-    <aside class="w-64 bg-[#0b1426] text-slate-300 flex flex-col justify-between flex-shrink-0">
+    <!-- MENU LATERAL (Idêntico ao sisFarma: bg escuro) -->
+    <aside class="w-64 bg-[#131c2e] text-slate-300 flex flex-col justify-between flex-shrink-0 z-20">
         <div>
-            <!-- Branding com Logo e Nome Dinâmico -->
-            <div class="p-5 flex items-center gap-3">
-                <div id="container-logo" class="w-10 h-10 rounded-lg bg-emerald-500 flex items-center justify-center overflow-hidden shadow-md text-white font-bold text-xl">
-                    <i id="icone-padrao" class="fa-solid fa-users-gear text-xl"></i>
+            <!-- Branding Logo -->
+            <div class="p-6 flex items-center gap-4">
+                <div id="container-logo" class="w-10 h-10 rounded-lg bg-emerald-500 flex items-center justify-center shadow-lg text-white font-bold text-xl flex-shrink-0">
+                    <span id="icone-padrao">sJ</span>
                 </div>
                 <div class="leading-tight">
-                    <h1 class="text-white font-bold text-sm tracking-wide">sisJess</h1>
-                    <span id="sub-brand" class="text-[11px] font-bold text-emerald-400">LocalAdministrativo</span>
+                    <h1 class="text-white font-bold text-base tracking-wide">sisJess</h1>
+                    <span id="sub-brand" class="text-xs font-bold text-emerald-400">LocalAdministrativo</span>
                 </div>
             </div>
             
-            <!-- Abas de Navegação -->
-            <nav class="p-3 space-y-1.5 mt-2">
-                <button onclick="navegarOperacional('aba-agenda')" id="btn-aba-agenda" class="btn-menu w-full flex items-center gap-3 px-4 py-3 text-xs font-semibold rounded-lg text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
-                    <i class="fa-solid fa-calendar-days text-sm w-5"></i> Dashboard / Agenda
+            <!-- Menus -->
+            <nav class="mt-4 flex flex-col gap-1">
+                <button onclick="navegarOperacional('aba-agenda')" id="btn-aba-agenda" class="btn-menu w-full flex items-center gap-3 px-6 py-3.5 text-sm font-medium text-slate-400 hover:text-white transition">
+                    <i class="fa-solid fa-chart-simple w-5 text-center"></i> Dashboard Interno
                 </button>
-                <button onclick="navegarOperacional('aba-documentos')" id="btn-aba-documentos" class="btn-menu w-full flex items-center gap-3 px-4 py-3 text-xs font-semibold rounded-lg text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
-                    <i class="fa-solid fa-folder-open text-sm w-5"></i> Arquivos & Documentos
+                <button onclick="navegarOperacional('aba-documentos')" id="btn-aba-documentos" class="btn-menu w-full flex items-center gap-3 px-6 py-3.5 text-sm font-medium text-slate-400 hover:text-white transition">
+                    <i class="fa-solid fa-folder-open w-5 text-center"></i> Documentos & Arquivos
                 </button>
-                <button onclick="navegarOperacional('aba-eleitores')" id="btn-aba-eleitores" class="btn-menu w-full flex items-center gap-3 px-4 py-3 text-xs font-semibold rounded-lg text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
-                    <i class="fa-solid fa-users text-sm w-5"></i> Base de Eleitores
+                <button onclick="navegarOperacional('aba-eleitores')" id="btn-aba-eleitores" class="btn-menu w-full flex items-center gap-3 px-6 py-3.5 text-sm font-medium text-slate-400 hover:text-white transition">
+                    <i class="fa-solid fa-users w-5 text-center"></i> Base de Eleitores
                 </button>
-                <button onclick="navegarOperacional('aba-rh')" id="btn-aba-rh" class="btn-menu w-full flex items-center gap-3 px-4 py-3 text-xs font-semibold rounded-lg text-slate-400 hover:bg-slate-800/60 hover:text-white transition">
-                    <i class="fa-solid fa-id-badge text-sm w-5"></i> Equipe & Crachás
+                <button onclick="navegarOperacional('aba-rh')" id="btn-aba-rh" class="btn-menu w-full flex items-center gap-3 px-6 py-3.5 text-sm font-medium text-slate-400 hover:text-white transition">
+                    <i class="fa-solid fa-id-badge w-5 text-center"></i> Equipe & Crachás
                 </button>
             </nav>
         </div>
         
-        <div class="p-5 border-t border-slate-800/50 flex flex-col gap-3">
-            <div class="text-center text-xs text-slate-500 leading-tight">
-                Painel Administrativo<br><span id="footer-unidade" class="font-bold text-slate-400">Carregando...</span>
-            </div>
-            <button onclick="window.location.href='index.html'" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-bold py-2 rounded-lg transition border border-slate-700">
-                <i class="fa-solid fa-power-off mr-1"></i> Encerrar Sessão
+        <!-- Rodapé do Menu -->
+        <div class="p-6 text-center text-xs text-slate-500 opacity-80">
+            Painel Administrativo<br><span id="footer-unidade" class="uppercase">Carregando...</span>
+            <button onclick="window.location.href='index.html'" class="mt-4 w-full border border-slate-700/50 hover:bg-slate-800 text-slate-400 py-2 rounded-lg transition text-[11px] font-bold">
+                SAIR DO SISTEMA
             </button>
         </div>
     </aside>
 
-    <!-- CONTAINER PRINCIPAL DE CONTEÚDO (Padrão Claro) -->
-    <div class="flex-1 flex flex-col h-full bg-[#f8fafc] overflow-hidden">
+    <!-- ÁREA DE CONTEÚDO -->
+    <div class="flex-1 flex flex-col h-full overflow-hidden relative">
         
-        <!-- Topbar Global -->
-        <header class="h-20 bg-white border-b border-slate-200 px-8 flex items-center justify-between flex-shrink-0">
-            <h2 id="titulo-pagina-op" class="font-bold text-slate-800 text-lg tracking-tight">Painel Operacional</h2>
-            <div id="badge-unidade" class="bg-slate-100 text-slate-700 text-[11px] font-bold px-4 py-2 rounded-full border border-slate-200 shadow-sm flex items-center gap-2">
-                <i class="fa-solid fa-building text-slate-400"></i> Unidade: Carregando...
+        <!-- Topbar Branca -->
+        <header class="h-20 bg-white border-b border-slate-200 px-10 flex items-center justify-between flex-shrink-0 z-10">
+            <h2 id="titulo-pagina-op" class="font-bold text-slate-800 text-xl">Equipe & Crachás</h2>
+            <div id="badge-unidade" class="bg-slate-50 text-slate-600 text-xs font-bold px-4 py-2 rounded-full border border-slate-200 shadow-sm">
+                Unidade: CARREGANDO...
             </div>
         </header>
 
-        <main class="flex-1 overflow-y-auto p-8 max-w-7xl w-full mx-auto">
+        <main class="flex-1 overflow-y-auto p-10 w-full">
             
-            <!-- ABA 02: AGENDA -->
-            <div id="aba-agenda" class="tab-op space-y-6">
-                <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 no-print">
-                    <h3 class="text-sm font-bold text-slate-800 mb-4">Adicionar Compromisso</h3>
-                    <form onsubmit="cadastrarCompromisso(event)" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-                        <div class="md:col-span-2">
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Título do Evento *</label>
-                            <input type="text" id="age-titulo" required class="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-xs focus:outline-none focus:border-slate-400">
+            <!-- ========================================== -->
+            <!-- ABA 06: EQUIPE & CRACHÁS (IDÊNTICO AO PRINT) -->
+            <!-- ========================================== -->
+            <div id="aba-rh" class="tab-op hidden space-y-6">
+                
+                <!-- Formulário de Cadastro Acima -->
+                <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm no-print">
+                    <form onsubmit="cadastrarAssessor(event)" class="flex flex-wrap md:flex-nowrap gap-4 items-end">
+                        <div class="w-full md:w-1/3">
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1.5">Nome Completo</label>
+                            <input type="text" id="func-nome" required class="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:border-emerald-500">
                         </div>
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Data *</label>
-                            <input type="date" id="age-data" required class="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-xs focus:outline-none focus:border-slate-400">
+                        <div class="w-full md:w-1/4">
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1.5">CPF / Doc</label>
+                            <input type="text" id="func-whats" class="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:border-emerald-500">
                         </div>
-                        <button type="submit" class="btn-dinamico w-full text-white text-xs font-bold py-2.5 rounded-lg transition shadow-sm">Gravar na Agenda</button>
+                        <div class="w-full md:w-1/3">
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1.5">Cargo / Setor</label>
+                            <input type="text" id="func-cargo" required class="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:border-emerald-500">
+                        </div>
+                        <div class="w-full md:w-auto">
+                            <button type="submit" class="btn-dinamico w-full md:w-auto text-white px-6 py-2.5 rounded-lg text-sm font-bold transition whitespace-nowrap">Cadastrar Colaborador</button>
+                        </div>
                     </form>
                 </div>
-                
-                <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden print-area">
-                    <div class="p-5 border-b border-slate-100 flex justify-between items-center no-print">
-                        <h3 class="text-base font-bold text-slate-800">Compromissos Agendados</h3>
-                        <button onclick="window.print()" class="border border-slate-200 hover:bg-slate-50 text-slate-600 px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2"><i class="fa-solid fa-print"></i> Imprimir Lista</button>
+
+                <!-- Tabela de Controle de Acessos -->
+                <div class="bg-white border border-slate-200 rounded-xl shadow-sm print-area">
+                    <div class="p-6 border-b border-slate-100 flex justify-between items-center no-print">
+                        <h3 class="text-lg font-bold text-slate-800">Controle de Acessos</h3>
+                        <div class="flex gap-3">
+                            <input type="text" placeholder="Buscar por Nome ou CPF..." class="border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none w-72">
+                            <button onclick="window.print()" class="bg-slate-50 border border-slate-200 hover:bg-slate-100 text-slate-700 px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition">
+                                <i class="fa-solid fa-print"></i> Imprimir Lista
+                            </button>
+                        </div>
                     </div>
-                    <div class="overflow-x-auto p-2">
-                        <table class="w-full text-left text-xs text-slate-600">
-                            <thead class="text-slate-400 uppercase font-bold text-[10px] border-b border-slate-100">
-                                <tr><th class="py-3 px-4">Data</th><th class="py-3 px-4">Evento</th><th class="py-3 px-4 text-center">Status</th><th class="py-3 px-4 text-center no-print">Ações</th></tr>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-slate-700">
+                            <thead class="text-slate-500 text-[11px] font-bold uppercase border-b border-slate-100">
+                                <tr>
+                                    <th class="py-4 px-6">Nome</th>
+                                    <th class="py-4 px-6">CPF / Doc</th>
+                                    <th class="py-4 px-6">Cargo</th>
+                                    <th class="py-4 px-6">Setor</th>
+                                    <th class="py-4 px-6 text-center">Status</th>
+                                    <th class="py-4 px-6 text-center no-print">Ações</th>
+                                </tr>
                             </thead>
-                            <tbody id="tabela-agenda" class="divide-y divide-slate-100"></tbody>
+                            <tbody id="tabela-funcionarios" class="divide-y divide-slate-100">
+                                <!-- Preenchido dinamicamente -->
+                            </tbody>
                         </table>
                     </div>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- DEMAIS ABAS (ADAPTADAS AO MESMO VISUAL) -->
+            <!-- ========================================== -->
+            
+            <!-- ABA 02: AGENDA -->
+            <div id="aba-agenda" class="tab-op hidden space-y-6">
+                <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm no-print">
+                    <form onsubmit="cadastrarCompromisso(event)" class="flex gap-4 items-end">
+                        <div class="flex-1"><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1.5">Título do Evento</label><input type="text" id="age-titulo" required class="w-full border rounded-lg px-4 py-2.5 text-sm"></div>
+                        <div class="w-48"><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1.5">Data</label><input type="date" id="age-data" required class="w-full border rounded-lg px-4 py-2.5 text-sm"></div>
+                        <button type="submit" class="btn-dinamico text-white px-6 py-2.5 rounded-lg text-sm font-bold">Salvar</button>
+                    </form>
+                </div>
+                <div class="bg-white border border-slate-200 rounded-xl shadow-sm print-area">
+                    <div class="p-6 border-b border-slate-100"><h3 class="text-lg font-bold text-slate-800">Agenda</h3></div>
+                    <table class="w-full text-left text-sm text-slate-700">
+                        <thead class="text-slate-500 text-[11px] font-bold uppercase border-b border-slate-100"><tr><th class="py-4 px-6">Data</th><th class="py-4 px-6">Evento</th><th class="py-4 px-6 text-center">Ações</th></tr></thead>
+                        <tbody id="tabela-agenda" class="divide-y divide-slate-100"></tbody>
+                    </table>
                 </div>
             </div>
 
             <!-- ABA 03: DOCUMENTOS -->
             <div id="aba-documentos" class="tab-op hidden space-y-6">
-                <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 no-print">
-                    <h3 class="text-sm font-bold text-slate-800 mb-4">Anexar Novo Documento</h3>
-                    <form onsubmit="cadastrarDoc(event)" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-                        <div class="md:col-span-2">
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Título / Descrição *</label>
-                            <input type="text" id="doc-titulo" required class="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-xs focus:outline-none focus:border-slate-400">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Categoria (Ex: Ofício)</label>
-                            <input type="text" id="doc-cat" required class="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-xs focus:outline-none focus:border-slate-400">
-                        </div>
-                        <button type="submit" class="btn-dinamico w-full text-white text-xs font-bold py-2.5 rounded-lg transition shadow-sm">Arquivar Documento</button>
+                <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm no-print">
+                    <form onsubmit="cadastrarDoc(event)" class="flex gap-4 items-end">
+                        <div class="flex-1"><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1.5">Título do Documento</label><input type="text" id="doc-titulo" required class="w-full border rounded-lg px-4 py-2.5 text-sm"></div>
+                        <div class="w-1/3"><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1.5">Categoria</label><input type="text" id="doc-cat" required class="w-full border rounded-lg px-4 py-2.5 text-sm"></div>
+                        <button type="submit" class="btn-dinamico text-white px-6 py-2.5 rounded-lg text-sm font-bold">Anexar</button>
                     </form>
                 </div>
-                
-                <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden print-area">
-                    <div class="p-5 border-b border-slate-100 flex justify-between items-center no-print">
-                        <h3 class="text-base font-bold text-slate-800">Repositório de Arquivos</h3>
-                        <button onclick="window.print()" class="border border-slate-200 hover:bg-slate-50 text-slate-600 px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2"><i class="fa-solid fa-print"></i> Imprimir Lista</button>
-                    </div>
-                    <div class="overflow-x-auto p-2">
-                        <table class="w-full text-left text-xs text-slate-600">
-                            <thead class="text-slate-400 uppercase font-bold text-[10px] border-b border-slate-100">
-                                <tr><th class="py-3 px-4">Título do Documento</th><th class="py-3 px-4">Categoria</th><th class="py-3 px-4 text-center">Status</th><th class="py-3 px-4 text-center no-print">Ações</th></tr>
-                            </thead>
-                            <tbody id="tabela-documentos" class="divide-y divide-slate-100"></tbody>
-                        </table>
-                    </div>
+                <div class="bg-white border border-slate-200 rounded-xl shadow-sm print-area">
+                    <div class="p-6 border-b border-slate-100"><h3 class="text-lg font-bold text-slate-800">Arquivos Salvos</h3></div>
+                    <table class="w-full text-left text-sm text-slate-700">
+                        <thead class="text-slate-500 text-[11px] font-bold uppercase border-b border-slate-100"><tr><th class="py-4 px-6">Título</th><th class="py-4 px-6">Categoria</th><th class="py-4 px-6 text-center">Ações</th></tr></thead>
+                        <tbody id="tabela-documentos" class="divide-y divide-slate-100"></tbody>
+                    </table>
                 </div>
             </div>
 
             <!-- ABA 04: ELEITORES -->
             <div id="aba-eleitores" class="tab-op hidden space-y-6">
-                <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden print-area">
-                    <div class="p-5 border-b border-slate-100 flex justify-between items-center no-print">
-                        <div>
-                            <h3 class="text-base font-bold text-slate-800">Base de Apoiadores</h3>
-                            <p class="text-[11px] text-slate-400 mt-1">Registros captados via portal público (index.html)</p>
-                        </div>
-                        <button onclick="window.print()" class="border border-slate-200 hover:bg-slate-50 text-slate-600 px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2"><i class="fa-solid fa-print"></i> Imprimir Lista</button>
+                <div class="bg-white border border-slate-200 rounded-xl shadow-sm print-area">
+                    <div class="p-6 border-b border-slate-100 flex justify-between">
+                        <h3 class="text-lg font-bold text-slate-800">Base de Apoiadores / Eleitores</h3>
+                        <button onclick="window.print()" class="bg-slate-50 border border-slate-200 px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2"><i class="fa-solid fa-print"></i> Imprimir</button>
                     </div>
-                    <div class="overflow-x-auto p-2">
-                        <table class="w-full text-left text-xs text-slate-600">
-                            <thead class="text-slate-400 uppercase font-bold text-[10px] border-b border-slate-100">
-                                <tr><th class="py-3 px-4">Nome Completo</th><th class="py-3 px-4">Bairro / Região</th><th class="py-3 px-4">WhatsApp</th><th class="py-3 px-4">Demanda</th><th class="py-3 px-4 text-center no-print">Ações</th></tr>
-                            </thead>
-                            <tbody id="tabela-eleitores" class="divide-y divide-slate-100"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ABA 06: GESTÃO DE EQUIPE (RH) -->
-            <div id="aba-rh" class="tab-op hidden space-y-6">
-                <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 no-print">
-                    <h3 class="text-sm font-bold text-slate-800 mb-4">Cadastrar Novo Colaborador</h3>
-                    <form onsubmit="cadastrarAssessor(event)" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-                        <div class="md:col-span-2">
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Nome Completo *</label>
-                            <input type="text" id="func-nome" required class="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-xs focus:outline-none focus:border-slate-400">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Cargo / Setor *</label>
-                            <input type="text" id="func-cargo" required class="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-xs focus:outline-none focus:border-slate-400">
-                        </div>
-                        <button type="submit" class="btn-dinamico w-full text-white text-xs font-bold py-2.5 rounded-lg transition shadow-sm">Adicionar à Equipe</button>
-                    </form>
-                </div>
-                
-                <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden print-area">
-                    <div class="p-5 border-b border-slate-100 flex flex-wrap justify-between items-center gap-4 no-print">
-                        <h3 class="text-base font-bold text-slate-800">Controle de Acessos</h3>
-                        <div class="flex gap-3">
-                            <input type="text" placeholder="Buscar por Nome..." class="border border-slate-200 rounded-lg px-4 py-2 text-xs focus:outline-none w-56 lg:w-72">
-                            <button onclick="window.print()" class="border border-slate-200 hover:bg-slate-50 text-slate-600 px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2">
-                                <i class="fa-solid fa-print"></i> Imprimir Lista
-                            </button>
-                        </div>
-                    </div>
-                    <div class="overflow-x-auto p-2">
-                        <table class="w-full text-left text-xs text-slate-600">
-                            <thead class="text-slate-400 uppercase font-bold text-[10px] border-b border-slate-100">
-                                <tr>
-                                    <th class="py-3 px-4">Nome</th>
-                                    <th class="py-3 px-4">Cargo / Setor</th>
-                                    <th class="py-3 px-4 text-center">Status</th>
-                                    <th class="py-3 px-4 text-center no-print">Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabela-funcionarios" class="divide-y divide-slate-100"></tbody>
-                        </table>
-                    </div>
+                    <table class="w-full text-left text-sm text-slate-700">
+                        <thead class="text-slate-500 text-[11px] font-bold uppercase border-b border-slate-100"><tr><th class="py-4 px-6">Nome Completo</th><th class="py-4 px-6">Bairro</th><th class="py-4 px-6">Contato</th><th class="py-4 px-6">Ações</th></tr></thead>
+                        <tbody id="tabela-eleitores" class="divide-y divide-slate-100"></tbody>
+                    </table>
                 </div>
             </div>
 
@@ -223,16 +204,20 @@
                     dadosGestorLogado = dados.gestor;
                     document.body.style.display = "flex";
                     
-                    // Identidade Visual Dinâmica
+                    // Nomes dinâmicos na interface
                     document.getElementById('footer-unidade').innerText = dadosGestorLogado.nome_campanha_gabinete;
-                    document.getElementById('badge-unidade').innerHTML = `<i class="fa-solid fa-building text-slate-400"></i> Unidade: ${dadosGestorLogado.nome_campanha_gabinete}`;
+                    document.getElementById('badge-unidade').innerHTML = `Unidade: ${dadosGestorLogado.nome_campanha_gabinete.toUpperCase()}`;
                     
+                    // Logo via URL (se existir)
                     if (dadosGestorLogado.url_logo) {
                         document.getElementById('container-logo').innerHTML = `<img src="${dadosGestorLogado.url_logo}" class="w-full h-full object-cover bg-white">`;
+                    } else {
+                        // Se não tiver imagem, pega a inicial do nome da unidade
+                        document.getElementById('icone-padrao').innerText = dadosGestorLogado.nome_campanha_gabinete.charAt(0).toUpperCase();
                     }
 
-                    // Aplica Cor Dinâmica
-                    const corCliente = dadosGestorLogado.cor_layout || '#10b981'; // Padrão Esmeralda
+                    // Aplica Cor Dinâmica do Banco (Botões e Logo)
+                    const corCliente = dadosGestorLogado.cor_layout || '#10b981'; // Padrão Verde Esmeralda (sisFarma)
                     document.getElementById('sub-brand').style.color = corCliente;
                     document.getElementById('container-logo').style.backgroundColor = corCliente;
                     
@@ -240,7 +225,8 @@
                         btn.style.backgroundColor = corCliente;
                     });
 
-                    navegarOperacional('aba-rh'); // Inicia na aba RH baseada no print
+                    // Inicia na aba RH para mostrar o layout idêntico ao seu print
+                    navegarOperacional('aba-rh'); 
                 } else {
                     alert(dados.mensagem); window.location.href = "index.html";
                 }
@@ -252,57 +238,66 @@
             document.getElementById(idAba).classList.remove('hidden');
 
             const titulos = {
-                'aba-agenda': 'Agenda Geral',
-                'aba-documentos': 'Repositório de Arquivos',
+                'aba-agenda': 'Dashboard Interno',
+                'aba-documentos': 'Documentos & Arquivos',
                 'aba-eleitores': 'Base de Eleitores',
                 'aba-rh': 'Equipe & Crachás'
             };
             document.getElementById('titulo-pagina-op').innerText = titulos[idAba];
 
-            // Limpa estilo dos botões laterais
+            // Limpa estilo dos botões laterais (Fundo transparente, sem borda)
             document.querySelectorAll('.btn-menu').forEach(b => {
-                b.className = "btn-menu w-full flex items-center gap-3 px-4 py-3 text-xs font-semibold rounded-lg text-slate-400 hover:bg-slate-800/60 hover:text-white transition";
-                b.style.backgroundColor = "transparent"; 
+                b.className = "btn-menu w-full flex items-center gap-3 px-6 py-3.5 text-sm font-medium text-slate-400 hover:text-white transition";
+                b.style.backgroundColor = "transparent";
+                b.style.borderLeft = "none";
+                b.style.borderRadius = "0px"; 
             });
 
-            // Aplica estilo ativo simulando o print
+            // Aplica estilo ativo no menu lateral (Fundo claro, borda esquerda colorida, cantos arredondados na direita)
             const btnAtivo = document.getElementById('btn-' + idAba);
             if(btnAtivo && dadosGestorLogado) {
-                btnAtivo.classList.add('bg-slate-800', 'text-white');
+                btnAtivo.classList.add('bg-slate-800/80', 'text-white');
                 btnAtivo.classList.remove('text-slate-400');
                 btnAtivo.style.borderLeft = `4px solid ${dadosGestorLogado.cor_layout || '#10b981'}`;
+                btnAtivo.style.borderTopRightRadius = "8px";
+                btnAtivo.style.borderBottomRightRadius = "8px";
             }
 
+            // Carregamentos
             if(idAba === 'aba-agenda') carregarAgenda();
             if(idAba === 'aba-documentos') carregarDocs();
             if(idAba === 'aba-eleitores') carregarEleitores();
             if(idAba === 'aba-rh') carregarFuncionarios();
         }
 
+        // ==========================================
+        // RENDERIZAÇÃO DA TABELA DE RH (IDÊNTICA AO PRINT)
+        // ==========================================
         async function carregarFuncionarios() {
             const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_funcionarios', gestor_id: dadosGestorLogado.id }) });
             const d = await res.json();
             const tbody = document.getElementById('tabela-funcionarios');
-            tbody.innerHTML = d.funcionarios.length ? '' : '<tr><td colspan="4" class="p-6 text-slate-400 italic text-center">Nenhum colaborador registrado.</td></tr>';
+            tbody.innerHTML = d.funcionarios.length ? '' : '<tr><td colspan="6" class="p-6 text-slate-400 italic text-center">Nenhum colaborador registrado.</td></tr>';
             
             d.funcionarios.forEach(f => {
+                // Divisão do cargo caso o usuário digite "Cargo / Setor" no form
+                const partes = (f.cargo || '').split('/');
+                const cargoDisplay = partes[0] ? partes[0].trim() : '---';
+                const setorDisplay = partes[1] ? partes[1].trim() : 'Geral';
+
                 tbody.innerHTML += `
                     <tr class="hover:bg-slate-50 transition-colors">
-                        <td class="py-4 px-4 font-bold text-slate-700">${f.nome.toUpperCase()}</td>
-                        <td class="py-4 px-4 text-slate-600">${f.cargo}</td>
-                        <td class="py-4 px-4 text-center">
-                            <span class="bg-emerald-50 text-emerald-600 px-3 py-1 rounded-md text-[10px] font-bold border border-emerald-100">Ativa</span>
+                        <td class="py-4 px-6 font-semibold text-slate-700">${f.nome.toUpperCase()}</td>
+                        <td class="py-4 px-6 font-bold text-slate-800">${f.whatsapp || '---'}</td>
+                        <td class="py-4 px-6 text-slate-600">${cargoDisplay}</td>
+                        <td class="py-4 px-6 text-slate-600">${setorDisplay}</td>
+                        <td class="py-4 px-6 text-center">
+                            <span class="text-emerald-500 bg-emerald-50 px-2 py-0.5 rounded text-xs font-bold">Ativa</span>
                         </td>
-                        <td class="py-4 px-4 flex justify-center gap-2 no-print">
-                            <button class="border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
-                                <i class="fa-regular fa-pen-to-square text-slate-400"></i> Editar
-                            </button>
-                            <button class="border border-slate-200 bg-white hover:bg-slate-50 text-rose-600 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
-                                <i class="fa-solid fa-ban text-rose-400"></i> Bloquear
-                            </button>
-                            <button class="border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
-                                <i class="fa-regular fa-id-badge text-slate-400"></i> Crachá
-                            </button>
+                        <td class="py-4 px-6 flex justify-center gap-2 no-print">
+                            <button class="border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 px-3 py-1.5 rounded text-xs flex items-center gap-2 transition shadow-sm"><i class="fa-regular fa-pen-to-square"></i> Editar</button>
+                            <button class="border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 px-3 py-1.5 rounded text-xs flex items-center gap-2 transition shadow-sm"><i class="fa-solid fa-ban text-rose-600"></i> Bloquear</button>
+                            <button class="border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 px-3 py-1.5 rounded text-xs flex items-center gap-2 transition shadow-sm"><i class="fa-regular fa-id-badge"></i> Crachá</button>
                         </td>
                     </tr>`;
             });
@@ -310,28 +305,20 @@
 
         async function cadastrarAssessor(e) {
             e.preventDefault();
-            await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'cadastrar_funcionario', nome: document.getElementById('func-nome').value, cargo: document.getElementById('func-cargo').value, whatsapp: '', gestor_id: dadosGestorLogado.id }) });
-            document.getElementById('func-nome').value = ''; document.getElementById('func-cargo').value = ''; carregarFuncionarios();
+            await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'cadastrar_funcionario', nome: document.getElementById('func-nome').value, cargo: document.getElementById('func-cargo').value, whatsapp: document.getElementById('func-whats').value, gestor_id: dadosGestorLogado.id }) });
+            document.getElementById('func-nome').value = ''; document.getElementById('func-cargo').value = ''; document.getElementById('func-whats').value = ''; carregarFuncionarios();
         }
 
+        // ==========================================
+        // RENDERIZAÇÃO DAS OUTRAS TABELAS
+        // ==========================================
         async function carregarEleitores() {
             const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_eleitores_gestor', gestor_id: dadosGestorLogado.id }) });
             const d = await res.json();
             const tbody = document.getElementById('tabela-eleitores');
-            tbody.innerHTML = d.eleitores.length ? '' : '<tr><td colspan="5" class="p-6 text-slate-400 italic text-center">Nenhum eleitor/apoiador registrado.</td></tr>';
+            tbody.innerHTML = d.eleitores.length ? '' : '<tr><td colspan="4" class="p-6 text-slate-400 italic text-center">Nenhum eleitor/apoiador registrado.</td></tr>';
             d.eleitores.forEach(e => {
-                tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50 transition">
-                        <td class="py-4 px-4 font-bold text-slate-700">${e.nome.toUpperCase()}</td>
-                        <td class="py-4 px-4 text-slate-600">${e.bairro}</td>
-                        <td class="py-4 px-4 text-slate-500 font-mono">${e.whatsapp}</td>
-                        <td class="py-4 px-4 text-slate-500">${e.demanda_inicial || '---'}</td>
-                        <td class="py-4 px-4 text-center no-print">
-                            <button class="border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 px-3 py-1.5 rounded-lg text-xs font-semibold inline-flex items-center gap-1.5 transition">
-                                <i class="fa-regular fa-eye text-slate-400"></i> Ver
-                            </button>
-                        </td>
-                    </tr>`;
+                tbody.innerHTML += `<tr class="hover:bg-slate-50"><td class="py-4 px-6 font-semibold">${e.nome.toUpperCase()}</td><td class="py-4 px-6">${e.bairro}</td><td class="py-4 px-6">${e.whatsapp}</td><td class="py-4 px-6"><button class="border border-slate-200 bg-white px-3 py-1.5 rounded text-xs shadow-sm"><i class="fa-regular fa-eye"></i> Ver Detalhes</button></td></tr>`;
             });
         }
 
@@ -339,17 +326,9 @@
             const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_agenda_gestor', gestor_id: dadosGestorLogado.id }) });
             const d = await res.json();
             const tbody = document.getElementById('tabela-agenda');
-            tbody.innerHTML = d.agenda.length ? '' : '<tr><td colspan="4" class="p-6 text-slate-400 italic text-center">Nenhum evento registrado.</td></tr>';
+            tbody.innerHTML = d.agenda.length ? '' : '<tr><td colspan="3" class="p-6 text-slate-400 italic text-center">Nenhum evento.</td></tr>';
             d.agenda.forEach(a => {
-                tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50 transition">
-                        <td class="py-4 px-4 font-mono font-semibold text-slate-600">${new Date(a.data_evento).toLocaleDateString('pt-BR')}</td>
-                        <td class="py-4 px-4 font-bold text-slate-800">${a.titulo}</td>
-                        <td class="py-4 px-4 text-center"><span class="bg-blue-50 text-blue-600 px-2.5 py-1 rounded-md text-[10px] font-bold border border-blue-100">Evento</span></td>
-                        <td class="py-4 px-4 flex justify-center gap-2 no-print">
-                            <button class="border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition"><i class="fa-regular fa-trash-can text-rose-400"></i> Excluir</button>
-                        </td>
-                    </tr>`;
+                tbody.innerHTML += `<tr class="hover:bg-slate-50"><td class="py-4 px-6">${new Date(a.data_evento).toLocaleDateString('pt-BR')}</td><td class="py-4 px-6 font-bold">${a.titulo}</td><td class="py-4 px-6 text-center"><button class="border border-slate-200 bg-white px-3 py-1.5 rounded text-xs shadow-sm text-rose-600"><i class="fa-regular fa-trash-can"></i> Excluir</button></td></tr>`;
             });
         }
 
@@ -363,17 +342,9 @@
             const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_documentos_gestor', gestor_id: dadosGestorLogado.id }) });
             const d = await res.json();
             const tbody = document.getElementById('tabela-documentos');
-            tbody.innerHTML = d.documentos.length ? '' : '<tr><td colspan="4" class="p-6 text-slate-400 italic text-center">Nenhum documento arquivado.</td></tr>';
+            tbody.innerHTML = d.documentos.length ? '' : '<tr><td colspan="3" class="p-6 text-slate-400 italic text-center">Nenhum documento.</td></tr>';
             d.documentos.forEach(doc => {
-                tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50 transition">
-                        <td class="py-4 px-4 font-bold text-slate-700">${doc.titulo}</td>
-                        <td class="py-4 px-4 text-slate-600">${doc.categoria}</td>
-                        <td class="py-4 px-4 text-center"><span class="bg-slate-100 text-slate-500 px-2.5 py-1 rounded-md text-[10px] font-bold border border-slate-200">Arquivado</span></td>
-                        <td class="py-4 px-4 flex justify-center gap-2 no-print">
-                            <button class="border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition"><i class="fa-solid fa-download text-slate-400"></i> Baixar</button>
-                        </td>
-                    </tr>`;
+                tbody.innerHTML += `<tr class="hover:bg-slate-50"><td class="py-4 px-6 font-bold">${doc.titulo}</td><td class="py-4 px-6">${doc.categoria}</td><td class="py-4 px-6 text-center"><button class="border border-slate-200 bg-white px-3 py-1.5 rounded text-xs shadow-sm"><i class="fa-solid fa-download"></i> Baixar</button></td></tr>`;
             });
         }
 

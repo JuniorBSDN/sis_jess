@@ -6,7 +6,16 @@
     <title>sisJess Master - Gestor Multi-Empresas</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style> body { display: none; } </style>
+    <style>
+        body { display: none; }
+        @media print {
+            aside, header, form, .no-print, button, .modal-open { display: none !important; }
+            body { display: block !important; background: white !important; color: black !important; }
+            .print-area { display: block !important; width: 100% !important; position: absolute; left: 0; top: 0; }
+            table { width: 100% !important; border-collapse: collapse !important; }
+            th, td { border: 1px solid #cbd5e1 !important; color: black !important; padding: 8px !important; }
+        }
+    </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans flex h-screen overflow-hidden">
 
@@ -14,7 +23,7 @@
     <aside class="w-64 bg-[#0f1e36] text-slate-300 flex flex-col justify-between flex-shrink-0">
         <div>
             <div class="p-5 flex items-center gap-3 border-b border-slate-700/40">
-                <div class="bg-emerald-500 text-white font-extrabold text-lg px-2.5 py-1.5 rounded-lg">sJ</div>
+                <div class="bg-emerald-500 text-white font-extrabold text-lg px-2.5 py-1.5 rounded-lg shadow-md">sJ</div>
                 <div>
                     <h1 class="text-white font-bold text-sm leading-tight tracking-wide">sisJess Master</h1>
                     <span class="text-emerald-400 text-xs font-medium">Gestor Multi-Empresas</span>
@@ -35,8 +44,8 @@
         <div class="p-4 text-center text-[11px] text-slate-500 border-t border-slate-700/20">v1.0.0 Master</div>
     </aside>
 
-    <!-- PAINEL CONTEÚDO -->
-    <div class="flex-1 flex flex-col h-full bg-[#f4f6f9]">
+    <!-- CONTEÚDO PRINCIPAL -->
+    <div class="flex-1 flex flex-col h-full bg-[#f4f6f9] overflow-hidden">
         <header class="h-16 bg-white border-b border-slate-200 px-8 flex items-center justify-between flex-shrink-0">
             <h2 id="titulo-pagina" class="font-bold text-slate-800 text-lg">Dashboard Geral</h2>
             <div class="text-right text-xs font-bold text-slate-800">Administrador Global</div>
@@ -44,14 +53,14 @@
 
         <main class="flex-1 overflow-y-auto p-8 max-w-7xl w-full mx-auto">
             
-            <!-- ABA 1 -->
+            <!-- ABA 1: DASHBOARD -->
             <div id="aba-dashboard" class="tab-content grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-white p-6 rounded-2xl border shadow-sm"><span class="text-[11px] text-slate-400 font-bold uppercase">Empresas</span><div id="card-total" class="text-3xl font-extrabold text-slate-800">0</div></div>
                 <div class="bg-white p-6 rounded-2xl border shadow-sm"><span class="text-[11px] text-slate-400 font-bold uppercase">Ativos</span><div id="card-ativos" class="text-3xl font-extrabold text-emerald-500">0</div></div>
                 <div class="bg-white p-6 rounded-2xl border shadow-sm"><span class="text-[11px] text-slate-400 font-bold uppercase">Inativos</span><div id="card-inativos" class="text-3xl font-extrabold text-slate-400">0</div></div>
             </div>
 
-            <!-- ABA 2: FORMULÁRIO COM UPLOAD REAL DE IMAGEM -->
+            <!-- ABA 2: CADASTRO -->
             <div id="aba-cadastro" class="tab-content hidden max-w-xl bg-white p-6 rounded-2xl border shadow-sm">
                 <form id="form-cadastro-gestor" onsubmit="realizarCadastro(event)" class="space-y-4">
                     <div>
@@ -66,20 +75,18 @@
                         <label class="block text-xs font-bold text-slate-500 uppercase mb-1">WhatsApp</label>
                         <input type="tel" id="cad-whats" class="w-full border rounded-xl px-4 py-2 text-sm bg-slate-50 focus:outline-none">
                     </div>
-                    
                     <div class="grid grid-cols-3 gap-4 border-t pt-4">
                         <div class="col-span-1">
                             <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Cor do Layout</label>
                             <input type="color" id="cad-cor" value="#db2777" class="w-full h-10 border rounded-xl p-1 bg-slate-50 cursor-pointer">
                         </div>
                         <div class="col-span-2">
-                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Logo da Empresa (Upload)</label>
-                            <input type="file" id="cad-logo-file" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200">
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Logo da Empresa</label>
+                            <input type="file" id="cad-logo-file" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-slate-100 file:text-slate-700">
                         </div>
                     </div>
-
                     <div class="bg-slate-50 p-4 rounded-xl border">
-                        <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Chave Automática de Acesso</label>
+                        <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Chave de Acesso Automática</label>
                         <div class="flex gap-2">
                             <input type="text" id="cad-senha" readonly class="flex-1 bg-white border rounded-lg px-3 py-2 text-sm font-mono text-emerald-600 font-bold text-center">
                             <button type="button" onclick="gerarSenhaAleatoria()" class="bg-slate-800 text-white text-xs px-3 rounded-lg">Gerar</button>
@@ -89,11 +96,24 @@
                 </form>
             </div>
 
-            <!-- ABA 3 -->
-            <div id="aba-parceiras" class="tab-content hidden bg-white rounded-2xl border shadow-sm overflow-hidden">
+            <!-- ABA 3: EMPRESAS PARCEIRAS E IMPRESSÃO -->
+            <div id="aba-parceiras" class="tab-content hidden bg-white rounded-2xl border shadow-sm overflow-hidden print-area">
+                <div class="p-4 bg-slate-50 border-b flex justify-between items-center no-print">
+                    <span class="text-xs text-slate-400 font-medium">Lista de Clientes Multi-Gabinetes</span>
+                    <button onclick="window.print()" class="bg-slate-800 text-white font-bold text-xs px-4 py-2 rounded-xl transition hover:bg-slate-700">
+                        <i class="fa-solid fa-print mr-2"></i> Imprimir Lista
+                    </button>
+                </div>
                 <table class="w-full text-left text-xs text-slate-600">
                     <thead class="bg-slate-50 border-b text-slate-400 uppercase font-bold">
-                        <tr><th class="p-4">Logo</th><th class="p-4">Gestor</th><th class="p-4">Gabinete / Empresa</th><th class="p-4">Cor</th><th class="p-4">Status</th></tr>
+                        <tr>
+                            <th class="p-4">Logo</th>
+                            <th class="p-4">Gestor</th>
+                            <th class="p-4">Empresa / Gabinete</th>
+                            <th class="p-4">Senha Admin</th>
+                            <th class="p-4">Status</th>
+                            <th class="p-4 text-center no-print">Ações do Registro</th>
+                        </tr>
                     </thead>
                     <tbody id="tabela-gestores" class="divide-y"></tbody>
                 </table>
@@ -102,7 +122,45 @@
         </main>
     </div>
 
+    <!-- MODAL DE EDIÇÃO DINÂMICA (no-print) -->
+    <div id="modal-edicao" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden no-print">
+        <div class="bg-white rounded-2xl w-full max-w-md border p-6 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="font-bold text-slate-800 text-sm uppercase">Editar Informações do Registro</h3>
+                <button onclick="fecharModalEdicao()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="form-edicao" onsubmit="salvarEdicao(event)" class="space-y-3">
+                <input type="hidden" id="edit-id">
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase">Nome do Gestor</label>
+                    <input type="text" id="edit-nome" required class="w-full border rounded-xl px-3 py-2 text-xs bg-slate-50">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase">Empresa / Gabinete</label>
+                    <input type="text" id="edit-gabinete" required class="w-full border rounded-xl px-3 py-2 text-xs bg-slate-50">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase">WhatsApp</label>
+                    <input type="tel" id="edit-whats" class="w-full border rounded-xl px-3 py-2 text-xs bg-slate-50">
+                </div>
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase">Mudar Cor</label>
+                        <input type="color" id="edit-cor" class="w-full h-8 border rounded-xl p-1 bg-slate-50 cursor-pointer">
+                    </div>
+                    <div class="col-span-2">
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase">Atualizar Imagem/Logo</label>
+                        <input type="file" id="edit-logo-file" accept="image/*" class="w-full text-[10px] text-slate-500">
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-emerald-500 text-white text-xs font-bold py-2.5 rounded-xl transition hover:bg-emerald-600">Salvar Alterações</button>
+            </form>
+        </div>
+    </div>
+
     <script>
+        let listaGestoresLocais = [];
+
         async function autenticarMaster() {
             const senha = prompt("Chave de Segurança Master (USER_SENHA):");
             if (!senha) { window.location.href = "index.html"; return; }
@@ -129,7 +187,6 @@
             document.getElementById('cad-senha').value = 'JESS-' + Math.floor(1000 + Math.random() * 9000);
         }
 
-        // Helper para ler arquivos locais em Base64
         const toBase64 = file => new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
@@ -139,42 +196,32 @@
 
         async function realizarCadastro(e) {
             e.preventDefault();
-            
             const btn = document.getElementById('btn-gravar');
-            btn.innerText = "Processando e Enviando Imagem...";
-            btn.disabled = true;
-
+            btn.innerText = "Processando Imagem..."; btn.disabled = true;
             let urlLogoFinal = "";
             const fileInput = document.getElementById('cad-logo-file');
 
             try {
-                // Se houver arquivo selecionado, faz o upload primeiro via API
                 if(fileInput.files.length > 0) {
                     const file = fileInput.files[0];
                     const base64Str = await toBase64(file);
-                    const nomeUnicoArquivo = Date.now() + "_" + file.name.replace(/\s+/g, '_');
-
+                    const nomeUnico = Date.now() + "_" + file.name.replace(/\s+/g, '_');
                     const uploadRes = await fetch('/api', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            action: 'upload_logo',
-                            file_base64: base64Str,
-                            filename: nomeUnicoArquivo
-                        })
+                        body: JSON.stringify({ action: 'upload_logo', file_base64: base64Str, filename: nomeUnico })
                     });
                     const uploadData = await uploadRes.json();
                     if(uploadData.url_logo) urlLogoFinal = uploadData.url_logo;
                 }
 
-                // Efetua a gravação do registro final no Supabase
                 const res = await fetch('/api', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         action: 'cadastrar_gestor',
                         nome_gestor: document.getElementById('cad-nome').value,
-                        nome_gabinete: document.getElementById('cad-gabinete').value,
+                        gabinete: document.getElementById('cad-gabinete').value,
                         whatsapp: document.getElementById('cad-whats').value,
                         senha_admin: document.getElementById('cad-senha').value,
                         cor_layout: document.getElementById('cad-cor').value,
@@ -182,20 +229,13 @@
                     })
                 });
                 const d = await res.json();
-                
                 if(d.sucesso) {
-                    alert("Gestor e logo cadastrados com sucesso no sisJess!");
+                    alert("Gestor registrado com sucesso!");
                     document.getElementById('form-cadastro-gestor').reset();
-                    gerarSenhaAleatoria(); 
-                    atualizarDashboard(); 
-                    navegarPara('aba-dashboard');
+                    gerarSenhaAleatoria(); atualizarDashboard(); navegarPara('aba-dashboard');
                 }
-            } catch(err) { 
-                alert("Erro operacional ao gravar."); 
-            } finally {
-                btn.innerText = "Gravar e Ativar Cliente";
-                btn.disabled = false;
-            }
+            } catch(err) { alert("Erro ao salvar."); }
+            finally { btn.innerText = "Gravar e Ativar Cliente"; btn.disabled = false; }
         }
 
         async function atualizarDashboard() {
@@ -206,6 +246,7 @@
                     body: JSON.stringify({ action: 'dados_dashboard_master' })
                 });
                 const d = await res.json();
+                listaGestoresLocais = d.gestores;
                 
                 document.getElementById('card-total').innerText = d.gestores.length;
                 const ativos = d.gestores.filter(g => g.status === 'Ativo').length;
@@ -216,17 +257,103 @@
                 tbody.innerHTML = '';
                 d.gestores.forEach(g => {
                     const imgLogo = g.url_logo ? `<img src="${g.url_logo}" class="w-6 h-6 rounded border object-contain bg-white">` : `<i class="fa-solid fa-building text-slate-400"></i>`;
+                    const statusText = g.status === 'Ativo' ? 'Desativar' : 'Ativar';
+                    const badgeColor = g.status === 'Ativo' ? 'bg-emerald-550/10 text-emerald-600' : 'bg-rose-50 text-rose-600';
+
                     tbody.innerHTML += `
-                        <tr class="hover:bg-slate-50">
+                        <tr class="hover:bg-slate-50 transition">
                             <td class="p-4">${imgLogo}</td>
                             <td class="p-4 font-semibold text-slate-800">${g.nome_gestor}</td>
                             <td class="p-4 text-slate-500">${g.nome_campanha_gabinete}</td>
-                            <td class="p-4"><div class="w-5 h-5 rounded border shadow-sm" style="background-color: ${g.cor_layout || '#db2777'}"></div></td>
-                            <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-600">${g.status}</span></td>
+                            <td class="p-4 font-mono font-bold text-slate-600">${g.senha_admin}</td>
+                            <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${badgeColor}">${g.status}</span></td>
+                            <td class="p-4 flex gap-1 justify-center no-print">
+                                <button onclick="abrirModalEdicao(${g.id})" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-2 py-1 rounded font-bold text-[10px]">Visualizar/Editar</button>
+                                <button onclick="alternarStatus(${g.id}, '${g.status}')" class="bg-slate-800 hover:bg-slate-700 text-white px-2 py-1 rounded font-bold text-[10px]">${statusText}</button>
+                                <button onclick="excluirRegistro(${g.id})" class="bg-rose-600 hover:bg-rose-700 text-white px-2 py-1 rounded font-bold text-[10px]"><i class="fa-solid fa-trash"></i></button>
+                            </td>
                         </tr>`;
                 });
             } catch (e) {}
         }
+
+        function abrirModalEdicao(id) {
+            const item = listaGestoresLocais.find(g => g.id == id);
+            if(!item) return;
+            document.getElementById('edit-id').value = item.id;
+            document.getElementById('edit-nome').value = item.nome_gestor;
+            document.getElementById('edit-gabinete').value = item.nome_campanha_gabinete;
+            document.getElementById('edit-whats').value = item.whatsapp || '';
+            document.getElementById('edit-cor').value = item.cor_layout || '#db2777';
+            document.getElementById('modal-edicao').classList.remove('hidden');
+        }
+
+        function fecharModalEdicao() { document.getElementById('modal-edicao').classList.add('hidden'); }
+
+        async function salvarEdicao(e) {
+            e.preventDefault();
+            let urlLogoFinal = "";
+            const fileInput = document.getElementById('edit-logo-file');
+
+            try {
+                if(fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    const base64Str = await toBase64(file);
+                    const nomeUnico = Date.now() + "_" + file.name.replace(/\s+/g, '_');
+                    const uploadRes = await fetch('/api', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action: 'upload_logo', file_base64: base64Str, filename: nomeUnico })
+                    });
+                    const uploadData = await uploadRes.json();
+                    if(uploadData.url_logo) urlLogoFinal = uploadData.url_logo;
+                }
+
+                const res = await fetch('/api', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'editar_gestor',
+                        id: document.getElementById('edit-id').value,
+                        nome_gestor: document.getElementById('edit-nome').value,
+                        gabinete: document.getElementById('edit-gabinete').value,
+                        whatsapp: document.getElementById('edit-whats').value,
+                        cor_layout: document.getElementById('edit-cor').value,
+                        url_logo: urlLogoFinal
+                    })
+                });
+                const d = await res.json();
+                if(d.sucesso) { alert("Registro atualizado!"); fecharModalEdicao(); atualizarDashboard(); }
+            } catch (err) { alert("Erro ao editar."); }
+        }
+
+        async function alternarStatus(id, statusAtual) {
+            const novo = statusAtual === 'Ativo' ? 'Inativo' : 'Ativo';
+            if(!confirm(`Deseja alterar o status deste cliente para ${novo}?`)) return;
+            try {
+                const res = await fetch('/api', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'alterar_status_gestor', id: id, status: novo })
+                });
+                const d = await res.json();
+                if(d.sucesso) atualizarDashboard();
+            } catch (e) {}
+        }
+
+        async function excluirRegistro(id) {
+            if(!confirm("Atenção: Excluir esta empresa/gestor removerá permanentemente o acesso e todos os eleitores vinculados. Confirmar?")) return;
+            try {
+                const res = await fetch('/api', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'excluir_gestor', id: id })
+                });
+                const d = await res.json();
+                if(d.sucesso) { alert("Registro removido com sucesso!"); atualizarDashboard(); }
+            } catch (e) {}
+        }
+
         window.onload = autenticarMaster;
     </script>
 </body>

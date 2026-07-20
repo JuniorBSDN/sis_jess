@@ -280,32 +280,40 @@
         // OPERACIONAL GERENCIAL: RH
         // =====================================
         async function carregarFuncionarios() {
-            const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_funcionarios', gestor_id: dadosGestorLogado.id }) });
-            const d = await res.json(); cacheFuncionarios = d.funcionarios || [];
-            const tbody = document.getElementById('tabela-funcionarios');
-            tbody.innerHTML = cacheFuncionarios.length ? '' : '<tr><td colspan="6" class="p-6 text-slate-400 italic text-center">Nenhum colaborador registrado.</td></tr>';
-            cacheFuncionarios.forEach(f => {
-                const isAtivo = (f.status !== 'Inativo');
-                const statusBadge = isAtivo ? '<span class="bg-emerald-50 text-emerald-500 border border-emerald-100 px-2 py-0.5 rounded text-[10px] font-bold">Ativa</span>' : '<span class="bg-rose-50 text-rose-600 border border-rose-100 px-2 py-0.5 rounded text-[10px] font-bold">Bloqueada</span>';
-                const btnStatus = isAtivo ?
-                    `<button onclick="mudarStatusFuncionario(${f.id}, 'Ativo')" title="Bloquear" class="border bg-white text-slate-600 px-1.5 py-0.5 rounded hover:bg-slate-50"><i class="fa-solid fa-ban text-rose-400 text-[10px]"></i></button>` :
-                    `<button onclick="mudarStatusFuncionario(${f.id}, 'Inativo')" title="Liberar" class="border bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded hover:bg-emerald-100"><i class="fa-solid fa-check text-[10px]"></i></button>`;
+            try {
+                const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_funcionarios', gestor_id: dadosGestorLogado.id }) });
+                const d = await res.json(); cacheFuncionarios = d.funcionarios || [];
+                const tbody = document.getElementById('tabela-funcionarios');
+                
+                tbody.innerHTML = '';
+                if (!cacheFuncionarios.length) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="p-6 text-slate-400 italic text-center">Nenhum colaborador registrado.</td></tr>';
+                    return;
+                }
 
-                tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50 text-xs">
-                        <td class="py-2 px-6 font-semibold">${f.nome.toUpperCase()}</td>
-                        <td class="py-2 px-6 font-mono">${f.documento || '---'}</td>
-                        <td class="py-2 px-6">${f.cargo || '---'}</td>
-                        <td class="py-2 px-6 font-mono">${f.whatsapp || '---'}</td>
-                        <td class="py-2 px-6 text-center">${statusBadge}</td>
-                        <td class="py-2 px-6 flex justify-center gap-1 no-print">
-                            <button onclick="abrirModalEdicaoFunc(${f.id})" title="Alterar/Visualizar" class="border bg-white px-2 py-0.5 rounded text-[10px]"><i class="fa-regular fa-pen-to-square"></i></button>
-                            ${btnStatus}
-                            <button onclick="excluirFuncionario(${f.id})" title="Excluir" class="border bg-white text-rose-500 px-2 py-0.5 rounded text-[10px]"><i class="fa-solid fa-trash"></i></button>
-                            <button onclick="gerarCracha('${f.nome}', '${f.cargo}')" title="Crachá" class="border bg-white px-2 py-0.5 rounded text-[10px]"><i class="fa-regular fa-id-badge"></i></button>
-                        </td>
-                    </tr>`;
-            });
+                cacheFuncionarios.forEach(f => {
+                    const isAtivo = (f.status !== 'Inativo');
+                    const statusBadge = isAtivo ? '<span class="bg-emerald-50 text-emerald-500 border border-emerald-100 px-2 py-0.5 rounded text-[10px] font-bold">Ativa</span>' : '<span class="bg-rose-50 text-rose-600 border border-rose-100 px-2 py-0.5 rounded text-[10px] font-bold">Bloqueada</span>';
+                    const btnStatus = isAtivo ?
+                        `<button onclick="mudarStatusFuncionario(${f.id}, 'Ativo')" title="Bloquear" class="border bg-white text-slate-600 px-1.5 py-0.5 rounded hover:bg-slate-50"><i class="fa-solid fa-ban text-rose-400 text-[10px]"></i></button>` :
+                        `<button onclick="mudarStatusFuncionario(${f.id}, 'Inativo')" title="Liberar" class="border bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded hover:bg-emerald-100"><i class="fa-solid fa-check text-[10px]"></i></button>`;
+
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-50 transition-colors text-xs">
+                            <td class="py-2 px-6 font-semibold">${f.nome ? f.nome.toUpperCase() : '---'}</td>
+                            <td class="py-2 px-6 font-mono">${f.documento || '---'}</td>
+                            <td class="py-2 px-6">${f.cargo || '---'}</td>
+                            <td class="py-2 px-6 font-mono">${f.whatsapp || '---'}</td>
+                            <td class="py-2 px-6 text-center">${statusBadge}</td>
+                            <td class="py-2 px-6 flex justify-center gap-1 no-print">
+                                <button onclick="abrirModalEdicaoFunc(${f.id})" title="Alterar/Visualizar" class="border bg-white px-2 py-0.5 rounded text-[10px]"><i class="fa-regular fa-pen-to-square"></i></button>
+                                ${btnStatus}
+                                <button onclick="excluirFuncionario(${f.id})" title="Excluir" class="border bg-white text-rose-500 px-2 py-0.5 rounded text-[10px]"><i class="fa-solid fa-trash"></i></button>
+                                <button onclick="gerarCracha('${f.nome}', '${f.cargo}')" title="Crachá" class="border bg-white px-2 py-0.5 rounded text-[10px]"><i class="fa-regular fa-id-badge"></i></button>
+                            </td>
+                        </tr>`;
+                });
+            } catch (err) { console.error(err); }
         }
 
         async function cadastrarAssessor(e) {
@@ -321,7 +329,7 @@
         function abrirModalEdicaoFunc(id) {
             const f = cacheFuncionarios.find(func => func.id === id); if(!f) return;
             document.getElementById('edit-func-id').value = f.id;
-            document.getElementById('edit-func-nome').value = f.nome;
+            document.getElementById('edit-func-nome').value = f.nome || '';
             document.getElementById('edit-func-doc').value = f.documento || '';
             document.getElementById('edit-func-cargo').value = f.cargo || '';
             document.getElementById('edit-func-whats').value = f.whatsapp || '';
@@ -367,25 +375,33 @@
         }
 
         // =====================================
-        // OPERACIONAL GERENCIAL: AGENDA HORA
+        // OPERACIONAL GERENCIAL: AGENDA
         // =====================================
         async function carregarAgenda() {
-            const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_agenda_gestor', gestor_id: dadosGestorLogado.id }) });
-            const d = await res.json(); const tbody = document.getElementById('tabela-agenda');
-            tbody.innerHTML = d.agenda.length ? '' : '<tr><td colspan="4" class="p-4 text-slate-400 italic text-center">Sem compromissos.</td></tr>';
-            d.agenda.forEach(a => {
-                const statusCor = a.status === 'Cancelado' ? 'text-rose-500 bg-rose-50 border-rose-100' : (a.status === 'Remarcado' ? 'text-amber-600 bg-amber-50 border-amber-100' : 'text-emerald-600 bg-emerald-50 border-emerald-100');
-                tbody.innerHTML += `<tr class="hover:bg-slate-50 text-xs">
-                    <td class="py-3 px-6 font-semibold">${new Date(a.data_evento).toLocaleDateString('pt-BR')} às ${a.hora_evento || '--:--'}</td>
-                    <td class="py-3 px-6 font-bold text-slate-700">${a.titulo}</td>
-                    <td class="py-3 px-6 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold border ${statusCor}">${a.status || 'Confirmado'}</span></td>
-                    <td class="py-3 px-6 flex justify-center gap-1.5 no-print">
-                        <button onclick="mudarStatusAgenda(${a.id}, 'Remarcado')" class="border bg-white text-amber-600 px-2 py-0.5 rounded text-[10px] font-medium">Remarcar</button>
-                        <button onclick="mudarStatusAgenda(${a.id}, 'Cancelado')" class="border bg-white text-rose-600 px-2 py-0.5 rounded text-[10px] font-medium">Cancelar</button>
-                        <button onclick="excluirAgenda(${a.id})" class="text-slate-400 hover:text-rose-600 px-1"><i class="fa-regular fa-trash-can"></i></button>
-                    </td>
-                </tr>`;
-            });
+            try {
+                const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_agenda_gestor', gestor_id: dadosGestorLogado.id }) });
+                const d = await res.json(); const tbody = document.getElementById('tabela-agenda');
+                
+                tbody.innerHTML = '';
+                if (!d.agenda || !d.agenda.length) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-slate-400 italic text-center">Sem compromissos.</td></tr>';
+                    return;
+                }
+
+                d.agenda.forEach(a => {
+                    const statusCor = a.status === 'Cancelado' ? 'text-rose-500 bg-rose-50 border-rose-100' : (a.status === 'Remarcado' ? 'text-amber-600 bg-amber-50 border-amber-100' : 'text-emerald-600 bg-emerald-50 border-emerald-100');
+                    tbody.innerHTML += `<tr class="hover:bg-slate-50 text-xs">
+                        <td class="py-3 px-6 font-semibold">${a.data_evento ? new Date(a.data_evento).toLocaleDateString('pt-BR') : ''} às ${a.hora_evento || '--:--'}</td>
+                        <td class="py-3 px-6 font-bold text-slate-700">${a.titulo || '---'}</td>
+                        <td class="py-3 px-6 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold border ${statusCor}">${a.status || 'Confirmado'}</span></td>
+                        <td class="py-3 px-6 flex justify-center gap-1.5 no-print">
+                            <button onclick="mudarStatusAgenda(${a.id}, 'Remarcado')" class="border bg-white text-amber-600 px-2 py-0.5 rounded text-[10px] font-medium">Remarcar</button>
+                            <button onclick="mudarStatusAgenda(${a.id}, 'Cancelado')" class="border bg-white text-rose-600 px-2 py-0.5 rounded text-[10px] font-medium">Cancelar</button>
+                            <button onclick="excluirAgenda(${a.id})" class="text-slate-400 hover:text-rose-600 px-1"><i class="fa-regular fa-trash-can"></i></button>
+                        </td>
+                    </tr>`;
+                });
+            } catch (err) { console.error(err); }
         }
 
         async function cadastrarCompromisso(e) {
@@ -409,34 +425,42 @@
         // OPERACIONAL GERENCIAL: ELEITORES
         // =====================================
         async function carregarEleitores() {
-            const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_eleitores_gestor', gestor_id: dadosGestorLogado.id }) });
-            const d = await res.json(); cacheEleitores = d.eleitores || [];
-            const tbody = document.getElementById('tabela-eleitores');
-            tbody.innerHTML = cacheEleitores.length ? '' : '<tr><td colspan="5" class="p-6 text-slate-400 italic text-center">Nenhum eleitor.</td></tr>';
-            cacheEleitores.forEach(e => {
-                const statusBadge = e.status === 'Bloqueado' ? '<span class="bg-rose-50 text-rose-600 border border-rose-100 px-2 py-0.5 rounded text-[10px] font-bold">Bloqueado</span>' : '<span class="bg-emerald-50 text-emerald-500 border border-emerald-100 px-2 py-0.5 rounded text-[10px] font-bold">Ativo</span>';
-                const btnStatus = e.status === 'Bloqueado' ?
-                    `<button onclick="mudarStatusEleitor(${e.id}, 'Ativo')" class="border bg-white text-emerald-600 px-2 py-0.5 rounded text-[10px] font-semibold">Desbloquear</button>` :
-                    `<button onclick="mudarStatusEleitor(${e.id}, 'Bloqueado')" class="border bg-white text-rose-600 px-2 py-0.5 rounded text-[10px] font-semibold">Bloquear</button>`;
+            try {
+                const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_eleitores_gestor', gestor_id: dadosGestorLogado.id }) });
+                const d = await res.json(); cacheEleitores = d.eleitores || [];
+                const tbody = document.getElementById('tabela-eleitores');
+                
+                tbody.innerHTML = '';
+                if (!cacheEleitores.length) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="p-6 text-slate-400 italic text-center">Nenhum eleitor.</td></tr>';
+                    return;
+                }
 
-                tbody.innerHTML += `<tr class="hover:bg-slate-50 text-xs">
-                    <td class="py-2 px-6 font-semibold">${e.nome.toUpperCase()}</td>
-                    <td class="py-2 px-6">${e.bairro}</td>
-                    <td class="py-2 px-6 font-mono">${e.whatsapp}</td>
-                    <td class="py-2 px-6 text-center">${statusBadge}</td>
-                    <td class="py-2 px-6 flex justify-center gap-1.5 no-print">
-                        <button onclick="abrirModalEleitor(${e.id})" class="border bg-white px-2 py-0.5 rounded text-[10px] font-semibold"><i class="fa-regular fa-eye mr-1"></i> Dados</button>
-                        ${btnStatus}
-                        <button onclick="excluirEleitor(${e.id})" class="text-slate-400 hover:text-rose-500 px-1"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>`;
-            });
+                cacheEleitores.forEach(e => {
+                    const statusBadge = e.status === 'Bloqueado' ? '<span class="bg-rose-50 text-rose-600 border border-rose-100 px-2 py-0.5 rounded text-[10px] font-bold">Bloqueado</span>' : '<span class="bg-emerald-50 text-emerald-500 border border-emerald-100 px-2 py-0.5 rounded text-[10px] font-bold">Ativo</span>';
+                    const btnStatus = e.status === 'Bloqueado' ?
+                        `<button onclick="mudarStatusEleitor(${e.id}, 'Ativo')" class="border bg-white text-emerald-600 px-2 py-0.5 rounded text-[10px] font-semibold">Desbloquear</button>` :
+                        `<button onclick="mudarStatusEleitor(${e.id}, 'Bloqueado')" class="border bg-white text-rose-600 px-2 py-0.5 rounded text-[10px] font-semibold">Bloquear</button>`;
+
+                    tbody.innerHTML += `<tr class="hover:bg-slate-50 text-xs">
+                        <td class="py-2 px-6 font-semibold">${e.nome ? e.nome.toUpperCase() : '---'}</td>
+                        <td class="py-2 px-6">${e.bairro || '---'}</td>
+                        <td class="py-2 px-6 font-mono">${e.whatsapp || '---'}</td>
+                        <td class="py-2 px-6 text-center">${statusBadge}</td>
+                        <td class="py-2 px-6 flex justify-center gap-1.5 no-print">
+                            <button onclick="abrirModalEleitor(${e.id})" class="border bg-white px-2 py-0.5 rounded text-[10px] font-semibold"><i class="fa-regular fa-eye mr-1"></i> Dados</button>
+                            ${btnStatus}
+                            <button onclick="excluirEleitor(${e.id})" class="text-slate-400 hover:text-rose-500 px-1"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>`;
+                });
+            } catch (err) { console.error(err); }
         }
 
         function abrirModalEleitor(id) {
             const e = cacheEleitores.find(el => el.id === id); if(!e) return;
             document.getElementById('conteudo-modal-eleitor').innerHTML = `
-                <div class="grid grid-cols-2 gap-2"><p><strong>Nome:</strong> ${e.nome}</p><p><strong>WhatsApp:</strong> ${e.whatsapp}</p><p><strong>Bairro:</strong> ${e.bairro}</p><p><strong>Título Eleitoral:</strong> ${e.titulo || '---'}</p><p><strong>Status:</strong> ${e.status || 'Ativo'}</p></div>
+                <div class="grid grid-cols-2 gap-2"><p><strong>Nome:</strong> ${e.nome || ''}</p><p><strong>WhatsApp:</strong> ${e.whatsapp || ''}</p><p><strong>Bairro:</strong> ${e.bairro || ''}</p><p><strong>Título Eleitoral:</strong> ${e.titulo || '---'}</p><p><strong>Status:</strong> ${e.status || 'Ativo'}</p></div>
                 <hr class="my-2"><p class="font-bold">Demanda Solicitada:</p><div class="bg-slate-50 p-2 rounded border mt-1 text-slate-600">${e.demanda || 'Nenhuma registrada.'}</div>`;
             document.getElementById('modal-eleitor').classList.remove('hidden');
         }
@@ -453,21 +477,24 @@
         }
 
         // =====================================
-        // SAFELY UPLOAD DOCUMENTOS (RESOLUÇÃO 413)
+        // OPERACIONAL GERENCIAL: DOCUMENTOS
         // =====================================
-        const toBase64 = file => new Promise((resolve, reject) => {
-            const reader = new FileReader(); reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result); reader.onerror = error => reject(error);
-        });
-
         async function carregarDocs() {
-            const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_documentos_gestor', gestor_id: dadosGestorLogado.id }) });
-            const d = await res.json(); const tbody = document.getElementById('tabela-documentos');
-            tbody.innerHTML = d.documentos.length ? '' : '<tr><td colspan="3" class="p-4 text-slate-400 italic text-center">Sem registros.</td></tr>';
-            d.documentos.forEach(doc => {
-                const btn = doc.url_arquivo ? `<button onclick="window.open('${doc.url_arquivo}', '_blank')" class="text-emerald-600 font-semibold"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>` : '';
-                tbody.innerHTML += `<tr class="hover:bg-slate-50 text-xs"><td class="py-3 px-6 font-bold">${doc.titulo}</td><td class="py-3 px-6">${doc.categoria || '---'}</td><td class="py-3 px-6 flex justify-center gap-4">${btn} <button onclick="excluirDoc(${doc.id})" class="text-rose-500"><i class="fa-solid fa-trash"></i></button></td></tr>`;
-            });
+            try {
+                const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_documentos_gestor', gestor_id: dadosGestorLogado.id }) });
+                const d = await res.json(); const tbody = document.getElementById('tabela-documentos');
+                
+                tbody.innerHTML = '';
+                if (!d.documentos || !d.documentos.length) {
+                    tbody.innerHTML = '<tr><td colspan="3" class="p-4 text-slate-400 italic text-center">Sem documentos.</td></tr>';
+                    return;
+                }
+
+                d.documentos.forEach(doc => {
+                    const btn = doc.url_arquivo ? `<button onclick="window.open('${doc.url_arquivo}', '_blank')" class="text-emerald-600 font-semibold"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>` : '';
+                    tbody.innerHTML += `<tr class="hover:bg-slate-50 text-xs"><td class="py-3 px-6 font-bold">${doc.titulo || '---'}</td><td class="py-3 px-6">${doc.categoria || '---'}</td><td class="py-3 px-6 flex justify-center gap-4">${btn} <button onclick="excluirDoc(${doc.id})" class="text-rose-500"><i class="fa-solid fa-trash"></i></button></td></tr>`;
+                });
+            } catch (err) { console.error(err); }
         }
 
         async function cadastrarDoc(e) {
@@ -476,17 +503,18 @@
             try {
                 if(fileInput.files.length > 0) {
                     const file = fileInput.files[0];
-                    if(file.size > 4 * 1024 * 1024) { alert("O arquivo excede o limite máximo seguro de 4MB para tráfego API."); btn.innerText = "Arquivar"; btn.disabled = false; return; }
+                    if(file.size > 4 * 1024 * 1024) { alert("O arquivo excede o limite máximo seguro de 4MB."); btn.innerText = "Arquivar"; btn.disabled = false; return; }
                     const base64Str = await toBase64(file);
                     const uploadRes = await fetch('/api', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'upload_documento', file_base64: base64Str, filename: Date.now() + "_" + file.name.replace(/\s+/g, '_') }) });
                     const uploadData = await uploadRes.json(); if(uploadData.url_arquivo) urlFinalDoc = uploadData.url_arquivo;
                 }
-                await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'custom_action' || 'cadastrar_documento', titulo: document.getElementById('doc-titulo').value, categoria: document.getElementById('doc-cat').value, url_arquivo: urlFinalDoc, gestor_id: dadosGestorLogado.id }) });
+                await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'cadastrar_documento', titulo: document.getElementById('doc-titulo').value, categoria: document.getElementById('doc-cat').value, url_arquivo: urlFinalDoc, gestor_id: dadosGestorLogado.id }) });
                 e.target.reset(); carregarDocs();
             } catch (error) { alert("Erro de comunicação no upload."); } finally { btn.innerText = "Arquivar"; btn.disabled = false; }
         }
 
         async function excluirDoc(id) {
+            if(!confirm("Remover documento?")) return;
             await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'excluir_documento', id: id }) });
             carregarDocs();
         }

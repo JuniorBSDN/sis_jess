@@ -186,13 +186,22 @@ class handler(BaseHTTPRequestHandler):
                 fid = dados.get('id')
                 url = f"{sb_url}/rest/v1/funcionarios?id=eq.{fid}"
                 
-                # Consolidado milimetricamente para evitar conflitos de maiúsculas/minúsculas no banco
                 status_bruto = dados.get('status')
                 novo_status = status_bruto.capitalize() if status_bruto else "Ativo"
                 
                 payload = json.dumps({"status": novo_status}).encode('utf-8')
-                req = urllib.request.Request(url, data=payload, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json'}, method='PATCH')
+                
+                # HEADERS COMPLETOS E OBRIGATÓRIOS PARA CORREÇÃO DO ERRO 400
+                headers = {
+                    'apikey': sb_key, 
+                    'Authorization': f'Bearer {sb_key}', 
+                    'Content-Type': 'application/json',
+                    'Prefer': 'return=minimal'
+                }
+                
+                req = urllib.request.Request(url, data=payload, headers=headers, method='PATCH')
                 with urllib.request.urlopen(req): pass
+                
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
                 return
                 

@@ -29,7 +29,7 @@ class handler(BaseHTTPRequestHandler):
             if content_length == 0:
                 self.wfile.write(json.dumps({"erro": "Sem payload"}).encode('utf-8'))
                 return
-                
+
             post_data = self.rfile.read(content_length)
             dados = json.loads(post_data.decode('utf-8'))
             action = dados.get('action')
@@ -49,13 +49,16 @@ class handler(BaseHTTPRequestHandler):
                 file_bytes = base64.b64decode(file_base64.split(",")[-1])
                 url_storage = f"{sb_url}/storage/v1/object/logos/{filename}"
                 content_type = mimetypes.guess_type(filename)[0] or 'application/octet-stream'
-                
-                req = urllib.request.Request(url_storage, data=file_bytes, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': content_type}, method='POST')
-                try: 
-                    with urllib.request.urlopen(req): pass
+
+                req = urllib.request.Request(url_storage, data=file_bytes,
+                                             headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}',
+                                                      'Content-Type': content_type}, method='POST')
+                try:
+                    with urllib.request.urlopen(req):
+                        pass
                 except urllib.error.HTTPError as e:
                     if e.code != 400: raise e
-                
+
                 url_publica = f"{sb_url}/storage/v1/object/public/logos/{filename}"
                 self.wfile.write(json.dumps({"sucesso": True, "url_logo": url_publica}).encode('utf-8'))
                 return
@@ -75,14 +78,18 @@ class handler(BaseHTTPRequestHandler):
                     "url_logo": dados.get('url_logo'),
                     "status": "Ativo"
                 }).encode('utf-8')
-                req = urllib.request.Request(url, data=payload, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json'}, method='POST')
-                with urllib.request.urlopen(req): pass
+                req = urllib.request.Request(url, data=payload,
+                                             headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}',
+                                                      'Content-Type': 'application/json'}, method='POST')
+                with urllib.request.urlopen(req):
+                    pass
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
                 return
 
             elif action == 'dados_dashboard_master':
                 url = f"{sb_url}/rest/v1/gestores?select=id,nome_gestor,nome_campanha_gabinete,status,cor_layout,url_logo,whatsapp,email,documento,data_inicio,endereco,senha_admin&order=id.desc"
-                req = urllib.request.Request(url, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'}, method='GET')
+                req = urllib.request.Request(url, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'},
+                                             method='GET')
                 with urllib.request.urlopen(req) as response:
                     gestores = json.loads(response.read().decode('utf-8'))
                 self.wfile.write(json.dumps({"gestores": gestores}).encode('utf-8'))
@@ -103,8 +110,11 @@ class handler(BaseHTTPRequestHandler):
                 }
                 if dados.get('url_logo'): body["url_logo"] = dados.get('url_logo')
                 payload = json.dumps(body).encode('utf-8')
-                req = urllib.request.Request(url, data=payload, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json'}, method='PATCH')
-                with urllib.request.urlopen(req): pass
+                req = urllib.request.Request(url, data=payload,
+                                             headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}',
+                                                      'Content-Type': 'application/json'}, method='PATCH')
+                with urllib.request.urlopen(req):
+                    pass
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
                 return
 
@@ -112,35 +122,43 @@ class handler(BaseHTTPRequestHandler):
                 gid = dados.get('id')
                 url = f"{sb_url}/rest/v1/gestores?id=eq.{gid}"
                 payload = json.dumps({"status": dados.get('status')}).encode('utf-8')
-                req = urllib.request.Request(url, data=payload, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json'}, method='PATCH')
-                with urllib.request.urlopen(req): pass
+                req = urllib.request.Request(url, data=payload,
+                                             headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}',
+                                                      'Content-Type': 'application/json'}, method='PATCH')
+                with urllib.request.urlopen(req):
+                    pass
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
                 return
 
             elif action == 'excluir_gestor':
                 gid = dados.get('id')
                 url = f"{sb_url}/rest/v1/gestores?id=eq.{gid}"
-                req = urllib.request.Request(url, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'}, method='DELETE')
-                with urllib.request.urlopen(req): pass
+                req = urllib.request.Request(url, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'},
+                                             method='DELETE')
+                with urllib.request.urlopen(req):
+                    pass
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
                 return
 
             elif action == 'verificar_login_gestor':
                 senha_input = dados.get('senha')
                 url = f"{sb_url}/rest/v1/gestores?senha_admin=eq.{senha_input}&status=eq.Ativo&select=id,nome_campanha_gabinete,cor_layout,url_logo"
-                req = urllib.request.Request(url, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'}, method='GET')
+                req = urllib.request.Request(url, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'},
+                                             method='GET')
                 with urllib.request.urlopen(req) as response:
                     res_data = json.loads(response.read().decode('utf-8'))
                 if res_data:
                     self.wfile.write(json.dumps({"autorizado": True, "gestor": res_data[0]}).encode('utf-8'))
                 else:
-                    self.wfile.write(json.dumps({"autorizado": False, "mensagem": "Acesso suspenso ou inválido."}).encode('utf-8'))
+                    self.wfile.write(
+                        json.dumps({"autorizado": False, "mensagem": "Acesso suspenso ou inválido."}).encode('utf-8'))
                 return
 
             elif action == 'listar_funcionarios':
                 gestor_id = dados.get('gestor_id')
                 url = f"{sb_url}/rest/v1/funcionarios?gestor_id=eq.{gestor_id}&order=id.desc"
-                req = urllib.request.Request(url, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'}, method='GET')
+                req = urllib.request.Request(url, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'},
+                                             method='GET')
                 with urllib.request.urlopen(req) as response:
                     funcs = json.loads(response.read().decode('utf-8'))
                 self.wfile.write(json.dumps({"funcionarios": funcs}).encode('utf-8'))
@@ -154,15 +172,19 @@ class handler(BaseHTTPRequestHandler):
                     "whatsapp": dados.get('whatsapp'),
                     "gestor_id": dados.get('gestor_id')
                 }).encode('utf-8')
-                req = urllib.request.Request(url, data=payload, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json'}, method='POST')
-                with urllib.request.urlopen(req): pass
+                req = urllib.request.Request(url, data=payload,
+                                             headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}',
+                                                      'Content-Type': 'application/json'}, method='POST')
+                with urllib.request.urlopen(req):
+                    pass
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
                 return
 
             elif action == 'listar_eleitores_gestor':
                 gestor_id = dados.get('gestor_id')
                 url = f"{sb_url}/rest/v1/eleitores?gestor_id=eq.{gestor_id}&order=id.desc"
-                req = urllib.request.Request(url, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'}, method='GET')
+                req = urllib.request.Request(url, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'},
+                                             method='GET')
                 with urllib.request.urlopen(req) as response:
                     eleitores = json.loads(response.read().decode('utf-8'))
                 self.wfile.write(json.dumps({"eleitores": eleitores}).encode('utf-8'))
@@ -171,11 +193,13 @@ class handler(BaseHTTPRequestHandler):
             elif action == 'listar_agenda_gestor':
                 gestor_id = dados.get('gestor_id')
                 url = f"{sb_url}/rest/v1/agenda?gestor_id=eq.{gestor_id}&order=data_evento.asc"
-                req = urllib.request.Request(url, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'}, method='GET')
+                req = urllib.request.Request(url, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'},
+                                             method='GET')
                 try:
                     with urllib.request.urlopen(req) as response:
                         agenda = json.loads(response.read().decode('utf-8'))
-                except: agenda = []
+                except:
+                    agenda = []
                 self.wfile.write(json.dumps({"agenda": agenda}).encode('utf-8'))
                 return
 
@@ -187,19 +211,24 @@ class handler(BaseHTTPRequestHandler):
                     "data_evento": dados.get('data'),
                     "gestor_id": dados.get('gestor_id')
                 }).encode('utf-8')
-                req = urllib.request.Request(url, data=payload, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json'}, method='POST')
-                with urllib.request.urlopen(req): pass
+                req = urllib.request.Request(url, data=payload,
+                                             headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}',
+                                                      'Content-Type': 'application/json'}, method='POST')
+                with urllib.request.urlopen(req):
+                    pass
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
                 return
 
             elif action == 'listar_documentos_gestor':
                 gestor_id = dados.get('gestor_id')
                 url = f"{sb_url}/rest/v1/documentos?gestor_id=eq.{gestor_id}&order=id.desc"
-                req = urllib.request.Request(url, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'}, method='GET')
+                req = urllib.request.Request(url, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'},
+                                             method='GET')
                 try:
                     with urllib.request.urlopen(req) as response:
                         docs = json.loads(response.read().decode('utf-8'))
-                except: docs = []
+                except:
+                    docs = []
                 self.wfile.write(json.dumps({"documentos": docs}).encode('utf-8'))
                 return
 
@@ -211,8 +240,11 @@ class handler(BaseHTTPRequestHandler):
                     "tags": dados.get('tags'),
                     "gestor_id": dados.get('gestor_id')
                 }).encode('utf-8')
-                req = urllib.request.Request(url, data=payload, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json'}, method='POST')
-                with urllib.request.urlopen(req): pass
+                req = urllib.request.Request(url, data=payload,
+                                             headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}',
+                                                      'Content-Type': 'application/json'}, method='POST')
+                with urllib.request.urlopen(req):
+                    pass
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
                 return
 

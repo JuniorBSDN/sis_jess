@@ -195,6 +195,9 @@
     <!-- LOGIC INTEGRATION VIA SERVERLESS PYTHON -->
     <script>
         // Carrega automaticamente a lista de gabinetes/campanhas ativas criadas no Master
+        let listaGabinetesLocais = [];
+
+        // Carrega automaticamente a lista de gabinetes/campanhas ativas criadas no Master
         async function carregarGabinetesAtivos() {
             try {
                 const res = await fetch('/api', {
@@ -203,13 +206,14 @@
                     body: JSON.stringify({ action: 'dados_dashboard_master' })
                 });
                 const data = await res.json();
-                
+                listaGabinetesLocais = data.gestores || [];
+
                 const select = document.getElementById('select-gestor');
                 select.innerHTML = '<option value="" disabled selected>-- Escolha um Gabinete/Parlamentar --</option>';
-                
+
                 // Filtra apenas os clientes ativos cadastrados no SaaS
-                const ativos = (data.gestores || []).filter(g => g.status === 'Ativo');
-                
+                const ativos = listaGabinetesLocais.filter(g => g.status === 'Ativo');
+
                 if (ativos.length === 0) {
                     select.innerHTML = '<option value="" disabled>Nenhum gabinete ativo em nossa base</option>';
                     return;
@@ -218,6 +222,17 @@
                 ativos.forEach(g => {
                     select.innerHTML += `<option value="${g.id}">${g.nome_campanha_gabinete} (${g.nome_gestor})</option>`;
                 });
+
+                // Ouvinte para mudar a cor do botão dinamicamente ao selecionar o gabinete
+                select.addEventListener('change', function() {
+                    const gabEscolhido = listaGabinetesLocais.find(g => g.id == this.value);
+                    const btnEnviar = document.getElementById('btn-enviar');
+                    if(gabEscolhido && gabEscolhido.cor_layout) {
+                        btnEnviar.style.backgroundColor = gabEscolhido.cor_layout;
+                        btnEnviar.style.borderColor = gabEscolhido.cor_layout;
+                    }
+                });
+
             } catch (e) {
                 document.getElementById('select-gestor').innerHTML = '<option value="" disabled>Erro ao carregar lista de gabinetes</option>';
             }
@@ -226,6 +241,7 @@
         async function salvarApoiador(event) {
             event.preventDefault();
             const btn = document.getElementById('btn-enviar');
+            const textoOriginal = btn.innerText;
             btn.innerText = "Processando Cadastro..."; btn.disabled = true;
 
             try {
@@ -243,18 +259,24 @@
                     })
                 });
                 const d = await res.json();
-                if(d.sucesso) {
+                
+                if(d.erro) {
+                    alert("Erro do Banco de Dados: " + d.erro);
+                } else if(d.sucesso) {
                     alert("Seu cadastro foi enviado com sucesso para a fila operacional do gabinete!");
                     document.getElementById('form-eleitor').reset();
+                    btn.style.backgroundColor = ""; // Reseta para a cor padrão do tema
                 }
             } catch (err) {
                 alert("Houve uma falha na comunicação de rede. Tente novamente.");
             } finally {
-                btn.innerText = "Confirmar Envio e Cadastro"; btn.disabled = false;
+                btn.innerText = textoOriginal; btn.disabled = false;
             }
         }
 
         window.onload = carregarGabinetesAtivos;
+        window.onload = carregarGabinetesAtivos;
+    
     </script>
 </body>
 </html>

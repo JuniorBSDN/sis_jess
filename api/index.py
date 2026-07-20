@@ -130,7 +130,6 @@ class handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
                 return
 
-
             # ==========================================
             # ROTAS DO PAINEL OPERACIONAL E SITE (PÚBLICO)
             # ==========================================
@@ -186,7 +185,12 @@ class handler(BaseHTTPRequestHandler):
             elif action == 'alterar_status_funcionario':
                 fid = dados.get('id')
                 url = f"{sb_url}/rest/v1/funcionarios?id=eq.{fid}"
-                payload = json.dumps({"status": dados.get('status')}).encode('utf-8')
+                
+                # Consolidado milimetricamente para evitar conflitos de maiúsculas/minúsculas no banco
+                status_bruto = dados.get('status')
+                novo_status = status_bruto.capitalize() if status_bruto else "Ativo"
+                
+                payload = json.dumps({"status": novo_status}).encode('utf-8')
                 req = urllib.request.Request(url, data=payload, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json'}, method='PATCH')
                 with urllib.request.urlopen(req): pass
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
@@ -272,7 +276,6 @@ class handler(BaseHTTPRequestHandler):
                 file_base64 = dados.get('file_base64')
                 filename = dados.get('filename')
                 file_bytes = base64.b64decode(file_base64.split(",")[-1])
-                # Note que aqui enviaremos para um bucket chamado "documentos"
                 url_storage = f"{sb_url}/storage/v1/object/documentos/{filename}"
                 content_type = mimetypes.guess_type(filename)[0] or 'application/octet-stream'
 

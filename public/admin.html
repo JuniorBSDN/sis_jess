@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Administrativo - Gestão Local</title>
+    <title>Painel Operacional - Gestão Local</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style> 
-        body { display: none; } 
+    <style>
+        body { display: none; }
         @media print {
             aside, header, .no-print { display: none !important; }
             body { display: block !important; background: white !important; }
@@ -17,20 +17,20 @@
 </head>
 <body class="bg-[#f4f7f9] text-slate-800 font-sans flex h-screen w-screen overflow-hidden">
 
-    <!-- MENU LATERAL FIXO (Design idêntico ao Print) -->
+    <!-- MENU LATERAL FIXO -->
     <aside class="w-[260px] min-w-[260px] bg-[#0f1e36] text-slate-300 flex flex-col justify-between flex-shrink-0 z-20 shadow-xl">
         <div>
-            <!-- Branding Logo -->
+            <!-- Branding Logo Ajustado (Maior e com nome dinâmico) -->
             <div class="p-6 flex items-center gap-3 border-b border-slate-800/50">
-                <div id="container-logo" class="w-10 h-10 rounded-lg bg-emerald-500 flex items-center justify-center shadow-lg text-white font-bold text-xl flex-shrink-0">
+                <div id="container-logo" class="w-12 h-12 rounded-lg bg-emerald-500 flex items-center justify-center shadow-lg text-white font-bold text-2xl flex-shrink-0 overflow-hidden">
                     <span id="icone-padrao">sJ</span>
                 </div>
-                <div class="leading-tight">
-                    <h1 class="text-white font-bold text-[15px] tracking-wide">sisJess</h1>
+                <div class="leading-tight overflow-hidden w-full">
+                    <h1 id="brand-name" class="text-white font-bold text-sm tracking-wide truncate">Carregando...</h1>
                     <span id="sub-brand" class="text-[11px] font-bold text-emerald-400">Operacional</span>
                 </div>
             </div>
-            
+
             <!-- Abas de Navegação -->
             <nav class="p-4 flex flex-col gap-1.5 mt-2">
                 <button onclick="navegarOperacional('aba-agenda')" id="btn-aba-agenda" class="btn-menu w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition">
@@ -47,7 +47,7 @@
                 </button>
             </nav>
         </div>
-        
+
         <!-- Rodapé do Menu Lateral -->
         <div class="p-5 text-center border-t border-slate-800/50">
             <div class="text-[10px] text-slate-500 mb-3 leading-relaxed">
@@ -61,7 +61,7 @@
 
     <!-- ÁREA DE CONTEÚDO BRANCA -->
     <div class="flex-1 flex flex-col h-full overflow-hidden relative">
-        
+
         <!-- Topbar Branca -->
         <header class="h-20 bg-white border-b border-slate-200 px-10 flex items-center justify-between flex-shrink-0 z-10">
             <h2 id="titulo-pagina-op" class="font-bold text-slate-800 text-[19px]">Equipe & Crachás</h2>
@@ -71,7 +71,7 @@
         </header>
 
         <main class="flex-1 overflow-y-auto p-10 w-full">
-            
+
             <!-- ABA 06: EQUIPE & CRACHÁS -->
             <div id="aba-rh" class="tab-op hidden space-y-6">
                 <!-- Formulário Cadastro -->
@@ -201,12 +201,19 @@
                 if (dados.autorizado) {
                     dadosGestorLogado = dados.gestor;
                     document.body.style.display = "flex";
-                    
+
+                    // Preenche o nome da Empresa no rodapé e no Badge superior
                     document.getElementById('footer-unidade').innerText = dadosGestorLogado.nome_campanha_gabinete;
                     document.getElementById('badge-unidade').innerHTML = `Unidade: ${dadosGestorLogado.nome_campanha_gabinete.toUpperCase()}`;
                     
+                    // Preenche dinamicamente o Nome da Empresa no Menu Lateral (substituindo sisJess)
+                    document.getElementById('brand-name').innerText = dadosGestorLogado.nome_campanha_gabinete;
+                    document.getElementById('brand-name').title = dadosGestorLogado.nome_campanha_gabinete;
+
+                    // Lógica da Imagem: 'object-contain' sem cortes e 'p-1' de respiro 
                     if (dadosGestorLogado.url_logo) {
-                        document.getElementById('container-logo').innerHTML = `<img src="${dadosGestorLogado.url_logo}" class="w-full h-full object-cover bg-white">`;
+                        const inicial = dadosGestorLogado.nome_campanha_gabinete.charAt(0).toUpperCase();
+                        document.getElementById('container-logo').innerHTML = `<img src="${dadosGestorLogado.url_logo}" onerror="this.outerHTML='<span id=\\'icone-padrao\\'>${inicial}</span>'" class="w-full h-full object-contain p-1 bg-white">`;
                     } else {
                         document.getElementById('icone-padrao').innerText = dadosGestorLogado.nome_campanha_gabinete.charAt(0).toUpperCase();
                     }
@@ -214,7 +221,7 @@
                     const corCliente = dadosGestorLogado.cor_layout || '#10b981';
                     document.getElementById('sub-brand').style.color = corCliente;
                     document.getElementById('container-logo').style.backgroundColor = corCliente;
-                    
+
                     document.querySelectorAll('.btn-dinamico').forEach(btn => {
                         btn.style.backgroundColor = corCliente;
                     });
@@ -238,7 +245,7 @@
             };
             document.getElementById('titulo-pagina-op').innerText = titulos[idAba];
 
-            // Reset do estilo dos botões 
+            // Reset do estilo dos botões
             document.querySelectorAll('.btn-menu').forEach(b => {
                 b.className = "btn-menu w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition";
                 b.style.backgroundColor = "transparent";
@@ -248,7 +255,7 @@
             const btnAtivo = document.getElementById('btn-' + idAba);
             if(btnAtivo && dadosGestorLogado) {
                 btnAtivo.className = "btn-menu w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-white rounded-xl transition shadow-sm";
-                btnAtivo.style.backgroundColor = "#1e293b"; 
+                btnAtivo.style.backgroundColor = "#1e293b";
             }
 
             if(idAba === 'aba-agenda') carregarAgenda();
@@ -262,7 +269,7 @@
             const d = await res.json();
             const tbody = document.getElementById('tabela-funcionarios');
             tbody.innerHTML = d.funcionarios.length ? '' : '<tr><td colspan="6" class="p-6 text-slate-400 italic text-center">Nenhum colaborador registrado.</td></tr>';
-            
+
             d.funcionarios.forEach(f => {
                 const partes = (f.cargo || '').split('/');
                 const cargoDisplay = partes[0] ? partes[0].trim() : '---';

@@ -168,7 +168,40 @@ class handler(BaseHTTPRequestHandler):
                     "gestor_id": dados.get('gestor_id'),
                     "status": "Ativo"
                 }).encode('utf-8')
-                headers = {'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json', 'Prefer': 'return=minimal'}
+                # Alterado para return=representation para forçar resposta imediata do banco
+                headers = {'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json', 'Prefer': 'return=representation'}
+                req = urllib.request.Request(url, data=payload, headers=headers, method='POST')
+                with urllib.request.urlopen(req): pass
+                self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
+                return
+
+            elif action == 'cadastrar_agenda':
+                url = f"{sb_url}/rest/v1/agenda"
+                payload = json.dumps({
+                    "titulo": dados.get('titulo'),
+                    "tipo": 'Evento',
+                    "data_evento": dados.get('data'),
+                    "hora_evento": dados.get('hora'),
+                    "gestor_id": dados.get('gestor_id'),
+                    "status": 'Confirmado'
+                }).encode('utf-8')
+                # Alterado para return=representation
+                headers = {'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json', 'Prefer': 'return=representation'}
+                req = urllib.request.Request(url, data=payload, headers=headers, method='POST')
+                with urllib.request.urlopen(req): pass
+                self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
+                return
+
+            elif action == 'cadastrar_documento':
+                url = f"{sb_url}/rest/v1/documentos"
+                payload = json.dumps({
+                    "titulo": dados.get('titulo'),
+                    "categoria": dados.get('categoria'),
+                    "url_arquivo": dados.get('url_arquivo'),
+                    "gestor_id": dados.get('gestor_id')
+                }).encode('utf-8')
+                # Alterado para return=representation
+                headers = {'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json', 'Prefer': 'return=representation'}
                 req = urllib.request.Request(url, data=payload, headers=headers, method='POST')
                 with urllib.request.urlopen(req): pass
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))

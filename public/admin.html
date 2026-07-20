@@ -17,7 +17,7 @@
 </head>
 <body class="bg-[#f4f7f9] text-slate-800 font-sans flex h-screen w-screen overflow-hidden">
 
-    <!-- MENU LATERAL FIXO (Design idêntico ao Print: bg-[#0f1e36]) -->
+    <!-- MENU LATERAL FIXO (Design idêntico ao Print) -->
     <aside class="w-[260px] min-w-[260px] bg-[#0f1e36] text-slate-300 flex flex-col justify-between flex-shrink-0 z-20 shadow-xl">
         <div>
             <!-- Branding Logo -->
@@ -31,7 +31,7 @@
                 </div>
             </div>
             
-            <!-- Abas de Navegação (Padrão Botão Flutuante Arredondado) -->
+            <!-- Abas de Navegação -->
             <nav class="p-4 flex flex-col gap-1.5 mt-2">
                 <button onclick="navegarOperacional('aba-agenda')" id="btn-aba-agenda" class="btn-menu w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition">
                     <i class="fa-solid fa-calendar-days w-5 text-center"></i> Agenda
@@ -238,17 +238,16 @@
             };
             document.getElementById('titulo-pagina-op').innerText = titulos[idAba];
 
-            // Reset do estilo dos botões (Deixa todos invisíveis/transparentes no fundo)
+            // Reset do estilo dos botões 
             document.querySelectorAll('.btn-menu').forEach(b => {
                 b.className = "btn-menu w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition";
                 b.style.backgroundColor = "transparent";
             });
 
-            // Aplica a bolha do botão ativo perfeitamente como no print (Fundo cinza azulado)
+            // Botão ativo (fundo mais escuro)
             const btnAtivo = document.getElementById('btn-' + idAba);
             if(btnAtivo && dadosGestorLogado) {
                 btnAtivo.className = "btn-menu w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-white rounded-xl transition shadow-sm";
-                // bg-slate-800 em hexadecimal para forçar a cor exata do botão do sisFarma
                 btnAtivo.style.backgroundColor = "#1e293b"; 
             }
 
@@ -279,9 +278,9 @@
                             <span class="text-emerald-500 bg-emerald-50 px-2.5 py-1 rounded text-xs font-bold border border-emerald-100">Ativa</span>
                         </td>
                         <td class="py-4 px-6 flex justify-center gap-2 no-print">
-                            <button class="border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition shadow-sm"><i class="fa-regular fa-pen-to-square"></i> Editar</button>
-                            <button class="border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition shadow-sm"><i class="fa-solid fa-ban text-rose-500"></i> Bloquear</button>
-                            <button class="border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition shadow-sm"><i class="fa-regular fa-id-badge"></i> Crachá</button>
+                            <button class="border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition shadow-sm"><i class="fa-regular fa-pen-to-square"></i> Editar</button>
+                            <button class="border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition shadow-sm"><i class="fa-solid fa-ban text-rose-500"></i> Bloquear</button>
+                            <button class="border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition shadow-sm"><i class="fa-regular fa-id-badge"></i> Crachá</button>
                         </td>
                     </tr>`;
             });
@@ -297,7 +296,7 @@
             const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_eleitores_gestor', gestor_id: dadosGestorLogado.id }) });
             const d = await res.json();
             const tbody = document.getElementById('tabela-eleitores');
-            tbody.innerHTML = d.eleitores.length ? '' : '<tr><td colspan="4" class="p-6 text-slate-400 italic text-center">Nenhum eleitor/apoiador registrado.</td></tr>';
+            tbody.innerHTML = d.eleitores.length ? '' : '<tr><td colspan="4" class="p-6 text-slate-400 italic text-center">Nenhum eleitor registrado.</td></tr>';
             d.eleitores.forEach(e => {
                 tbody.innerHTML += `<tr class="hover:bg-slate-50"><td class="py-4 px-6 font-semibold">${e.nome.toUpperCase()}</td><td class="py-4 px-6">${e.bairro}</td><td class="py-4 px-6 font-mono">${e.whatsapp}</td><td class="py-4 px-6 text-center"><button class="border border-slate-200 bg-white px-3 py-1.5 rounded-lg text-xs shadow-sm font-semibold flex items-center justify-center gap-2 m-auto"><i class="fa-regular fa-eye"></i> Detalhes</button></td></tr>`;
             });

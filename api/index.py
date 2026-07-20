@@ -4,6 +4,7 @@ import os
 import urllib.request
 import urllib.error
 import mimetypes
+import base64
 
 class handler(BaseHTTPRequestHandler):
 
@@ -24,7 +25,11 @@ class handler(BaseHTTPRequestHandler):
     def do_POST(self):
         self._set_headers()
         try:
-            content_length = int(self.headers['Content-Length'])
+            content_length = int(self.headers.get('Content-Length', 0))
+            if content_length == 0:
+                self.wfile.write(json.dumps({"erro": "Sem payload"}).encode('utf-8'))
+                return
+                
             post_data = self.rfile.read(content_length)
             dados = json.loads(post_data.decode('utf-8'))
             action = dados.get('action')
@@ -41,13 +46,13 @@ class handler(BaseHTTPRequestHandler):
             elif action == 'upload_logo':
                 file_base64 = dados.get('file_base64')
                 filename = dados.get('filename')
-                import base64
                 file_bytes = base64.b64decode(file_base64.split(",")[-1])
                 url_storage = f"{sb_url}/storage/v1/object/logos/{filename}"
                 content_type = mimetypes.guess_type(filename)[0] or 'application/octet-stream'
                 
                 req = urllib.request.Request(url_storage, data=file_bytes, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': content_type}, method='POST')
-                try: with urllib.request.urlopen(req): pass
+                try: 
+                    with urllib.request.urlopen(req): pass
                 except urllib.error.HTTPError as e:
                     if e.code != 400: raise e
                 
@@ -132,7 +137,6 @@ class handler(BaseHTTPRequestHandler):
                     self.wfile.write(json.dumps({"autorizado": False, "mensagem": "Acesso suspenso ou inválido."}).encode('utf-8'))
                 return
 
-            # --- NOVAS RONTAS OPERACIONAIS PARA O ADMIN.HTML ---
             elif action == 'listar_funcionarios':
                 gestor_id = dados.get('gestor_id')
                 url = f"{sb_url}/rest/v1/funcionarios?gestor_id=eq.{gestor_id}&order=id.desc"
@@ -148,6 +152,63 @@ class handler(BaseHTTPRequestHandler):
                     "nome": dados.get('nome'),
                     "cargo": dados.get('cargo'),
                     "whatsapp": dados.get('whatsapp'),
+                    "gestor_id": dados.get('gestor_id')
+                }).encode('utf-8')
+                req = urllib.request.Request(url, data=payload, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json'}, method='POST')
+                with urllib.request.urlopen(req): pass
+                self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
+                return
+
+            elif action == 'listar_eleitores_gestor':
+                gestor_id = dados.get('gestor_id')
+                url = f"{sb_url}/rest/v1/eleitores?gestor_id=eq.{gestor_id}&order=id.desc"
+                req = urllib.request.Request(url, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'}, method='GET')
+                with urllib.request.urlopen(req) as response:
+                    eleitores = json.loads(response.read().decode('utf-8'))
+                self.wfile.write(json.dumps({"eleitores": eleitores}).encode('utf-8'))
+                return
+
+            elif action == 'listar_agenda_gestor':
+                gestor_id = dados.get('gestor_id')
+                url = f"{sb_url}/rest/v1/agenda?gestor_id=eq.{gestor_id}&order=data_evento.asc"
+                req = urllib.request.Request(url, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'}, method='GET')
+                try:
+                    with urllib.request.urlopen(req) as response:
+                        agenda = json.loads(response.read().decode('utf-8'))
+                except: agenda = []
+                self.wfile.write(json.dumps({"agenda": agenda}).encode('utf-8'))
+                return
+
+            elif action == 'cadastrar_agenda':
+                url = f"{sb_url}/rest/v1/agenda"
+                payload = json.dumps({
+                    "titulo": dados.get('titulo'),
+                    "tipo": dados.get('tipo'),
+                    "data_evento": dados.get('data'),
+                    "gestor_id": dados.get('gestor_id')
+                }).encode('utf-8')
+                req = urllib.request.Request(url, data=payload, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json'}, method='POST')
+                with urllib.request.urlopen(req): pass
+                self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
+                return
+
+            elif action == 'listar_documentos_gestor':
+                gestor_id = dados.get('gestor_id')
+                url = f"{sb_url}/rest/v1/documentos?gestor_id=eq.{gestor_id}&order=id.desc"
+                req = urllib.request.Request(url, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'}, method='GET')
+                try:
+                    with urllib.request.urlopen(req) as response:
+                        docs = json.loads(response.read().decode('utf-8'))
+                except: docs = []
+                self.wfile.write(json.dumps({"documentos": docs}).encode('utf-8'))
+                return
+
+            elif action == 'cadastrar_documento':
+                url = f"{sb_url}/rest/v1/documentos"
+                payload = json.dumps({
+                    "titulo": dados.get('titulo'),
+                    "categoria": dados.get('categoria'),
+                    "tags": dados.get('tags'),
                     "gestor_id": dados.get('gestor_id')
                 }).encode('utf-8')
                 req = urllib.request.Request(url, data=payload, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json'}, method='POST')

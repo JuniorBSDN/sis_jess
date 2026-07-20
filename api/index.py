@@ -131,7 +131,7 @@ class handler(BaseHTTPRequestHandler):
                 return
 
             # ==========================================
-            # ROTAS DO PAINEL OPERACIONAL E SITE (PÚBLICO)
+            # ROTAS DO PAINEL OPERACIONAL E SITE
             # ==========================================
             elif action == 'verificar_login_gestor':
                 senha_input = dados.get('senha')
@@ -145,7 +145,7 @@ class handler(BaseHTTPRequestHandler):
                     self.wfile.write(json.dumps({"autorizado": False, "mensagem": "Acesso suspenso ou inválido."}).encode('utf-8'))
                 return
 
-            # --- FUNCIONÁRIOS (RH) ---
+            # --- FUNCIONÁRIOS (RH EXPANDIDO) ---
             elif action == 'listar_funcionarios':
                 gestor_id = dados.get('gestor_id')
                 url = f"{sb_url}/rest/v1/funcionarios?gestor_id=eq.{gestor_id}&order=id.desc"
@@ -161,10 +161,16 @@ class handler(BaseHTTPRequestHandler):
                     "nome": dados.get('nome'),
                     "cargo": dados.get('cargo'),
                     "whatsapp": dados.get('whatsapp'),
+                    "email": dados.get('email'),
+                    "documento": dados.get('documento'),
+                    "endereco": dados.get('endereco'),
+                    "conta_bancaria": dados.get('conta_bancaria'),
                     "gestor_id": dados.get('gestor_id'),
                     "status": "Ativo"
                 }).encode('utf-8')
-                req = urllib.request.Request(url, data=payload, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json'}, method='POST')
+                
+                headers = {'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json', 'Prefer': 'return=minimal'}
+                req = urllib.request.Request(url, data=payload, headers=headers, method='POST')
                 with urllib.request.urlopen(req): pass
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
                 return
@@ -175,9 +181,15 @@ class handler(BaseHTTPRequestHandler):
                 payload = json.dumps({
                     "nome": dados.get('nome'),
                     "whatsapp": dados.get('whatsapp'),
-                    "cargo": dados.get('cargo')
+                    "cargo": dados.get('cargo'),
+                    "email": dados.get('email'),
+                    "documento": dados.get('documento'),
+                    "endereco": dados.get('endereco'),
+                    "conta_bancaria": dados.get('conta_bancaria')
                 }).encode('utf-8')
-                req = urllib.request.Request(url, data=payload, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json'}, method='PATCH')
+                
+                headers = {'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json', 'Prefer': 'return=minimal'}
+                req = urllib.request.Request(url, data=payload, headers=headers, method='PATCH')
                 with urllib.request.urlopen(req): pass
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
                 return
@@ -185,23 +197,13 @@ class handler(BaseHTTPRequestHandler):
             elif action == 'alterar_status_funcionario':
                 fid = dados.get('id')
                 url = f"{sb_url}/rest/v1/funcionarios?id=eq.{fid}"
-                
                 status_bruto = dados.get('status')
                 novo_status = status_bruto.capitalize() if status_bruto else "Ativo"
-                
                 payload = json.dumps({"status": novo_status}).encode('utf-8')
                 
-                # HEADERS COMPLETOS E OBRIGATÓRIOS PARA CORREÇÃO DO ERRO 400
-                headers = {
-                    'apikey': sb_key, 
-                    'Authorization': f'Bearer {sb_key}', 
-                    'Content-Type': 'application/json',
-                    'Prefer': 'return=minimal'
-                }
-                
+                headers = {'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json', 'Prefer': 'return=minimal'}
                 req = urllib.request.Request(url, data=payload, headers=headers, method='PATCH')
                 with urllib.request.urlopen(req): pass
-                
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
                 return
                 
@@ -216,26 +218,24 @@ class handler(BaseHTTPRequestHandler):
             # --- ELEITORES ---
             elif action == 'salvar_apoiador':
                 url = f"{sb_url}/rest/v1/eleitores"
+                raw_gestor_id = dados.get('gestor_id')
+                try:
+                    gestor_id_int = int(raw_gestor_id) if raw_gestor_id else None
+                except ValueError:
+                    gestor_id_int = None
+
                 payload = json.dumps({
                     "nome": dados.get('nome'),
                     "whatsapp": dados.get('whatsapp'),
                     "bairro": dados.get('bairro'),
                     "titulo": dados.get('titulo'),
                     "demanda": dados.get('demanda'),
-                    "gestor_id": dados.get('gestor_id')
+                    "gestor_id": gestor_id_int
                 }).encode('utf-8')
-                
-                # HEADERS COMPLETOS COM PREFER E CONTENT-TYPE PARA ELIMINAR O ERRO 400
-                headers = {
-                    'apikey': sb_key, 
-                    'Authorization': f'Bearer {sb_key}', 
-                    'Content-Type': 'application/json',
-                    'Prefer': 'return=minimal'
-                }
-                
+
+                headers = {'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json', 'Prefer': 'return=minimal'}
                 req = urllib.request.Request(url, data=payload, headers=headers, method='POST')
                 with urllib.request.urlopen(req): pass
-                
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
                 return
 
@@ -281,7 +281,7 @@ class handler(BaseHTTPRequestHandler):
                 with urllib.request.urlopen(req): pass
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
                 return
-                
+
             elif action == 'excluir_agenda':
                 aid = dados.get('id')
                 url = f"{sb_url}/rest/v1/agenda?id=eq.{aid}"
@@ -290,7 +290,7 @@ class handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
                 return
 
-            # --- DOCUMENTOS E ARQUIVOS ---
+            # --- DOCUMENTOS MÍDIA ---
             elif action == 'upload_documento':
                 file_base64 = dados.get('file_base64')
                 filename = dados.get('filename')
@@ -298,9 +298,7 @@ class handler(BaseHTTPRequestHandler):
                 url_storage = f"{sb_url}/storage/v1/object/documentos/{filename}"
                 content_type = mimetypes.guess_type(filename)[0] or 'application/octet-stream'
 
-                req = urllib.request.Request(url_storage, data=file_bytes,
-                                             headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}',
-                                                      'Content-Type': content_type}, method='POST')
+                req = urllib.request.Request(url_storage, data=file_bytes, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': content_type}, method='POST')
                 try:
                     with urllib.request.urlopen(req): pass
                 except urllib.error.HTTPError as e:
@@ -334,7 +332,7 @@ class handler(BaseHTTPRequestHandler):
                 with urllib.request.urlopen(req): pass
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
                 return
-                
+
             elif action == 'excluir_documento':
                 did = dados.get('id')
                 url = f"{sb_url}/rest/v1/documentos?id=eq.{did}"

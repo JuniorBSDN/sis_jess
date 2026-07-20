@@ -186,7 +186,37 @@
         </main>
     </div>
 
-    <!-- MODAL ELEITORES -->
+    <!-- ============================================== -->
+    <!-- MODAIS E JANELAS FLUTUANTES -->
+    <!-- ============================================== -->
+
+    <!-- Modal Editar Funcionário -->
+    <div id="modal-edicao-func" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
+        <div class="bg-white rounded-2xl w-full max-w-md border p-6 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="font-bold text-slate-800 text-sm uppercase">Editar Colaborador</h3>
+                <button onclick="document.getElementById('modal-edicao-func').classList.add('hidden')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form onsubmit="salvarEdicaoFunc(event)" class="space-y-4">
+                <input type="hidden" id="edit-func-id">
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Nome Completo</label>
+                    <input type="text" id="edit-func-nome" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm bg-slate-50 focus:outline-none focus:border-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">CPF / Documento</label>
+                    <input type="text" id="edit-func-whats" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm bg-slate-50 focus:outline-none focus:border-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Cargo / Setor</label>
+                    <input type="text" id="edit-func-cargo" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm bg-slate-50 focus:outline-none focus:border-emerald-500">
+                </div>
+                <button type="submit" class="w-full bg-slate-800 text-white font-bold text-xs py-3 rounded-lg transition hover:bg-slate-700 mt-2">Salvar Alterações</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Visualizar Eleitor -->
     <div id="modal-eleitor" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
         <div class="bg-white rounded-2xl w-full max-w-lg border p-6 shadow-2xl space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
@@ -201,7 +231,8 @@
 
     <script>
         let dadosGestorLogado = null;
-        let cacheEleitores = []; // Guarda os dados dos eleitores para o modal
+        let cacheEleitores = [];
+        let cacheFuncionarios = [];
 
         async function autenticarGestor() {
             const senhaDigitada = prompt("Digite a sua Chave de Acesso do Gabinete:");
@@ -234,10 +265,7 @@
                     const corCliente = dadosGestorLogado.cor_layout || '#10b981';
                     document.getElementById('sub-brand').style.color = corCliente;
                     document.getElementById('container-logo').style.backgroundColor = corCliente;
-
-                    document.querySelectorAll('.btn-dinamico').forEach(btn => {
-                        btn.style.backgroundColor = corCliente;
-                    });
+                    document.querySelectorAll('.btn-dinamico').forEach(btn => { btn.style.backgroundColor = corCliente; });
 
                     navegarOperacional('aba-rh');
                 } else {
@@ -276,29 +304,41 @@
         }
 
         // =====================================
-        // FUNÇÕES ABA RH
+        // FUNÇÕES ABA RH (COMPLETA)
         // =====================================
         async function carregarFuncionarios() {
             const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_funcionarios', gestor_id: dadosGestorLogado.id }) });
             const d = await res.json();
+            cacheFuncionarios = d.funcionarios || []; // Salva no cache para usar no modal de edição
+            
             const tbody = document.getElementById('tabela-funcionarios');
-            tbody.innerHTML = d.funcionarios.length ? '' : '<tr><td colspan="5" class="p-6 text-slate-400 italic text-center">Nenhum colaborador registrado.</td></tr>';
+            tbody.innerHTML = cacheFuncionarios.length ? '' : '<tr><td colspan="5" class="p-6 text-slate-400 italic text-center">Nenhum colaborador registrado.</td></tr>';
 
-            d.funcionarios.forEach(f => {
-                const statusTexto = (f.status === 'Inativo') ? 'Bloqueada' : 'Ativa';
-                const statusCor = (f.status === 'Inativo') ? 'bg-rose-50 text-rose-600 border-rose-100' : 'bg-emerald-50 text-emerald-500 border-emerald-100';
+            cacheFuncionarios.forEach(f => {
+                const partes = (f.cargo || '').split('/');
+                const cargoDisplay = partes[0] ? partes[0].trim() : '---';
+                const setorDisplay = partes[1] ? partes[1].trim() : 'Geral';
+
+                const isAtivo = (f.status !== 'Inativo');
+                const statusBadge = isAtivo ? '<span class="bg-emerald-50 text-emerald-500 border border-emerald-100 px-2.5 py-1 rounded text-xs font-bold">Ativa</span>' : '<span class="bg-rose-50 text-rose-600 border border-rose-100 px-2.5 py-1 rounded text-xs font-bold">Bloqueada</span>';
+                
+                // Botão de Status (Muda a cor e o texto dinamicamente)
+                const btnStatus = isAtivo ? 
+                    `<button onclick="mudarStatusFuncionario(${f.id}, 'Ativo')" class="border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition shadow-sm"><i class="fa-solid fa-ban text-rose-400"></i> Bloquear</button>` : 
+                    `<button onclick="mudarStatusFuncionario(${f.id}, 'Inativo')" class="border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition shadow-sm"><i class="fa-solid fa-check"></i> Liberar</button>`;
 
                 tbody.innerHTML += `
                     <tr class="hover:bg-slate-50 transition-colors">
                         <td class="py-4 px-6 font-semibold text-slate-700">${f.nome.toUpperCase()}</td>
                         <td class="py-4 px-6 font-bold text-slate-800">${f.whatsapp || '---'}</td>
-                        <td class="py-4 px-6 text-slate-600">${f.cargo || '---'}</td>
-                        <td class="py-4 px-6 text-center">
-                            <span class="${statusCor} px-2.5 py-1 rounded text-xs font-bold border cursor-pointer" onclick="mudarStatusFuncionario(${f.id}, '${f.status || 'Ativo'}')">${statusTexto}</span>
-                        </td>
+                        <td class="py-4 px-6 text-slate-600">${cargoDisplay}</td>
+                        <td class="py-4 px-6 text-slate-600">${setorDisplay}</td>
+                        <td class="py-4 px-6 text-center">${statusBadge}</td>
                         <td class="py-4 px-6 flex justify-center gap-2 no-print">
-                            <button onclick="excluirFuncionario(${f.id})" class="border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition shadow-sm"><i class="fa-solid fa-trash text-rose-500"></i> Excluir</button>
-                            <button onclick="gerarCracha('${f.nome}', '${f.cargo}')" class="border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition shadow-sm"><i class="fa-regular fa-id-badge"></i> Crachá</button>
+                            <button onclick="abrirModalEdicaoFunc(${f.id})" class="border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition shadow-sm"><i class="fa-regular fa-pen-to-square"></i> Editar</button>
+                            ${btnStatus}
+                            <button onclick="excluirFuncionario(${f.id})" class="border border-rose-200 bg-white hover:bg-rose-50 text-rose-600 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition shadow-sm"><i class="fa-solid fa-trash"></i> Excluir</button>
+                            <button onclick="gerarCracha('${f.nome}', '${cargoDisplay}')" class="border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition shadow-sm"><i class="fa-regular fa-id-badge"></i> Crachá</button>
                         </td>
                     </tr>`;
             });
@@ -310,6 +350,29 @@
             document.getElementById('func-nome').value = ''; document.getElementById('func-cargo').value = ''; document.getElementById('func-whats').value = ''; carregarFuncionarios();
         }
 
+        // Lógica para Abrir Modal e Editar Colaborador
+        function abrirModalEdicaoFunc(id) {
+            const f = cacheFuncionarios.find(func => func.id === id);
+            if(!f) return;
+            document.getElementById('edit-func-id').value = f.id;
+            document.getElementById('edit-func-nome').value = f.nome;
+            document.getElementById('edit-func-whats').value = f.whatsapp || '';
+            document.getElementById('edit-func-cargo').value = f.cargo || '';
+            document.getElementById('modal-edicao-func').classList.remove('hidden');
+        }
+
+        async function salvarEdicaoFunc(e) {
+            e.preventDefault();
+            const id = document.getElementById('edit-func-id').value;
+            const nome = document.getElementById('edit-func-nome').value;
+            const whatsapp = document.getElementById('edit-func-whats').value;
+            const cargo = document.getElementById('edit-func-cargo').value;
+
+            await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'editar_funcionario', id: id, nome: nome, whatsapp: whatsapp, cargo: cargo }) });
+            document.getElementById('modal-edicao-func').classList.add('hidden');
+            carregarFuncionarios();
+        }
+
         async function mudarStatusFuncionario(id, statusAtual) {
             const novoStatus = (statusAtual === 'Ativo') ? 'Inativo' : 'Ativo';
             await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'alterar_status_funcionario', id: id, status: novoStatus }) });
@@ -317,16 +380,14 @@
         }
 
         async function excluirFuncionario(id) {
-            if(!confirm("Remover este colaborador?")) return;
+            if(!confirm("Remover permanentemente este colaborador?")) return;
             await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'excluir_funcionario', id: id }) });
             carregarFuncionarios();
         }
 
         function gerarCracha(nome, cargo) {
-            const crachaHTML = `<html><head><title>Crachá - ${nome}</title><style>body{font-family:sans-serif;text-align:center;padding:50px;} .cracha{border:2px solid #333;width:250px;height:400px;margin:0 auto;border-radius:10px;padding:20px;box-shadow:3px 3px 10px rgba(0,0,0,0.2);} h2{margin-top:50px;font-size:22px;text-transform:uppercase;} h3{color:#555;font-size:16px;} .empresa{margin-top:80px;font-size:12px;color:#888;}</style></head><body onload="window.print()">
-            <div class="cracha"><h2>${nome}</h2><h3>${cargo || 'Colaborador'}</h3><div class="empresa">Unidade: ${dadosGestorLogado.nome_campanha_gabinete}</div></div></body></html>`;
-            const win = window.open('', '_blank');
-            win.document.write(crachaHTML); win.document.close();
+            const crachaHTML = `<html><head><title>Crachá - ${nome}</title><style>body{font-family:sans-serif;text-align:center;padding:50px;background:#f4f7f9;} .cracha{background:white;border:2px solid #e2e8f0;width:260px;height:420px;margin:0 auto;border-radius:12px;padding:25px;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);position:relative;} h2{margin-top:70px;font-size:24px;text-transform:uppercase;color:#1e293b;} h3{color:#64748b;font-size:16px;margin-top:10px;} .furo{width:60px;height:12px;background:#f4f7f9;border-radius:20px;margin:0 auto;border:2px solid #e2e8f0;} .empresa{position:absolute;bottom:25px;left:0;right:0;font-size:12px;color:#94a3b8;font-weight:bold;}</style></head><body onload="window.print()"><div class="cracha"><div class="furo"></div><h2>${nome}</h2><h3>${cargo || 'Colaborador'}</h3><div class="empresa">UNIDADE:<br>${dadosGestorLogado.nome_campanha_gabinete.toUpperCase()}</div></div></body></html>`;
+            const win = window.open('', '_blank'); win.document.write(crachaHTML); win.document.close();
         }
 
         // =====================================
@@ -347,7 +408,6 @@
         function abrirModalEleitor(id) {
             const eleitor = cacheEleitores.find(e => e.id === id);
             if(!eleitor) return;
-            
             const dataReg = eleitor.criado_em ? new Date(eleitor.criado_em).toLocaleDateString('pt-BR') : 'Data não informada';
             
             document.getElementById('conteudo-modal-eleitor').innerHTML = `
@@ -397,7 +457,7 @@
         }
 
         // =====================================
-        // FUNÇÕES ABA DOCUMENTOS (Com Upload)
+        // FUNÇÕES ABA DOCUMENTOS
         // =====================================
         const toBase64 = file => new Promise((resolve, reject) => {
             const reader = new FileReader(); reader.readAsDataURL(file);
@@ -410,7 +470,6 @@
             const tbody = document.getElementById('tabela-documentos');
             tbody.innerHTML = d.documentos.length ? '' : '<tr><td colspan="4" class="p-6 text-slate-400 italic text-center">Nenhum documento.</td></tr>';
             d.documentos.forEach(doc => {
-                // Se tiver URL salva, abre o arquivo. Se não tiver, avisa que não tem anexo.
                 const btnAcessar = doc.url_arquivo ? 
                     `<button onclick="window.open('${doc.url_arquivo}', '_blank')" class="border border-slate-200 bg-white px-3 py-1.5 rounded-lg text-xs shadow-sm font-semibold flex items-center justify-center gap-2 hover:bg-slate-50 transition"><i class="fa-solid fa-external-link-alt text-slate-400"></i> Abrir PDF</button>` : 
                     `<span class="text-[10px] text-slate-400">Sem Anexo</span>`;
@@ -428,7 +487,6 @@
             const fileInput = document.getElementById('doc-file');
 
             try {
-                // Se o usuário selecionou um arquivo, fazemos o upload primeiro
                 if(fileInput.files.length > 0) {
                     const file = fileInput.files[0];
                     const base64Str = await toBase64(file);
@@ -441,21 +499,8 @@
                     if(uploadData.url_arquivo) urlFinalDoc = uploadData.url_arquivo;
                 }
 
-                // Agora salvamos os dados na tabela do banco
-                await fetch('/api', { 
-                    method: 'POST', 
-                    headers: {'Content-Type': 'application/json'}, 
-                    body: JSON.stringify({ 
-                        action: 'cadastrar_documento', 
-                        titulo: document.getElementById('doc-titulo').value, 
-                        categoria: document.getElementById('doc-cat').value, 
-                        url_arquivo: urlFinalDoc,
-                        gestor_id: dadosGestorLogado.id 
-                    }) 
-                });
-                
-                document.getElementById('doc-titulo').value = ''; document.getElementById('doc-cat').value = ''; fileInput.value = ''; 
-                carregarDocs();
+                await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'cadastrar_documento', titulo: document.getElementById('doc-titulo').value, categoria: document.getElementById('doc-cat').value, url_arquivo: urlFinalDoc, gestor_id: dadosGestorLogado.id }) });
+                document.getElementById('doc-titulo').value = ''; document.getElementById('doc-cat').value = ''; fileInput.value = ''; carregarDocs();
             } catch (error) {
                 alert("Erro ao enviar o documento.");
             } finally {

@@ -224,8 +224,18 @@ class handler(BaseHTTPRequestHandler):
                     "demanda": dados.get('demanda'),
                     "gestor_id": dados.get('gestor_id')
                 }).encode('utf-8')
-                req = urllib.request.Request(url, data=payload, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json'}, method='POST')
+                
+                # HEADERS COMPLETOS COM PREFER E CONTENT-TYPE PARA ELIMINAR O ERRO 400
+                headers = {
+                    'apikey': sb_key, 
+                    'Authorization': f'Bearer {sb_key}', 
+                    'Content-Type': 'application/json',
+                    'Prefer': 'return=minimal'
+                }
+                
+                req = urllib.request.Request(url, data=payload, headers=headers, method='POST')
                 with urllib.request.urlopen(req): pass
+                
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
                 return
 

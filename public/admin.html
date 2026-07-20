@@ -375,8 +375,25 @@
 
         async function mudarStatusFuncionario(id, statusAtual) {
             const novoStatus = (statusAtual === 'Ativo') ? 'Inativo' : 'Ativo';
-            await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'alterar_status_funcionario', id: id, status: novoStatus }) });
-            carregarFuncionarios();
+            
+            try {
+                const req = await fetch('/api', { 
+                    method: 'POST', 
+                    headers: {'Content-Type': 'application/json'}, 
+                    body: JSON.stringify({ action: 'alterar_status_funcionario', id: id, status: novoStatus }) 
+                });
+                
+                const resposta = await req.json();
+                
+                if (resposta.erro) {
+                    alert("Erro do Banco de Dados: " + resposta.erro);
+                } else {
+                    // Só recarrega a tela se deu tudo certo
+                    carregarFuncionarios();
+                }
+            } catch (e) {
+                alert("Erro de comunicação com o servidor.");
+            }
         }
 
         async function excluirFuncionario(id) {

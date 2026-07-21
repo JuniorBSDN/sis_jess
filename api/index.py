@@ -155,7 +155,7 @@ class handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"funcionarios": funcs}).encode('utf-8'))
                 return
 
-            elif action == 'cadastrar_funcionario':
+           elif action == 'cadastrar_funcionario':
                 url = f"{sb_url}/rest/v1/funcionarios"
                 payload = json.dumps({
                     "nome": dados.get('nome'),

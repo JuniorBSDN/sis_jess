@@ -22,6 +22,12 @@ class handler(BaseHTTPRequestHandler):
     def _obter_url_supabase(self):
         return "https://scotyvkhwptckrvrjzdi.supabase.co"
 
+    def _safe_int(self, value):
+        try:
+            return int(value) if value else None
+        except:
+            return None
+
     def do_POST(self):
         self._set_headers()
         try:
@@ -155,7 +161,7 @@ class handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"funcionarios": funcs}).encode('utf-8'))
                 return
 
-           elif action == 'cadastrar_funcionario':
+            elif action == 'cadastrar_funcionario':
                 url = f"{sb_url}/rest/v1/funcionarios"
                 payload = json.dumps({
                     "nome": dados.get('nome'),
@@ -165,42 +171,9 @@ class handler(BaseHTTPRequestHandler):
                     "documento": dados.get('documento'),
                     "endereco": dados.get('endereco'),
                     "conta_bancaria": dados.get('conta_bancaria'),
-                    "gestor_id": dados.get('gestor_id'),
+                    "gestor_id": self._safe_int(dados.get('gestor_id')),
                     "status": "Ativo"
                 }).encode('utf-8')
-                # Alterado para return=representation para forçar resposta imediata do banco
-                headers = {'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json', 'Prefer': 'return=representation'}
-                req = urllib.request.Request(url, data=payload, headers=headers, method='POST')
-                with urllib.request.urlopen(req): pass
-                self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
-                return
-
-            elif action == 'cadastrar_agenda':
-                url = f"{sb_url}/rest/v1/agenda"
-                payload = json.dumps({
-                    "titulo": dados.get('titulo'),
-                    "tipo": 'Evento',
-                    "data_evento": dados.get('data'),
-                    "hora_evento": dados.get('hora'),
-                    "gestor_id": dados.get('gestor_id'),
-                    "status": 'Confirmado'
-                }).encode('utf-8')
-                # Alterado para return=representation
-                headers = {'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json', 'Prefer': 'return=representation'}
-                req = urllib.request.Request(url, data=payload, headers=headers, method='POST')
-                with urllib.request.urlopen(req): pass
-                self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
-                return
-
-            elif action == 'cadastrar_documento':
-                url = f"{sb_url}/rest/v1/documentos"
-                payload = json.dumps({
-                    "titulo": dados.get('titulo'),
-                    "categoria": dados.get('categoria'),
-                    "url_arquivo": dados.get('url_arquivo'),
-                    "gestor_id": dados.get('gestor_id')
-                }).encode('utf-8')
-                # Alterado para return=representation
                 headers = {'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json', 'Prefer': 'return=representation'}
                 req = urllib.request.Request(url, data=payload, headers=headers, method='POST')
                 with urllib.request.urlopen(req): pass
@@ -219,7 +192,7 @@ class handler(BaseHTTPRequestHandler):
                     "endereco": dados.get('endereco'),
                     "conta_bancaria": dados.get('conta_bancaria')
                 }).encode('utf-8')
-                headers = {'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json', 'Prefer': 'return=minimal'}
+                headers = {'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json', 'Prefer': 'return=representation'}
                 req = urllib.request.Request(url, data=payload, headers=headers, method='PATCH')
                 with urllib.request.urlopen(req): pass
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
@@ -231,7 +204,7 @@ class handler(BaseHTTPRequestHandler):
                 status_bruto = dados.get('status')
                 novo_status = status_bruto.capitalize() if status_bruto else "Ativo"
                 payload = json.dumps({"status": novo_status}).encode('utf-8')
-                headers = {'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json', 'Prefer': 'return=minimal'}
+                headers = {'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json', 'Prefer': 'return=representation'}
                 req = urllib.request.Request(url, data=payload, headers=headers, method='PATCH')
                 with urllib.request.urlopen(req): pass
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
@@ -248,19 +221,16 @@ class handler(BaseHTTPRequestHandler):
             # --- ELEITORES ---
             elif action == 'salvar_apoiador':
                 url = f"{sb_url}/rest/v1/eleitores"
-                raw_gestor_id = dados.get('gestor_id')
-                try: gestor_id_int = int(raw_gestor_id) if raw_gestor_id else None
-                except ValueError: gestor_id_int = None
                 payload = json.dumps({
                     "nome": dados.get('nome'),
                     "whatsapp": dados.get('whatsapp'),
                     "bairro": dados.get('bairro'),
                     "titulo": dados.get('titulo'),
                     "demanda": dados.get('demanda'),
-                    "gestor_id": gestor_id_int,
+                    "gestor_id": self._safe_int(dados.get('gestor_id')),
                     "status": "Ativo"
                 }).encode('utf-8')
-                headers = {'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json', 'Prefer': 'return=minimal'}
+                headers = {'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json', 'Prefer': 'return=representation'}
                 req = urllib.request.Request(url, data=payload, headers=headers, method='POST')
                 with urllib.request.urlopen(req): pass
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
@@ -279,7 +249,7 @@ class handler(BaseHTTPRequestHandler):
                 eid = dados.get('id')
                 url = f"{sb_url}/rest/v1/eleitores?id=eq.{eid}"
                 payload = json.dumps({"status": dados.get('status')}).encode('utf-8')
-                headers = {'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json', 'Prefer': 'return=minimal'}
+                headers = {'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json', 'Prefer': 'return=representation'}
                 req = urllib.request.Request(url, data=payload, headers=headers, method='PATCH')
                 with urllib.request.urlopen(req): pass
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
@@ -313,10 +283,11 @@ class handler(BaseHTTPRequestHandler):
                     "tipo": 'Evento',
                     "data_evento": dados.get('data'),
                     "hora_evento": dados.get('hora'),
-                    "gestor_id": dados.get('gestor_id'),
+                    "gestor_id": self._safe_int(dados.get('gestor_id')),
                     "status": 'Confirmado'
                 }).encode('utf-8')
-                req = urllib.request.Request(url, data=payload, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json'}, method='POST')
+                headers = {'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json', 'Prefer': 'return=representation'}
+                req = urllib.request.Request(url, data=payload, headers=headers, method='POST')
                 with urllib.request.urlopen(req): pass
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
                 return
@@ -325,7 +296,7 @@ class handler(BaseHTTPRequestHandler):
                 aid = dados.get('id')
                 url = f"{sb_url}/rest/v1/agenda?id=eq.{aid}"
                 payload = json.dumps({"status": dados.get('status')}).encode('utf-8')
-                headers = {'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json', 'Prefer': 'return=minimal'}
+                headers = {'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json', 'Prefer': 'return=representation'}
                 req = urllib.request.Request(url, data=payload, headers=headers, method='PATCH')
                 with urllib.request.urlopen(req): pass
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
@@ -375,9 +346,10 @@ class handler(BaseHTTPRequestHandler):
                     "titulo": dados.get('titulo'),
                     "categoria": dados.get('categoria'),
                     "url_arquivo": dados.get('url_arquivo'),
-                    "gestor_id": dados.get('gestor_id')
+                    "gestor_id": self._safe_int(dados.get('gestor_id'))
                 }).encode('utf-8')
-                req = urllib.request.Request(url, data=payload, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json'}, method='POST')
+                headers = {'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json', 'Prefer': 'return=representation'}
+                req = urllib.request.Request(url, data=payload, headers=headers, method='POST')
                 with urllib.request.urlopen(req): pass
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
                 return

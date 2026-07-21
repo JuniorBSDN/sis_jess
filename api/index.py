@@ -59,9 +59,7 @@ class handler(BaseHTTPRequestHandler):
                 url_storage = f"{sb_url}/storage/v1/object/logos/{filename}"
                 content_type = mimetypes.guess_type(filename)[0] or 'application/octet-stream'
 
-                req = urllib.request.Request(url_storage, data=file_bytes,
-                                             headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}',
-                                                      'Content-Type': content_type}, method='POST')
+                req = urllib.request.Request(url_storage, data=file_bytes, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': content_type}, method='POST')
                 try:
                     with urllib.request.urlopen(req): pass
                 except urllib.error.HTTPError as e:

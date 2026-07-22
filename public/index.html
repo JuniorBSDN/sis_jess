@@ -3,144 +3,637 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>sis Jess - Plataforma de Gestão</title>
+    <title>Painel Operacional - Gestão Local</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { display: none; }
+        @media print {
+            aside, header, .no-print, #menu-backdrop { display: none !important; }
+            body { display: block !important; background: white !important; }
+            .print-area { display: block !important; width: 100% !important; border: none !important; box-shadow: none !important; margin: 0 !important; padding: 0 !important; }
+        }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-blue-500 selection:text-white">
+<body class="bg-[#f4f7f9] text-slate-800 font-sans flex h-screen w-screen overflow-hidden">
 
-    <!-- NAVBAR RESPONSIVA -->
-    <nav class="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 p-3 md:p-4 sticky top-0 z-50">
-        <div class="container mx-auto flex justify-between items-center max-w-6xl">
-            <div class="flex items-center gap-2">
-                <i class="fa-solid fa-square-poll-vertical text-blue-500 text-xl md:text-2xl"></i>
-                <span class="font-bold text-base md:text-lg text-white tracking-wide">sis<span class="text-blue-500"> Jess</span></span>
-            </div>
-            <div class="flex items-center gap-3 md:gap-6">
-                <!-- Botão ajustado para não quebrar a tela no celular -->
-                <a href="admin.html" class="bg-slate-800 hover:bg-slate-700 text-[10px] md:text-xs text-white font-bold px-3 md:px-4 py-2 rounded-lg md:rounded-xl border border-slate-700 transition whitespace-nowrap">
-                    <i class="fa-solid fa-right-to-bracket mr-1"></i> Acesso Restrito
-                </a>
-            </div>
-        </div>
-    </nav>
+    <!-- Fundo escuro do menu no celular -->
+    <div id="menu-backdrop" onclick="toggleMenu()" class="fixed inset-0 bg-slate-900/60 z-20 hidden md:hidden backdrop-blur-sm transition-opacity"></div>
 
-    
-    <!-- SEÇÃO FORMULÁRIO COM ESPAÇAMENTOS ADAPTÁVEIS -->
-    <section id="cadastro" class="bg-slate-900 border-t border-slate-800 py-10 md:py-20 px-4">
-        <div class="container mx-auto max-w-3xl bg-slate-950 border border-slate-800 p-5 md:p-8 rounded-2xl md:rounded-3xl shadow-2xl">
-            <div class="text-center mb-6 md:mb-8">
-                <h2 class="text-lg md:text-xl font-bold text-white flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-user-plus text-blue-500"></i> Faça Parte do Nosso Projeto
-                </h2>
-                <p class="text-[11px] md:text-xs text-slate-400 mt-1">Inscreva-se informando a sua região para receber atualizações.</p>
+    <!-- SIDEBAR (Barra Lateral) Responsiva -->
+    <aside id="sidebar" class="fixed md:relative top-0 left-0 h-full w-[260px] min-w-[260px] bg-[#0f1e36] text-slate-300 flex flex-col justify-between flex-shrink-0 z-30 shadow-2xl md:shadow-xl no-print transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
+        <div>
+            <div class="p-6 flex items-center gap-3 border-b border-slate-800/50 relative">
+                <button onclick="toggleMenu()" class="md:hidden absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+                
+                <div id="container-logo" class="w-12 h-12 rounded-lg bg-emerald-500 flex items-center justify-center shadow-lg text-white font-bold text-2xl flex-shrink-0 overflow-hidden">
+                    <span id="icone-padrao">sJ</span>
+                </div>
+                <div class="leading-tight overflow-hidden w-full pr-4">
+                    <h1 id="brand-name" class="text-white font-bold text-sm tracking-wide truncate">Carregando...</h1>
+                    <span id="sub-brand" class="text-[11px] font-bold text-emerald-400">Operacional</span>
+                </div>
             </div>
 
-            <form id="form-eleitor" class="space-y-4" onsubmit="salvarApoiador(event)">
-                <div>
-                    <label class="block text-[11px] md:text-xs font-bold text-slate-400 uppercase mb-1">Selecione o Gabinete / Campanha *</label>
-                    <select id="select-gestor" required class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-[11px] md:text-xs text-white focus:outline-none focus:border-blue-500 cursor-pointer transition">
-                        <option value="" disabled selected>Carregando gabinetes...</option>
-                    </select>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-[11px] md:text-xs font-bold text-slate-400 uppercase mb-1">Nome Completo *</label>
-                        <input type="text" id="nome" required class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-[11px] md:text-xs text-white focus:outline-none focus:border-blue-500 transition">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] md:text-xs font-bold text-slate-400 uppercase mb-1">WhatsApp / Contato *</label>
-                        <input type="tel" id="whatsapp" required placeholder="(91) 99999-9999" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-[11px] md:text-xs text-white focus:outline-none focus:border-blue-500 transition">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-[11px] md:text-xs font-bold text-slate-400 uppercase mb-1">Bairro Regional *</label>
-                        <input type="text" id="bairro" required class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-[11px] md:text-xs text-white focus:outline-none focus:border-blue-500 transition">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] md:text-xs font-bold text-slate-400 uppercase mb-1">Título de Eleitor (Opcional)</label>
-                        <input type="text" id="titulo" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-[11px] md:text-xs text-white focus:outline-none focus:border-blue-500 transition">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-[11px] md:text-xs font-bold text-slate-400 uppercase mb-1">Deixe sua demanda ou sugestão</label>
-                    <textarea id="demanda" rows="3" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-[11px] md:text-xs text-white focus:outline-none focus:border-blue-500 transition resize-y"></textarea>
-                </div>
-
-                <div class="flex items-start gap-2 pt-2">
-                    <input type="checkbox" id="lgpd" required class="mt-1 accent-blue-500 cursor-pointer flex-shrink-0">
-                    <label for="lgpd" class="text-[9px] md:text-[10px] text-slate-500 select-none leading-relaxed">Autorizo o armazenamento seguro das minhas informações em conformidade com a LGPD.</label>
-                </div>
-
-                <button type="submit" id="btn-enviar" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-[11px] md:text-xs py-3.5 rounded-xl transition uppercase tracking-wider mt-2 shadow-lg shadow-blue-900/20">
-                    Confirmar Envio e Cadastro
+            <nav class="p-4 flex flex-col gap-1.5 mt-2 overflow-y-auto">
+                <button onclick="navegarOperacional('aba-dashboard')" id="btn-aba-dashboard" class="btn-menu w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition">
+                    <i class="fa-solid fa-house w-5 text-center"></i> Início / Avisos
                 </button>
-            </form>
+                <button onclick="navegarOperacional('aba-agenda')" id="btn-aba-agenda" class="btn-menu w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition">
+                    <i class="fa-solid fa-calendar-days w-5 text-center"></i> Agenda
+                </button>
+                <button onclick="navegarOperacional('aba-documentos')" id="btn-aba-documentos" class="btn-menu w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition">
+                    <i class="fa-solid fa-folder-open w-5 text-center"></i> Documentos
+                </button>
+                <button onclick="navegarOperacional('aba-eleitores')" id="btn-aba-eleitores" class="btn-menu w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition">
+                    <i class="fa-solid fa-users w-5 text-center"></i> Eleitores
+                </button>
+                <button onclick="navegarOperacional('aba-rh')" id="btn-aba-rh" class="btn-menu w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition">
+                    <i class="fa-solid fa-id-badge w-5 text-center"></i> Equipe & Crachás
+                </button>
+            </nav>
         </div>
-    </section>
 
-    <footer class="p-6 text-center text-[10px] md:text-[11px] text-slate-600 border-t border-slate-900">
-        sis Jess - Gestão Eleitoral Multi-Empresas © 2026.
-    </footer>
+        <div class="p-5 text-center border-t border-slate-800/50">
+            <div class="text-[10px] text-slate-500 mb-3 leading-relaxed hidden md:block">
+                Painel Administrativo<br><span id="footer-unidade" class="uppercase font-bold text-slate-400">Carregando...</span>
+            </div>
+            <button onclick="window.location.href='index.html'" class="w-full text-slate-400 hover:text-white text-xs font-bold py-2 rounded-lg transition hover:bg-white/5 border border-transparent hover:border-slate-700/50">
+                <i class="fa-solid fa-power-off mr-1"></i> Sair do Sistema
+            </button>
+        </div>
+    </aside>
 
-    <!-- SCRIPT 100% INTACTO E FUNCIONAL -->
+    <!-- ÁREA PRINCIPAL -->
+    <div class="flex-1 flex flex-col h-full overflow-hidden relative w-full">
+        <!-- HEADER Responsivo -->
+        <header class="h-16 md:h-20 bg-white border-b border-slate-200 px-4 md:px-10 flex items-center justify-between flex-shrink-0 z-10 no-print">
+            <div class="flex items-center gap-3">
+                <button onclick="toggleMenu()" class="md:hidden text-slate-600 hover:text-emerald-500 text-xl p-1 focus:outline-none">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <h2 id="titulo-pagina-op" class="font-bold text-slate-800 text-[16px] md:text-[19px] truncate max-w-[150px] md:max-w-none">Painel de Controle</h2>
+            </div>
+            <div id="badge-unidade" class="bg-slate-50 text-slate-600 text-[9px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-slate-200 shadow-sm truncate max-w-[130px] md:max-w-none">
+                Unidade: CARREGANDO...
+            </div>
+        </header>
+
+        <!-- CONTEÚDO SCROLLÁVEL -->
+        <main class="flex-1 overflow-y-auto p-4 md:p-10 w-full">
+
+            <!-- ABA: DASHBOARD -->
+            <div id="aba-dashboard" class="tab-op hidden space-y-4 md:space-y-6 no-print">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+                    <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 md:p-6">
+                        <h3 class="text-sm font-bold text-slate-700 uppercase mb-4 border-b pb-2 flex items-center">
+                            <i class="fa-solid fa-bell text-amber-500 mr-2"></i>Avisos de Agenda (7 dias)
+                        </h3>
+                        <div id="lista-avisos-agenda" class="space-y-3">
+                            <p class="text-xs text-slate-400">Analisando calendário...</p>
+                        </div>
+                    </div>
+                    <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 md:p-6">
+                        <h3 class="text-sm font-bold text-slate-700 uppercase mb-4 border-b pb-2 flex items-center">
+                            <i class="fa-solid fa-cake-candles text-rose-500 mr-2"></i>Aniversariantes
+                        </h3>
+                        <div id="lista-avisos-niver" class="space-y-3">
+                            <p class="text-xs text-slate-400">Analisando equipe...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ABA RH -->
+            <div id="aba-rh" class="tab-op hidden space-y-4 md:space-y-6">
+                <div class="bg-white border border-slate-200 rounded-xl p-4 md:p-6 shadow-sm no-print">
+                    <h3 class="text-sm font-bold text-slate-700 uppercase mb-4 border-b pb-2"><i class="fa-solid fa-user-plus mr-2 text-emerald-500"></i>Novo Colaborador</h3>
+                    <form onsubmit="cadastrarAssessor(event)" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+                        
+                        <!-- NOVO CAMPO: FOTO -->
+                        <div class="sm:col-span-2 md:col-span-3 lg:col-span-1">
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Foto 3x4 (Crachá)</label>
+                            <input type="file" id="func-foto" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-slate-100 file:text-slate-700 focus:outline-none transition">
+                        </div>
+
+                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Nome Completo *</label><input type="text" id="func-nome" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
+                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">CPF ou CNPJ *</label><input type="text" id="func-doc" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
+                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Data de Nascimento</label><input type="date" id="func-nasc" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
+                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Cargo / Setor *</label><input type="text" id="func-cargo" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
+                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Telefone / WhatsApp *</label><input type="text" id="func-whats" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
+                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">E-mail *</label><input type="email" id="func-email" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
+                        <div class="sm:col-span-2 md:col-span-1"><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Conta Bancária (Pix/Ag) *</label><input type="text" id="func-bank" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
+                        <div class="sm:col-span-2 md:col-span-2"><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Endereço Residencial *</label><input type="text" id="func-end" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
+                        <div class="sm:col-span-2 md:col-span-3 flex justify-end mt-2"><button type="submit" class="btn-dinamico w-full sm:w-auto text-white px-8 py-2.5 rounded-lg text-xs font-bold transition">Cadastrar Colaborador</button></div>
+                    </form>
+                </div>
+                <div class="bg-white border border-slate-200 rounded-xl shadow-sm print-area overflow-hidden">
+                    <div class="p-4 md:p-6 border-b border-slate-100 flex flex-wrap justify-between items-center gap-3 no-print">
+                        <h3 class="text-md md:text-lg font-bold text-slate-800">Controle de Acessos</h3>
+                        <button onclick="window.print()" class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold flex items-center gap-2 transition"><i class="fa-solid fa-print"></i> Imprimir Lista</button>
+                    </div>
+                    <div class="overflow-x-auto scrollbar-hide w-full">
+                        <table class="w-full text-left text-sm text-slate-700 min-w-[900px]">
+                            <thead class="text-slate-500 text-[11px] font-bold uppercase border-b border-slate-100"><tr><th class="py-3 md:py-4 px-4 md:px-6">Nome</th><th class="py-3 md:py-4 px-4 md:px-6">CPF/CNPJ</th><th class="py-3 md:py-4 px-4 md:px-6">Cargo / Setor</th><th class="py-3 md:py-4 px-4 md:px-6">Contato</th><th class="py-3 md:py-4 px-4 md:px-6 text-center">Status</th><th class="py-3 md:py-4 px-4 md:px-6 text-center no-print">Ações</th></tr></thead>
+                            <tbody id="tabela-funcionarios" class="divide-y divide-slate-100"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ABA AGENDA -->
+            <div id="aba-agenda" class="tab-op hidden space-y-4 md:space-y-6">
+                <div class="bg-white border border-slate-200 rounded-xl p-4 md:p-6 shadow-sm no-print">
+                    <form onsubmit="cadastrarCompromisso(event)" class="flex gap-3 md:gap-4 items-end flex-wrap">
+                        <div class="w-full sm:flex-1"><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1.5">Título do Evento</label><input type="text" id="age-titulo" required class="w-full border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none"></div>
+                        <div class="w-[48%] sm:w-40 md:w-48"><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1.5">Data</label><input type="date" id="age-data" required class="w-full border border-slate-200 rounded-lg px-2 md:px-4 py-2 text-sm focus:outline-none"></div>
+                        <div class="w-[48%] sm:w-32"><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1.5">Horário</label><input type="time" id="age-hora" required class="w-full border border-slate-200 rounded-lg px-2 md:px-4 py-2 text-sm focus:outline-none"></div>
+                        <button type="submit" class="btn-dinamico w-full sm:w-auto text-white px-6 py-2 rounded-lg text-sm font-bold mt-2 sm:mt-0 transition">Agendar</button>
+                    </form>
+                </div>
+                <div class="bg-white border border-slate-200 rounded-xl shadow-sm print-area overflow-hidden">
+                    <div class="p-4 md:p-6 border-b border-slate-100"><h3 class="text-md md:text-lg font-bold text-slate-800">Agenda Geral</h3></div>
+                    <div class="overflow-x-auto scrollbar-hide w-full">
+                        <table class="w-full text-left text-sm text-slate-700 min-w-[700px]">
+                            <thead class="text-slate-500 text-[11px] font-bold uppercase border-b border-slate-100"><tr><th class="py-3 md:py-4 px-4 md:px-6">Data / Hora</th><th class="py-3 md:py-4 px-4 md:px-6">Evento</th><th class="py-3 md:py-4 px-4 md:px-6 text-center">Status</th><th class="py-3 md:py-4 px-4 md:px-6 text-center no-print">Ações</th></tr></thead>
+                            <tbody id="tabela-agenda" class="divide-y divide-slate-100"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ABA DOCUMENTOS -->
+            <div id="aba-documentos" class="tab-op hidden space-y-4 md:space-y-6">
+                <div class="bg-white border border-slate-200 rounded-xl p-4 md:p-6 shadow-sm no-print">
+                    <form onsubmit="cadastrarDoc(event)" class="flex gap-3 md:gap-4 items-end flex-wrap">
+                        <div class="w-full sm:flex-1"><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1.5">Título do Documento *</label><input type="text" id="doc-titulo" required class="w-full border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none"></div>
+                        <div class="w-full sm:w-1/4"><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1.5">Categoria</label><input type="text" id="doc-cat" class="w-full border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none"></div>
+                        <div class="w-full sm:w-1/3"><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1.5">Anexar Arquivo (PDF/Img) *</label><input type="file" id="doc-file" required class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-slate-100 file:text-slate-700"></div>
+                        <button type="submit" id="btn-salvar-doc" class="btn-dinamico w-full sm:w-auto text-white px-6 py-2 rounded-lg text-sm font-bold mt-2 sm:mt-0 transition">Arquivar</button>
+                    </form>
+                </div>
+                <div class="bg-white border border-slate-200 rounded-xl shadow-sm print-area overflow-hidden">
+                    <div class="p-4 md:p-6 border-b border-slate-100"><h3 class="text-md md:text-lg font-bold text-slate-800">Arquivos Salvos</h3></div>
+                    <div class="overflow-x-auto scrollbar-hide w-full">
+                        <table class="w-full text-left text-sm text-slate-700 min-w-[600px]">
+                            <thead class="text-slate-500 text-[11px] font-bold uppercase border-b border-slate-100"><tr><th class="py-3 md:py-4 px-4 md:px-6">Título</th><th class="py-3 md:py-4 px-4 md:px-6">Categoria</th><th class="py-3 md:py-4 px-4 md:px-6 text-center no-print">Ações</th></tr></thead>
+                            <tbody id="tabela-documentos" class="divide-y divide-slate-100"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ABA ELEITORES -->
+            <div id="aba-eleitores" class="tab-op hidden space-y-4 md:space-y-6">
+                <!-- FORMULÁRIO DE NOVO APOIADOR -->
+                <div class="bg-white border border-slate-200 rounded-xl p-4 md:p-6 shadow-sm no-print">
+                    <h3 class="text-sm font-bold text-slate-700 uppercase mb-4 border-b pb-2"><i class="fa-solid fa-user-plus mr-2 text-emerald-500"></i>Novo Apoiador / Eleitor</h3>
+                    <form onsubmit="cadastrarApoiadorAdmin(event)" class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Nome Completo *</label>
+                            <input type="text" id="eleitor-nome" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">WhatsApp / Contato *</label>
+                            <input type="tel" id="eleitor-whatsapp" required placeholder="(91) 99999-9999" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Bairro Regional *</label>
+                            <input type="text" id="eleitor-bairro" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Título de Eleitor (Opcional)</label>
+                            <input type="text" id="eleitor-titulo" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Demanda / Sugestão</label>
+                            <textarea id="eleitor-demanda" rows="2" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition resize-y"></textarea>
+                        </div>
+                        <div class="sm:col-span-2 flex justify-end mt-2">
+                            <button type="submit" class="btn-dinamico w-full sm:w-auto text-white px-8 py-2.5 rounded-lg text-xs font-bold transition">Confirmar e Cadastrar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- TABELA DE ELEITORES EXISTENTE -->
+                <div class="bg-white border border-slate-200 rounded-xl shadow-sm print-area overflow-hidden">
+                    <div class="p-4 md:p-6 border-b border-slate-100 flex flex-wrap justify-between items-center gap-3 no-print">
+                        <h3 class="text-md md:text-lg font-bold text-slate-800">Base de Apoiadores / Eleitores</h3>
+                        <button onclick="window.print()" class="bg-white border border-slate-200 hover:bg-slate-50 px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold flex items-center gap-2 transition"><i class="fa-solid fa-print"></i> Imprimir</button>
+                    </div>
+                    <div class="overflow-x-auto scrollbar-hide w-full">
+                        <table class="w-full text-left text-sm text-slate-700 min-w-[800px]">
+                            <thead class="text-slate-500 text-[11px] font-bold uppercase border-b border-slate-100"><tr><th class="py-3 md:py-4 px-4 md:px-6">Nome Completo</th><th class="py-3 md:py-4 px-4 md:px-6">Bairro</th><th class="py-3 md:py-4 px-4 md:px-6">Contato</th><th class="py-3 md:py-4 px-4 md:px-6 text-center">Status</th><th class="py-3 md:py-4 px-4 md:px-6 text-center no-print">Ações</th></tr></thead>
+                            <tbody id="tabela-eleitores" class="divide-y divide-slate-100"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL DE ALERTA AUTOMÁTICO -->
+    <div id="modal-alerta-login" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl w-full max-w-md border shadow-2xl overflow-hidden transform transition-all flex flex-col max-h-[90vh]">
+            <div class="bg-emerald-500 p-5 text-center relative flex-shrink-0">
+                <button onclick="document.getElementById('modal-alerta-login').classList.add('hidden')" class="absolute top-4 right-4 text-white/80 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+                <div class="w-12 h-12 md:w-16 md:h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-2 md:mb-3 shadow-lg">
+                    <i class="fa-solid fa-bell text-emerald-500 text-2xl md:text-3xl"></i>
+                </div>
+                <h2 class="text-lg md:text-xl font-bold text-white tracking-wide">Resumo do Gabinete</h2>
+                <p class="text-emerald-50 text-xs mt-1">Aqui estão as suas prioridades de hoje!</p>
+            </div>
+            <div class="p-4 md:p-6 space-y-4 overflow-y-auto" id="conteudo-alerta-login"></div>
+            <div class="p-4 border-t bg-slate-50 flex justify-center flex-shrink-0">
+                <button onclick="document.getElementById('modal-alerta-login').classList.add('hidden')" class="bg-slate-800 hover:bg-slate-700 text-white font-bold w-full md:w-auto px-8 py-2.5 rounded-xl transition text-sm">Ciente, acessar sistema</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Edição RH -->
+    <div id="modal-edicao-func" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
+        <div class="bg-white rounded-2xl w-full max-w-2xl border shadow-2xl overflow-hidden flex flex-col max-h-[95vh]">
+            <div class="flex justify-between items-center border-b p-4 md:p-5 flex-shrink-0">
+                <h3 class="font-bold text-slate-800 text-sm uppercase">Ficha / Alteração</h3>
+                <button onclick="document.getElementById('modal-edicao-func').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="overflow-y-auto p-4 md:p-5">
+                <form onsubmit="salvarEdicaoFunc(event)" class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+                    <input type="hidden" id="edit-func-id">
+                    
+                    <div class="sm:col-span-2">
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Atualizar Foto 3x4 (Crachá)</label>
+                        <input type="file" id="edit-func-foto" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-slate-100 file:text-slate-700 focus:outline-none transition">
+                    </div>
+
+                    <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Nome</label><input type="text" id="edit-func-nome" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs bg-slate-50 focus:outline-none"></div>
+                    <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">CPF/CNPJ</label><input type="text" id="edit-func-doc" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs bg-slate-50 focus:outline-none"></div>
+                    <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Data Nasc.</label><input type="date" id="edit-func-nasc" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs bg-slate-50 focus:outline-none"></div>
+                    <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Cargo</label><input type="text" id="edit-func-cargo" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs bg-slate-50 focus:outline-none"></div>
+                    <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">WhatsApp</label><input type="text" id="edit-func-whats" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs bg-slate-50 focus:outline-none"></div>
+                    <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">E-mail</label><input type="email" id="edit-func-email" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs bg-slate-50 focus:outline-none"></div>
+                    <div class="sm:col-span-2"><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Banco / Pix</label><input type="text" id="edit-func-bank" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs bg-slate-50 focus:outline-none"></div>
+                    <div class="sm:col-span-2"><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Endereço</label><input type="text" id="edit-func-end" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs bg-slate-50 focus:outline-none"></div>
+                    <div class="sm:col-span-2 pt-3 border-t flex flex-col sm:flex-row justify-end gap-2 mt-2">
+                        <button type="button" onclick="imprimirFichaFunc()" class="w-full sm:w-auto bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs px-4 py-2.5 rounded-lg transition">Imprimir Ficha</button>
+                        <button type="submit" class="w-full sm:w-auto bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs px-6 py-2.5 rounded-lg transition">Salvar Dados</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Eleitor -->
+    <div id="modal-eleitor" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
+        <div class="bg-white rounded-2xl w-full max-w-lg border shadow-2xl flex flex-col max-h-[90vh]">
+            <div class="flex justify-between items-center border-b p-4 md:p-5 flex-shrink-0">
+                <h3 class="font-bold text-slate-800 text-sm uppercase"><i class="fa-solid fa-clipboard-user text-emerald-500 mr-2"></i>Ficha de Apoiador</h3>
+                <button onclick="document.getElementById('modal-eleitor').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div id="conteudo-modal-eleitor" class="p-4 md:p-5 text-xs text-slate-700 space-y-3 overflow-y-auto"></div>
+        </div>
+    </div>
+
+    <!-- Modal Status da Agenda -->
+    <div id="modal-status-agenda" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
+        <div class="bg-white rounded-2xl w-full max-w-md border shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="flex justify-between items-center border-b p-4 md:p-5 flex-shrink-0">
+                <h3 id="titulo-modal-agenda" class="font-bold text-slate-800 text-sm uppercase">Alterar Status</h3>
+                <button onclick="document.getElementById('modal-status-agenda').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="overflow-y-auto p-4 md:p-5">
+                <form onsubmit="salvarStatusAgenda(event)" class="space-y-4">
+                    <input type="hidden" id="status-agenda-id">
+                    <input type="hidden" id="status-agenda-acao">
+                    <div id="container-data-hora-remarcar" class="hidden grid grid-cols-2 gap-3">
+                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Nova Data</label><input type="date" id="status-agenda-data" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none"></div>
+                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Novo Horário</label><input type="time" id="status-agenda-hora" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none"></div>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Justificativa / Motivo</label>
+                        <textarea id="status-agenda-justificativa" rows="3" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none resize-none" placeholder="Digite o motivo..."></textarea>
+                    </div>
+                    <div class="pt-3 border-t flex justify-end mt-2">
+                        <button type="submit" id="btn-salvar-status-agenda" class="w-full sm:w-auto bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs px-6 py-2.5 rounded-lg transition">Confirmar Alteração</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
-        let listaGabinetesLocais = [];
+        let dadosGestorLogado = null;
+        let cacheEleitores = [];
+        let cacheFuncionarios = [];
+        let cacheAgenda = [];
 
-        async function carregarGabinetesAtivos() {
+        function toggleMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('menu-backdrop');
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                backdrop.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                backdrop.classList.add('hidden');
+            }
+        }
+
+        async function autenticarGestor() {
+            const senhaDigitada = prompt("Digite a sua Chave de Acesso do Gabinete:");
+            if (!senhaDigitada) { window.location.href = "index.html"; return; }
+
             try {
-                const res = await fetch('/api', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'dados_dashboard_master' }) });
-                const data = await res.json(); listaGabinetesLocais = data.gestores || [];
-                const select = document.getElementById('select-gestor');
-                select.innerHTML = '<option value="" disabled selected>-- Escolha um Gabinete/Parlamentar --</option>';
+                const resposta = await fetch('/api', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'verificar_login_gestor', senha: senhaDigitada }) });
+                if (!resposta.ok) throw new Error("Erro na comunicação");
+                const dados = await resposta.json();
 
-                const ativos = listaGabinetesLocais.filter(g => g.status === 'Ativo');
-                if (ativos.length === 0) { select.innerHTML = '<option value="" disabled>Nenhum gabinete ativo</option>'; return; }
+                if (dados.erro) { alert("Erro do Banco: " + dados.erro); window.location.href = "index.html"; return; }
 
-                ativos.forEach(g => { select.innerHTML += `<option value="${g.id}">${g.nome_campanha_gabinete} (${g.nome_gestor})</option>`; });
+                if (dados.autorizado) {
+                    dadosGestorLogado = dados.gestor;
+                    document.body.style.display = "flex";
 
-                select.addEventListener('change', function() {
-                    const gabEscolhido = listaGabinetesLocais.find(g => g.id == this.value);
-                    const btnEnviar = document.getElementById('btn-enviar');
-                    if(gabEscolhido && gabEscolhido.cor_layout) {
-                        btnEnviar.style.backgroundColor = gabEscolhido.cor_layout;
-                        btnEnviar.style.borderColor = gabEscolhido.cor_layout;
-                        btnEnviar.style.boxShadow = `0 10px 15px -3px ${gabEscolhido.cor_layout}40`; // Mantém o brilho sutil com a cor escolhida
+                    const nomeGabinete = dadosGestorLogado.nome_campanha_gabinete || 'Gabinete';
+                    document.getElementById('footer-unidade').innerText = nomeGabinete;
+                    document.getElementById('badge-unidade').innerHTML = `Unidade: ${nomeGabinete.toUpperCase()}`;
+                    document.getElementById('brand-name').innerText = nomeGabinete;
+
+                    const containerLogo = document.getElementById('container-logo');
+                    const inicial = nomeGabinete.charAt(0).toUpperCase();
+                    if (dadosGestorLogado.url_logo) {
+                        containerLogo.innerHTML = `<img src="${dadosGestorLogado.url_logo}" onerror="this.outerHTML='<span id=\\'icone-padrao\\'>${inicial}</span>'" class="w-full h-full object-contain p-1 bg-white">`;
+                    } else { containerLogo.innerHTML = `<span id="icone-padrao">${inicial}</span>`; }
+
+                    const corCliente = dadosGestorLogado.cor_layout || '#10b981';
+                    document.getElementById('sub-brand').style.color = corCliente;
+                    containerLogo.style.backgroundColor = corCliente;
+                    document.querySelectorAll('.btn-dinamico').forEach(btn => { btn.style.backgroundColor = corCliente; });
+
+                    navegarOperacional('aba-dashboard');
+                } else {
+                    alert(dados.mensagem || "Acesso negado."); window.location.href = "index.html";
+                }
+            } catch (erro) { alert("Falha de conexão com a API."); document.body.style.display = "flex"; }
+        }
+
+        function navegarOperacional(idAba) {
+            document.querySelectorAll('.tab-op').forEach(el => el.classList.add('hidden'));
+            document.getElementById(idAba).classList.remove('hidden');
+            const titulos = { 'aba-dashboard': 'Início e Avisos do Sistema', 'aba-agenda': 'Agenda Geral e Eventos', 'aba-documentos': 'Documentos & Arquivos', 'aba-eleitores': 'Base de Eleitores', 'aba-rh': 'Equipe & Crachás' };
+            document.getElementById('titulo-pagina-op').innerText = titulos[idAba];
+            document.querySelectorAll('.btn-menu').forEach(b => { b.className = "btn-menu w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition"; b.style.backgroundColor = "transparent"; });
+            const btnAtivo = document.getElementById('btn-' + idAba);
+            if(btnAtivo && dadosGestorLogado) { btnAtivo.className = "btn-menu w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-white rounded-xl transition shadow-sm"; btnAtivo.style.backgroundColor = "#1e293b"; }
+
+            if (window.innerWidth < 768) {
+                document.getElementById('sidebar').classList.add('-translate-x-full');
+                document.getElementById('menu-backdrop').classList.add('hidden');
+            }
+
+            if(idAba === 'aba-dashboard') carregarAvisosDashboard();
+            if(idAba === 'aba-agenda') carregarAgenda();
+            if(idAba === 'aba-documentos') carregarDocs();
+            if(idAba === 'aba-eleitores') carregarEleitores();
+            if(idAba === 'aba-rh') carregarFuncionarios();
+        }
+
+        async function carregarAvisosDashboard() {
+            try {
+                const [resA, resF] = await Promise.all([
+                    fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_agenda_gestor', gestor_id: dadosGestorLogado.id }) }),
+                    fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_funcionarios', gestor_id: dadosGestorLogado.id }) })
+                ]);
+                const dataA = await resA.json(); const dataF = await resF.json();
+                cacheAgenda = dataA.agenda || []; cacheFuncionarios = dataF.funcionarios || [];
+
+                const hoje = new Date(); hoje.setHours(0,0,0,0);
+                const limiteAgenda = new Date(hoje); limiteAgenda.setDate(limiteAgenda.getDate() + 7);
+                
+                let htmlAgenda = ''; let textoAlertaPopup = '';
+                
+                cacheAgenda.filter(a => a.status === 'Confirmado' || a.status === 'Remarcado').forEach(a => {
+                    if(!a.data_evento) return;
+                    const dataEv = new Date(a.data_evento + 'T00:00:00');
+                    if(dataEv >= hoje && dataEv <= limiteAgenda) {
+                        const diasRestantes = Math.floor((dataEv - hoje) / (1000 * 60 * 60 * 24));
+                        let seloDia = diasRestantes === 0 ? '<span class="text-rose-500 bg-rose-50 px-2 py-1 rounded">Hoje!</span>' : (diasRestantes === 1 ? '<span class="text-amber-500 bg-amber-50 px-2 py-1 rounded">Amanhã</span>' : `<span class="text-slate-500 bg-slate-100 px-2 py-1 rounded">Em ${diasRestantes} dias</span>`);
+                        htmlAgenda += `<div class="p-3 border border-slate-100 rounded-lg flex justify-between items-center bg-white shadow-sm"><div class="text-xs pr-2"><p class="font-bold text-slate-700 line-clamp-1">${a.titulo}</p><p class="text-slate-500">${dataEv.toLocaleDateString('pt-BR')} às ${a.hora_evento.substring(0,5)}</p></div><div class="text-[10px] font-bold tracking-wide whitespace-nowrap">${seloDia}</div></div>`;
+                        textoAlertaPopup += `<div class="bg-amber-50 border border-amber-100 p-3 rounded-lg"><h4 class="text-amber-800 font-bold text-xs"><i class="fa-regular fa-calendar mr-2"></i>${a.titulo}</h4><p class="text-amber-600 text-[11px] mt-1">${dataEv.toLocaleDateString('pt-BR')} às ${a.hora_evento.substring(0,5)} (${seloDia.replace(/<[^>]*>?/gm, '')})</p></div>`;
                     }
                 });
-            } catch (e) { document.getElementById('select-gestor').innerHTML = '<option value="" disabled>Erro ao carregar</option>'; }
-        }
+                
+                if(htmlAgenda === '') htmlAgenda = '<div class="p-4 bg-slate-50 rounded-lg text-center text-xs text-slate-500 border border-slate-100">Nenhum compromisso para os próximos 7 dias.</div>';
+                document.getElementById('lista-avisos-agenda').innerHTML = htmlAgenda;
 
-        async function salvarApoiador(event) {
-            event.preventDefault();
-            const btn = document.getElementById('btn-enviar'); const textoOriginal = btn.innerText;
-            btn.innerText = "Processando Cadastro..."; btn.disabled = true;
-
-            try {
-                const res = await fetch('/api', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'salvar_apoiador',
-                        nome: document.getElementById('nome').value,
-                        whatsapp: document.getElementById('whatsapp').value,
-                        bairro: document.getElementById('bairro').value,
-                        titulo: document.getElementById('titulo').value,
-                        demanda: document.getElementById('demanda').value,
-                        gestor_id: document.getElementById('select-gestor').value
-                    })
+                const mesAtual = hoje.getMonth() + 1;
+                let htmlNiver = '';
+                
+                cacheFuncionarios.filter(f => f.status !== 'Inativo').forEach(f => {
+                    if(!f.data_nascimento) return;
+                    const parts = f.data_nascimento.split('-');
+                    if(parts.length === 3 && parseInt(parts[1], 10) === mesAtual) {
+                        htmlNiver += `<div class="p-3 border border-slate-100 rounded-lg flex justify-between items-center bg-white shadow-sm"><div class="text-xs pr-2"><p class="font-bold text-slate-700 line-clamp-1">${f.nome.toUpperCase()}</p><p class="text-slate-500 line-clamp-1">${f.cargo}</p></div><div class="text-[11px] font-bold text-rose-500 bg-rose-50 border border-rose-100 px-3 py-1.5 rounded-lg shadow-sm whitespace-nowrap"><i class="fa-solid fa-gift mr-1"></i> Dia ${parts[2]}</div></div>`;
+                        textoAlertaPopup += `<div class="bg-rose-50 border border-rose-100 p-3 rounded-lg"><h4 class="text-rose-800 font-bold text-xs"><i class="fa-solid fa-cake-candles mr-2"></i>Aniversário: ${f.nome.toUpperCase()}</h4><p class="text-rose-600 text-[11px] mt-1">Dia ${parts[2]} - Não se esqueça de parabenizar!</p></div>`;
+                    }
                 });
-                const d = await res.json();
-                if(d.erro) { alert("Erro: " + d.erro); }
-                else if(d.sucesso) { alert("Cadastro realizado com sucesso!"); document.getElementById('form-eleitor').reset(); btn.style.backgroundColor = ""; btn.style.boxShadow = ""; }
-            } catch (err) { alert("Falha na rede."); } finally { btn.innerText = textoOriginal; btn.disabled = false; }
+
+                if(htmlNiver === '') htmlNiver = '<div class="p-4 bg-slate-50 rounded-lg text-center text-xs text-slate-500 border border-slate-100">Nenhum aniversário este mês.</div>';
+                document.getElementById('lista-avisos-niver').innerHTML = htmlNiver;
+
+                if (textoAlertaPopup !== '') {
+                    document.getElementById('conteudo-alerta-login').innerHTML = textoAlertaPopup;
+                    document.getElementById('modal-alerta-login').classList.remove('hidden');
+                }
+
+            } catch (err) {}
         }
 
-        window.onload = carregarGabinetesAtivos;
+        const toBase64 = file => new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = () => resolve(reader.result); reader.onerror = error => reject(error); });
+
+        // ---- RH & CRACHÁ (AGORA COM FOTO) ----
+        async function carregarFuncionarios() {
+            const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_funcionarios', gestor_id: dadosGestorLogado.id }) });
+            const d = await res.json(); cacheFuncionarios = d.funcionarios || [];
+            const tbody = document.getElementById('tabela-funcionarios'); tbody.innerHTML = '';
+            if (!cacheFuncionarios.length) { tbody.innerHTML = '<tr><td colspan="6" class="p-4 md:p-6 text-slate-400 italic text-center">Nenhum colaborador registrado.</td></tr>'; return; }
+            cacheFuncionarios.forEach(f => {
+                const isAtivo = (f.status !== 'Inativo');
+                const statusBadge = isAtivo ? '<span class="bg-emerald-50 text-emerald-500 border border-emerald-100 px-2 py-0.5 rounded text-[10px] font-bold whitespace-nowrap">Ativa</span>' : '<span class="bg-rose-50 text-rose-600 border border-rose-100 px-2 py-0.5 rounded text-[10px] font-bold whitespace-nowrap">Bloqueada</span>';
+                const btnStatus = isAtivo ? `<button onclick="mudarStatusFuncionario(${f.id}, 'Ativo')" class="border bg-white text-slate-600 px-2 py-1 rounded hover:bg-slate-50"><i class="fa-solid fa-ban text-rose-400 text-[10px]"></i></button>` : `<button onclick="mudarStatusFuncionario(${f.id}, 'Inativo')" class="border bg-emerald-50 text-emerald-700 px-2 py-1 rounded hover:bg-emerald-100"><i class="fa-solid fa-check text-[10px]"></i></button>`;
+                
+                const miniaturaFoto = f.url_foto 
+                    ? `<img src="${f.url_foto}" class="w-8 h-8 rounded-full object-cover border border-slate-200 shadow-sm flex-shrink-0">` 
+                    : `<div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 text-xs font-bold border border-slate-300 shadow-sm flex-shrink-0">${f.nome.charAt(0).toUpperCase()}</div>`;
+                
+                tbody.innerHTML += `<tr class="hover:bg-slate-50 transition-colors text-xs border-b border-slate-50">
+                    <td class="py-3 px-4 md:px-6 font-semibold whitespace-nowrap flex items-center gap-3">${miniaturaFoto} <span>${f.nome ? f.nome.toUpperCase() : '---'}</span></td>
+                    <td class="py-3 px-4 md:px-6 font-mono whitespace-nowrap">${f.documento || '---'}</td>
+                    <td class="py-3 px-4 md:px-6 whitespace-nowrap">${f.cargo || '---'}</td>
+                    <td class="py-3 px-4 md:px-6 font-mono whitespace-nowrap">${f.whatsapp || '---'}</td>
+                    <td class="py-3 px-4 md:px-6 text-center">${statusBadge}</td>
+                    <td class="py-3 px-4 md:px-6 flex justify-center gap-1.5 no-print">
+                        <button onclick="abrirModalEdicaoFunc(${f.id})" class="border bg-white px-2 py-1 rounded text-[10px]"><i class="fa-regular fa-pen-to-square"></i></button>
+                        ${btnStatus}
+                        <button onclick="excluirFuncionario(${f.id})" class="border bg-white text-rose-500 px-2 py-1 rounded text-[10px]"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="gerarCracha('${f.nome}', '${f.cargo}', '${f.url_foto || ''}')" title="Imprimir Crachá" class="border bg-white text-emerald-600 px-2 py-1 rounded text-[10px] font-bold"><i class="fa-regular fa-id-badge"></i></button>
+                    </td>
+                </tr>`;
+            });
+        }
+        
+        async function cadastrarAssessor(e) {
+            e.preventDefault(); const btn = e.target.querySelector('button[type="submit"]'); btn.innerText = "Salvando..."; btn.disabled = true;
+            let urlFinalFoto = ""; const fileInput = document.getElementById('func-foto');
+            
+            try {
+                if(fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    if(file.size > 2 * 1024 * 1024) { alert("A foto deve ter no máximo 2MB."); btn.innerText = "Cadastrar Colaborador"; btn.disabled = false; return; }
+                    const base64Str = await toBase64(file);
+                    const uploadRes = await fetch('/api', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'upload_foto', file_base64: base64Str, filename: "foto_" + Date.now() + "_" + file.name.replace(/\s+/g, '_') }) });
+                    const uploadData = await uploadRes.json();
+                    if(uploadData.url_foto) urlFinalFoto = uploadData.url_foto;
+                    else if (uploadData.erro) { alert(uploadData.erro); btn.innerText = "Cadastrar Colaborador"; btn.disabled = false; return; }
+                }
+
+                const req = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ 
+                    action: 'cadastrar_funcionario', nome: document.getElementById('func-nome').value, cargo: document.getElementById('func-cargo').value, whatsapp: document.getElementById('func-whats').value, email: document.getElementById('func-email').value, documento: document.getElementById('func-doc').value, endereco: document.getElementById('func-end').value, conta_bancaria: document.getElementById('func-bank').value, data_nascimento: document.getElementById('func-nasc').value, url_foto: urlFinalFoto, gestor_id: dadosGestorLogado.id 
+                }) });
+                const res = await req.json(); if(res.erro) alert("Erro: " + res.erro); else { e.target.reset(); carregarFuncionarios(); }
+            } catch (error) {} finally { btn.innerText = "Cadastrar Colaborador"; btn.disabled = false; }
+        }
+
+        function abrirModalEdicaoFunc(id) {
+            const f = cacheFuncionarios.find(func => func.id === id); if(!f) return;
+            document.getElementById('edit-func-id').value = f.id; document.getElementById('edit-func-nome').value = f.nome || ''; document.getElementById('edit-func-doc').value = f.documento || ''; document.getElementById('edit-func-nasc').value = f.data_nascimento || ''; document.getElementById('edit-func-cargo').value = f.cargo || ''; document.getElementById('edit-func-whats').value = f.whatsapp || ''; document.getElementById('edit-func-email').value = f.email || ''; document.getElementById('edit-func-bank').value = f.conta_bancaria || ''; document.getElementById('edit-func-end').value = f.endereco || '';
+            document.getElementById('modal-edicao-func').classList.remove('hidden');
+        }
+
+        async function salvarEdicaoFunc(e) {
+            e.preventDefault(); const btn = e.target.querySelector('button[type="submit"]'); btn.innerText = "Salvando..."; btn.disabled = true;
+            let urlFinalFoto = ""; const fileInput = document.getElementById('edit-func-foto');
+            
+            try {
+                if(fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    if(file.size > 2 * 1024 * 1024) { alert("A foto deve ter no máximo 2MB."); btn.innerText = "Salvar Dados"; btn.disabled = false; return; }
+                    const base64Str = await toBase64(file);
+                    const uploadRes = await fetch('/api', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'upload_foto', file_base64: base64Str, filename: "foto_edit_" + Date.now() + "_" + file.name.replace(/\s+/g, '_') }) });
+                    const uploadData = await uploadRes.json();
+                    if(uploadData.url_foto) urlFinalFoto = uploadData.url_foto;
+                }
+
+                let payloadData = { action: 'editar_funcionario', id: document.getElementById('edit-func-id').value, nome: document.getElementById('edit-func-nome').value, documento: document.getElementById('edit-func-doc').value, data_nascimento: document.getElementById('edit-func-nasc').value, cargo: document.getElementById('edit-func-cargo').value, whatsapp: document.getElementById('edit-func-whats').value, email: document.getElementById('edit-func-email').value, conta_bancaria: document.getElementById('edit-func-bank').value, endereco: document.getElementById('edit-func-end').value };
+                if (urlFinalFoto !== "") { payloadData.url_foto = urlFinalFoto; }
+
+                const req = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payloadData) });
+                const res = await req.json(); if(res.erro) alert("Erro: " + res.erro); else { document.getElementById('modal-edicao-func').classList.add('hidden'); carregarFuncionarios(); }
+            } catch (error) {} finally { btn.innerText = "Salvar Dados"; btn.disabled = false; }
+        }
+
+        function imprimirFichaFunc() {
+            const id = document.getElementById('edit-func-id').value; const f = cacheFuncionarios.find(func => func.id == id); if(!f) return;
+            const nasc = f.data_nascimento ? new Date(f.data_nascimento + 'T00:00:00').toLocaleDateString('pt-BR') : 'Não informada';
+            const imgHtml = f.url_foto ? `<div style="text-align:right;"><img src="${f.url_foto}" style="width:100px;height:130px;object-fit:cover;border:1px solid #ccc;border-radius:8px;"></div>` : '';
+            const w = window.open('', '_blank');
+            w.document.write(`<html><head><title>Ficha - ${f.nome}</title><style>body{font-family:sans-serif;padding:30px;line-height:1.6;} h2{border-bottom:2px solid #333;pb:5px;}</style></head><body onload="window.print()"><div style="display:flex;justify-content:space-between;align-items:start;"><div><h2>FICHA DE COLABORADOR</h2><p><strong>Nome:</strong> ${f.nome}</p><p><strong>CPF/CNPJ:</strong> ${f.documento}</p><p><strong>Data de Nascimento:</strong> ${nasc}</p><p><strong>Cargo:</strong> ${f.cargo}</p><p><strong>Contato:</strong> ${f.whatsapp}</p><p><strong>E-mail:</strong> ${f.email}</p><p><strong>Dados Bancários:</strong> ${f.conta_bancaria}</p><p><strong>Endereço:</strong> ${f.endereco}</p><p><strong>Gabinete Vínculo:</strong> ${dadosGestorLogado.nome_campanha_gabinete}</p></div>${imgHtml}</div></body></html>`);
+            w.document.close();
+        }
+
+        function gerarCracha(nome, cargo, fotoUrl) {
+            const imgHtml = fotoUrl ? `<img src="${fotoUrl}" style="width:110px;height:140px;object-fit:cover;margin:15px auto;border:2px solid #ddd;border-radius:8px;box-shadow: 0 4px 6px rgba(0,0,0,0.1);">` : `<div style="width:110px;height:140px;margin:15px auto;border:2px dashed #ccc;border-radius:8px;background:#f9f9f9;display:flex;align-items:center;justify-content:center;color:#999;font-size:12px;font-weight:bold;">SEM FOTO</div>`;
+            const corLogo = dadosGestorLogado.cor_layout || '#10b981';
+            const win = window.open('', '_blank');
+            win.document.write(`<html><body onload="window.print()"><div style="border:1px solid #ccc;width:240px;height:380px;margin:50px auto;text-align:center;font-family:sans-serif;border-radius:12px;overflow:hidden;box-shadow:0 10px 15px rgba(0,0,0,0.1);"><div style="background-color:${corLogo};color:white;padding:12px 0;font-weight:bold;font-size:14px;letter-spacing:1px;text-transform:uppercase;">${dadosGestorLogado.nome_campanha_gabinete}</div>${imgHtml}<h3 style="margin:10px 0 5px 0;font-size:18px;color:#333;">${nome.toUpperCase()}</h3><p style="margin:0;color:${corLogo};font-weight:bold;font-size:14px;">${cargo}</p><div style="margin-top:20px;font-size:10px;color:#888;border-top:1px solid #eee;padding-top:10px;">Acesso Liberado</div></div></body></html>`);
+            win.document.close();
+        }
+
+        async function mudarStatusFuncionario(id, statusBR) {
+            const novo = statusBR === 'Ativo' ? 'Inativo' : 'Ativo';
+            await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'alterar_status_funcionario', id: id, status: novo }) }); carregarFuncionarios();
+        }
+        async function excluirFuncionario(id) {
+            if(!confirm("Apagar permanentemente?")) return;
+            await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'excluir_funcionario', id: id }) }); carregarFuncionarios();
+        }
+
+        // ---- AGENDA ----
+        async function carregarAgenda() {
+            const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_agenda_gestor', gestor_id: dadosGestorLogado.id }) });
+            const d = await res.json(); const tbody = document.getElementById('tabela-agenda'); tbody.innerHTML = '';
+            if (!d.agenda || !d.agenda.length) { tbody.innerHTML = '<tr><td colspan="4" class="p-4 md:p-6 text-slate-400 italic text-center">Sem compromissos.</td></tr>'; return; }
+            d.agenda.forEach(a => {
+                const statusCor = a.status === 'Cancelado' ? 'text-rose-500 bg-rose-50 border-rose-100' : (a.status === 'Remarcado' ? 'text-amber-600 bg-amber-50 border-amber-100' : 'text-emerald-600 bg-emerald-50 border-emerald-100');
+                const justificativaHtml = a.justificativa ? `<div class="text-[10px] text-slate-500 font-normal mt-1"><i class="fa-solid fa-quote-left text-slate-300 mr-1"></i>${a.justificativa}</div>` : '';
+                const dataFormatada = a.data_evento ? new Date(a.data_evento + 'T00:00:00').toLocaleDateString('pt-BR') : ''; const horaFormatada = a.hora_evento ? a.hora_evento.substring(0, 5) : '--:--';
+                tbody.innerHTML += `<tr class="hover:bg-slate-50 text-xs border-b border-slate-50"><td class="py-3 px-4 md:px-6 font-semibold whitespace-nowrap">${dataFormatada} às ${horaFormatada}</td><td class="py-3 px-4 md:px-6"><div class="font-bold text-slate-700 min-w-[150px]">${a.titulo || '---'}</div>${justificativaHtml}</td><td class="py-3 px-4 md:px-6 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold border whitespace-nowrap ${statusCor}">${a.status || 'Confirmado'}</span></td><td class="py-3 px-4 md:px-6 flex justify-center gap-1.5 no-print"><button onclick="abrirModalStatusAgenda(${a.id}, 'Remarcado', '${a.data_evento || ''}', '${a.hora_evento || ''}')" class="border bg-white text-amber-600 hover:bg-amber-50 px-2 py-1 rounded text-[10px] font-medium transition whitespace-nowrap">Remarcar</button><button onclick="abrirModalStatusAgenda(${a.id}, 'Cancelado')" class="border bg-white text-rose-600 hover:bg-rose-50 px-2 py-1 rounded text-[10px] font-medium transition whitespace-nowrap">Cancelar</button><button onclick="excluirAgenda(${a.id})" class="text-slate-400 hover:text-rose-600 px-1 ml-1"><i class="fa-regular fa-trash-can"></i></button></td></tr>`;
+            });
+        }
+        async function cadastrarCompromisso(e) {
+            e.preventDefault(); const req = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'cadastrar_agenda', titulo: document.getElementById('age-titulo').value, data: document.getElementById('age-data').value, hora: document.getElementById('age-hora').value, gestor_id: dadosGestorLogado.id }) });
+            const res = await req.json(); if(res.erro) alert("Erro: " + res.erro); else { e.target.reset(); carregarAgenda(); }
+        }
+        function abrirModalStatusAgenda(id, acao, dataAtual = '', horaAtual = '') {
+            document.getElementById('status-agenda-id').value = id; document.getElementById('status-agenda-acao').value = acao; document.getElementById('status-agenda-justificativa').value = '';
+            const containerDataHora = document.getElementById('container-data-hora-remarcar'); const inputData = document.getElementById('status-agenda-data'); const inputHora = document.getElementById('status-agenda-hora');
+            if (acao === 'Remarcado') { document.getElementById('titulo-modal-agenda').innerHTML = '<i class="fa-solid fa-clock-rotate-left mr-2 text-amber-500"></i>Remarcar Evento'; containerDataHora.classList.remove('hidden'); inputData.required = true; inputHora.required = true; inputData.value = dataAtual; inputHora.value = horaAtual ? horaAtual.substring(0, 5) : ''; } else { document.getElementById('titulo-modal-agenda').innerHTML = '<i class="fa-solid fa-ban mr-2 text-rose-500"></i>Cancelar Evento'; containerDataHora.classList.add('hidden'); inputData.required = false; inputHora.required = false; }
+            document.getElementById('modal-status-agenda').classList.remove('hidden');
+        }
+        async function salvarStatusAgenda(e) {
+            e.preventDefault(); const btn = document.getElementById('btn-salvar-status-agenda'); btn.innerText = "Salvando..."; btn.disabled = true;
+            try {
+                const id = document.getElementById('status-agenda-id').value; const status = document.getElementById('status-agenda-acao').value; const justificativa = document.getElementById('status-agenda-justificativa').value;
+                let payload = { action: 'alterar_status_agenda', id: id, status: status, justificativa: justificativa };
+                if (status === 'Remarcado') { payload.data = document.getElementById('status-agenda-data').value; payload.hora = document.getElementById('status-agenda-hora').value; }
+                const req = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
+                const res = await req.json(); if (res.erro) alert("Erro ao salvar: " + res.erro); else { document.getElementById('modal-status-agenda').classList.add('hidden'); carregarAgenda(); }
+            } catch (error) {} finally { btn.innerText = "Confirmar Alteração"; btn.disabled = false; }
+        }
+        async function excluirAgenda(id) { if(!confirm("Remover evento definitivamente?")) return; await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'excluir_agenda', id: id }) }); carregarAgenda(); }
+        
+        // ---- ELEITORES ----
+        async function carregarEleitores() {
+            const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_eleitores_gestor', gestor_id: dadosGestorLogado.id }) });
+            const d = await res.json(); cacheEleitores = d.eleitores || []; const tbody = document.getElementById('tabela-eleitores'); tbody.innerHTML = '';
+            if (!cacheEleitores.length) { tbody.innerHTML = '<tr><td colspan="5" class="p-4 md:p-6 text-slate-400 italic text-center">Nenhum eleitor.</td></tr>'; return; }
+            cacheEleitores.forEach(e => {
+                const statusBadge = e.status === 'Bloqueado' ? '<span class="bg-rose-50 text-rose-600 border border-rose-100 px-2 py-0.5 rounded text-[10px] font-bold whitespace-nowrap">Bloqueado</span>' : '<span class="bg-emerald-50 text-emerald-500 border border-emerald-100 px-2 py-0.5 rounded text-[10px] font-bold whitespace-nowrap">Ativo</span>';
+                const btnStatus = e.status === 'Bloqueado' ? `<button onclick="mudarStatusEleitor(${e.id}, 'Ativo')" class="border bg-white text-emerald-600 px-2 py-1 rounded text-[10px] font-semibold whitespace-nowrap">Desbloquear</button>` : `<button onclick="mudarStatusEleitor(${e.id}, 'Bloqueado')" class="border bg-white text-rose-600 px-2 py-1 rounded text-[10px] font-semibold whitespace-nowrap">Bloquear</button>`;
+                tbody.innerHTML += `<tr class="hover:bg-slate-50 text-xs border-b border-slate-50"><td class="py-3 px-4 md:px-6 font-semibold whitespace-nowrap">${e.nome ? e.nome.toUpperCase() : '---'}</td><td class="py-3 px-4 md:px-6 whitespace-nowrap">${e.bairro || '---'}</td><td class="py-3 px-4 md:px-6 font-mono whitespace-nowrap">${e.whatsapp || '---'}</td><td class="py-3 px-4 md:px-6 text-center">${statusBadge}</td><td class="py-3 px-4 md:px-6 flex justify-center gap-1.5 no-print"><button onclick="abrirModalEleitor(${e.id})" class="border bg-white px-2 py-1 rounded text-[10px] font-semibold flex items-center whitespace-nowrap"><i class="fa-regular fa-eye mr-1"></i> Dados</button>${btnStatus}<button onclick="excluirEleitor(${e.id})" class="text-slate-400 hover:text-rose-500 px-1"><i class="fa-solid fa-trash"></i></button></td></tr>`;
+            });
+        }
+        async function cadastrarApoiadorAdmin(e) {
+            e.preventDefault(); const btn = e.target.querySelector('button[type="submit"]'); const txtOriginal = btn.innerText; btn.innerText = "Salvando..."; btn.disabled = true;
+            try {
+                const req = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'salvar_apoiador', nome: document.getElementById('eleitor-nome').value, whatsapp: document.getElementById('eleitor-whatsapp').value, bairro: document.getElementById('eleitor-bairro').value, titulo: document.getElementById('eleitor-titulo').value, demanda: document.getElementById('eleitor-demanda').value, gestor_id: dadosGestorLogado.id }) });
+                const res = await req.json(); if(res.erro) { alert("Erro: " + res.erro); } else { e.target.reset(); carregarEleitores(); }
+            } catch (error) { alert("Falha de rede."); } finally { btn.innerText = txtOriginal; btn.disabled = false; }
+        }
+        function abrirModalEleitor(id) { const e = cacheEleitores.find(el => el.id === id); if(!e) return; document.getElementById('conteudo-modal-eleitor').innerHTML = `<div class="grid grid-cols-2 gap-2"><p><strong>Nome:</strong> ${e.nome || ''}</p><p><strong>WhatsApp:</strong> ${e.whatsapp || ''}</p><p><strong>Bairro:</strong> ${e.bairro || ''}</p><p><strong>Título Eleitoral:</strong> ${e.titulo || '---'}</p><p><strong>Status:</strong> ${e.status || 'Ativo'}</p></div><hr class="my-2"><p class="font-bold">Demanda Solicitada:</p><div class="bg-slate-50 p-3 rounded-lg border mt-1 text-slate-600 break-words">${e.demanda || 'Nenhuma registrada.'}</div>`; document.getElementById('modal-eleitor').classList.remove('hidden'); }
+        async function mudarStatusEleitor(id, novoStatus) { await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'alterar_status_eleitor', id: id, status: novoStatus }) }); carregarEleitores(); }
+        async function excluirEleitor(id) { if(!confirm("Remover eleitor?")) return; await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'excluir_eleitor', id: id }) }); document.getElementById('modal-eleitor').classList.add('hidden'); carregarEleitores(); }
+        
+        // ---- DOCUMENTOS ----
+        async function carregarDocs() {
+            const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_documentos_gestor', gestor_id: dadosGestorLogado.id }) });
+            const d = await res.json(); const tbody = document.getElementById('tabela-documentos'); tbody.innerHTML = '';
+            if (!d.documentos || !d.documentos.length) { tbody.innerHTML = '<tr><td colspan="3" class="p-4 md:p-6 text-slate-400 italic text-center">Sem documentos.</td></tr>'; return; }
+            d.documentos.forEach(doc => { const btn = doc.url_arquivo ? `<button onclick="window.open('${doc.url_arquivo}', '_blank')" class="text-emerald-600 font-semibold p-1"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>` : ''; tbody.innerHTML += `<tr class="hover:bg-slate-50 text-xs border-b border-slate-50"><td class="py-3 px-4 md:px-6 font-bold whitespace-nowrap">${doc.titulo || '---'}</td><td class="py-3 px-4 md:px-6 whitespace-nowrap">${doc.categoria || '---'}</td><td class="py-3 px-4 md:px-6 flex justify-center gap-4 items-center">${btn} <button onclick="excluirDoc(${doc.id})" class="text-rose-500 p-1"><i class="fa-solid fa-trash"></i></button></td></tr>`; });
+        }
+        async function cadastrarDoc(e) {
+            e.preventDefault(); const btn = document.getElementById('btn-salvar-doc'); btn.innerText = "Enviando..."; btn.disabled = true; let urlFinalDoc = ""; const fileInput = document.getElementById('doc-file');
+            try {
+                if(fileInput.files.length > 0) { const file = fileInput.files[0]; if(file.size > 4 * 1024 * 1024) { alert("O arquivo excede limite de 4MB."); btn.innerText = "Arquivar"; btn.disabled = false; return; } const base64Str = await toBase64(file); const uploadRes = await fetch('/api', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'upload_documento', file_base64: base64Str, filename: Date.now() + "_" + file.name.replace(/\s+/g, '_') }) }); const uploadData = await uploadRes.json(); if(uploadData.url_arquivo) urlFinalDoc = uploadData.url_arquivo; }
+                const req = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'cadastrar_documento', titulo: document.getElementById('doc-titulo').value, categoria: document.getElementById('doc-cat').value, url_arquivo: urlFinalDoc, gestor_id: dadosGestorLogado.id }) });
+                const res = await req.json(); if(res.erro) alert("Erro: " + res.erro); else { e.target.reset(); carregarDocs(); }
+            } catch (error) {} finally { btn.innerText = "Arquivar"; btn.disabled = false; }
+        }
+        async function excluirDoc(id) { if(!confirm("Remover documento?")) return; await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'excluir_documento', id: id }) }); carregarDocs(); }
+        
+        window.onload = autenticarGestor;
     </script>
 </body>
 </html>

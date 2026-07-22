@@ -188,7 +188,7 @@
         </div>
     </div>
 
-    <!-- NOVO: Modal para Status da Agenda -->
+    <!-- Modal para Status da Agenda -->
     <div id="modal-status-agenda" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
         <div class="bg-white rounded-2xl w-full max-w-md border p-6 shadow-2xl space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
@@ -404,10 +404,8 @@
                 d.agenda.forEach(a => {
                     const statusCor = a.status === 'Cancelado' ? 'text-rose-500 bg-rose-50 border-rose-100' : (a.status === 'Remarcado' ? 'text-amber-600 bg-amber-50 border-amber-100' : 'text-emerald-600 bg-emerald-50 border-emerald-100');
                     
-                    // Lógica para mostrar a justificativa elegantemente
                     const justificativaHtml = a.justificativa ? `<div class="text-[10px] text-slate-500 font-normal mt-1"><i class="fa-solid fa-quote-left text-slate-300 mr-1"></i>${a.justificativa}</div>` : '';
                     
-                    // Tratamento seguro de Data e Hora
                     const dataFormatada = a.data_evento ? new Date(a.data_evento + 'T00:00:00').toLocaleDateString('pt-BR') : '';
                     const horaFormatada = a.hora_evento ? a.hora_evento.substring(0, 5) : '--:--';
 
@@ -431,7 +429,6 @@
             const res = await req.json(); if(res.erro) { alert("Erro: " + res.erro); } else { e.target.reset(); carregarAgenda(); }
         }
 
-        // Função que abre a janela para Remarcar ou Cancelar
         function abrirModalStatusAgenda(id, acao, dataAtual = '', horaAtual = '') {
             document.getElementById('status-agenda-id').value = id;
             document.getElementById('status-agenda-acao').value = acao;
@@ -458,7 +455,6 @@
             document.getElementById('modal-status-agenda').classList.remove('hidden');
         }
 
-        // Função que envia a remarcação ou cancelamento com a justificativa
         async function salvarStatusAgenda(e) {
             e.preventDefault();
             const btn = document.getElementById('btn-salvar-status-agenda');
@@ -471,7 +467,6 @@
                 
                 let payload = { action: 'alterar_status_agenda', id: id, status: status, justificativa: justificativa };
                 
-                // Só envia nova data se for Remarcação
                 if (status === 'Remarcado') {
                     payload.data = document.getElementById('status-agenda-data').value;
                     payload.hora = document.getElementById('status-agenda-hora').value;

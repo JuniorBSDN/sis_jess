@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>sis JESS v.i - Plataforma de Gestão</title>
+    <title>sis Jess v.1 - Plataforma de Gestão</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -22,18 +22,18 @@
     <!-- Fundo escuro do menu no celular -->
     <div id="menu-backdrop" onclick="toggleMenu()" class="fixed inset-0 bg-slate-900/60 z-20 hidden md:hidden backdrop-blur-sm transition-opacity"></div>
 
-    <!-- SIDEBAR (Barra Lateral) Responsiva -->
+    <!-- SIDEBAR Responsiva -->
     <aside id="sidebar" class="fixed md:relative top-0 left-0 h-full w-[260px] min-w-[260px] bg-[#0f1e36] text-slate-300 flex flex-col justify-between flex-shrink-0 z-30 shadow-2xl md:shadow-xl no-print transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
         <div>
             <div class="p-6 flex items-center gap-3 border-b border-slate-800/50 relative">
                 <button onclick="toggleMenu()" class="md:hidden absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
                 
-                <div id="container-logo" class="w-12 h-12 rounded-lg bg-emerald-500 flex items-center justify-center shadow-lg text-white font-bold text-2xl flex-shrink-0 overflow-hidden">
+                <div id="container-logo" class="w-12 h-12 rounded-lg bg-blue-600 flex items-center justify-center shadow-lg text-white font-bold text-2xl flex-shrink-0 overflow-hidden">
                     <span id="icone-padrao">sJ</span>
                 </div>
                 <div class="leading-tight overflow-hidden w-full pr-4">
-                    <h1 id="brand-name" class="text-white font-bold text-sm tracking-wide truncate">Carregando...</h1>
-                    <span id="sub-brand" class="text-[11px] font-bold text-emerald-400">Operacional</span>
+                    <h1 id="brand-name" class="text-white font-bold text-sm tracking-wide truncate">sis Jess</h1>
+                    <span id="sub-brand" class="text-[11px] font-bold text-blue-400">Gestão Local</span>
                 </div>
             </div>
 
@@ -58,9 +58,9 @@
 
         <div class="p-5 text-center border-t border-slate-800/50">
             <div class="text-[10px] text-slate-500 mb-3 leading-relaxed hidden md:block">
-                Painel Administrativo<br><span id="footer-unidade" class="uppercase font-bold text-slate-400">Carregando...</span>
+                sis Jess &copy; 2026<br><span id="footer-unidade" class="uppercase font-bold text-slate-400">Carregando...</span>
             </div>
-            <button onclick="window.location.href='index.html'" class="w-full text-slate-400 hover:text-white text-xs font-bold py-2 rounded-lg transition hover:bg-white/5 border border-transparent hover:border-slate-700/50">
+            <button onclick="window.location.reload()" class="w-full text-slate-400 hover:text-white text-xs font-bold py-2 rounded-lg transition hover:bg-white/5 border border-transparent hover:border-slate-700/50">
                 <i class="fa-solid fa-power-off mr-1"></i> Sair do Sistema
             </button>
         </div>
@@ -71,10 +71,10 @@
         <!-- HEADER Responsivo -->
         <header class="h-16 md:h-20 bg-white border-b border-slate-200 px-4 md:px-10 flex items-center justify-between flex-shrink-0 z-10 no-print">
             <div class="flex items-center gap-3">
-                <button onclick="toggleMenu()" class="md:hidden text-slate-600 hover:text-emerald-500 text-xl p-1 focus:outline-none">
+                <button onclick="toggleMenu()" class="md:hidden text-slate-600 hover:text-blue-600 text-xl p-1 focus:outline-none">
                     <i class="fa-solid fa-bars"></i>
                 </button>
-                <h2 id="titulo-pagina-op" class="font-bold text-slate-800 text-[16px] md:text-[19px] truncate max-w-[150px] md:max-w-none">Painel de Controle</h2>
+                <h2 id="titulo-pagina-op" class="font-bold text-slate-800 text-[16px] md:text-[19px] truncate max-w-[150px] md:max-w-none">sis Jess - Painel</h2>
             </div>
             <div id="badge-unidade" class="bg-slate-50 text-slate-600 text-[9px] md:text-xs font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-slate-200 shadow-sm truncate max-w-[130px] md:max-w-none">
                 Unidade: CARREGANDO...
@@ -109,30 +109,34 @@
             <!-- ABA RH -->
             <div id="aba-rh" class="tab-op hidden space-y-4 md:space-y-6">
                 <div class="bg-white border border-slate-200 rounded-xl p-4 md:p-6 shadow-sm no-print">
-                    <h3 class="text-sm font-bold text-slate-700 uppercase mb-4 border-b pb-2"><i class="fa-solid fa-user-plus mr-2 text-emerald-500"></i>Novo Colaborador</h3>
+                    <h3 class="text-sm font-bold text-slate-700 uppercase mb-4 border-b pb-2"><i class="fa-solid fa-user-plus mr-2 text-blue-600"></i>Novo Colaborador</h3>
                     <form onsubmit="cadastrarAssessor(event)" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-                        
-                        <!-- NOVO CAMPO: FOTO -->
                         <div class="sm:col-span-2 md:col-span-3 lg:col-span-1">
                             <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Foto 3x4 (Crachá)</label>
                             <input type="file" id="func-foto" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-slate-100 file:text-slate-700 focus:outline-none transition">
                         </div>
-
-                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Nome Completo *</label><input type="text" id="func-nome" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
-                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">CPF ou CNPJ *</label><input type="text" id="func-doc" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
-                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Data de Nascimento</label><input type="date" id="func-nasc" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
-                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Cargo / Setor *</label><input type="text" id="func-cargo" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
-                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Telefone / WhatsApp *</label><input type="text" id="func-whats" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
-                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">E-mail *</label><input type="email" id="func-email" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
-                        <div class="sm:col-span-2 md:col-span-1"><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Conta Bancária (Pix/Ag) *</label><input type="text" id="func-bank" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
-                        <div class="sm:col-span-2 md:col-span-2"><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Endereço Residencial *</label><input type="text" id="func-end" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
+                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Nome Completo *</label><input type="text" id="func-nome" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-blue-500 transition"></div>
+                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">CPF ou CNPJ *</label><input type="text" id="func-doc" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-blue-500 transition"></div>
+                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Data de Nascimento</label><input type="date" id="func-nasc" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-blue-500 transition"></div>
+                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Cargo / Setor *</label><input type="text" id="func-cargo" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-blue-500 transition"></div>
+                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Telefone / WhatsApp *</label><input type="text" id="func-whats" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-blue-500 transition"></div>
+                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">E-mail *</label><input type="email" id="func-email" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-blue-500 transition"></div>
+                        <div class="sm:col-span-2 md:col-span-1"><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Conta Bancária (Pix/Ag) *</label><input type="text" id="func-bank" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-blue-500 transition"></div>
+                        <div class="sm:col-span-2 md:col-span-2"><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Endereço Residencial *</label><input type="text" id="func-end" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-blue-500 transition"></div>
                         <div class="sm:col-span-2 md:col-span-3 flex justify-end mt-2"><button type="submit" class="btn-dinamico w-full sm:w-auto text-white px-8 py-2.5 rounded-lg text-xs font-bold transition">Cadastrar Colaborador</button></div>
                     </form>
                 </div>
                 <div class="bg-white border border-slate-200 rounded-xl shadow-sm print-area overflow-hidden">
                     <div class="p-4 md:p-6 border-b border-slate-100 flex flex-wrap justify-between items-center gap-3 no-print">
                         <h3 class="text-md md:text-lg font-bold text-slate-800">Controle de Acessos</h3>
-                        <button onclick="window.print()" class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold flex items-center gap-2 transition"><i class="fa-solid fa-print"></i> Imprimir Lista</button>
+                        <div class="flex items-center gap-3 w-full md:w-auto">
+                            <!-- BARRA DE BUSCA -->
+                            <div class="relative w-full md:w-64">
+                                <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-sm"></i>
+                                <input type="text" id="busca-rh" onkeyup="filtrarTabela('busca-rh', 'tabela-funcionarios')" placeholder="Buscar nome, cargo, CPF..." class="w-full border border-slate-200 rounded-lg pl-9 pr-3 py-1.5 text-sm focus:outline-none focus:border-blue-500 transition">
+                            </div>
+                            <button onclick="window.print()" class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-2 transition whitespace-nowrap"><i class="fa-solid fa-print"></i> Imprimir</button>
+                        </div>
                     </div>
                     <div class="overflow-x-auto scrollbar-hide w-full">
                         <table class="w-full text-left text-sm text-slate-700 min-w-[900px]">
@@ -154,7 +158,14 @@
                     </form>
                 </div>
                 <div class="bg-white border border-slate-200 rounded-xl shadow-sm print-area overflow-hidden">
-                    <div class="p-4 md:p-6 border-b border-slate-100"><h3 class="text-md md:text-lg font-bold text-slate-800">Agenda Geral</h3></div>
+                    <div class="p-4 md:p-6 border-b border-slate-100 flex flex-wrap justify-between items-center gap-3 no-print">
+                        <h3 class="text-md md:text-lg font-bold text-slate-800">Agenda Geral</h3>
+                        <!-- BARRA DE BUSCA -->
+                        <div class="relative w-full md:w-64">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-sm"></i>
+                            <input type="text" id="busca-agenda" onkeyup="filtrarTabela('busca-agenda', 'tabela-agenda')" placeholder="Buscar evento, status..." class="w-full border border-slate-200 rounded-lg pl-9 pr-3 py-1.5 text-sm focus:outline-none focus:border-blue-500 transition">
+                        </div>
+                    </div>
                     <div class="overflow-x-auto scrollbar-hide w-full">
                         <table class="w-full text-left text-sm text-slate-700 min-w-[700px]">
                             <thead class="text-slate-500 text-[11px] font-bold uppercase border-b border-slate-100"><tr><th class="py-3 md:py-4 px-4 md:px-6">Data / Hora</th><th class="py-3 md:py-4 px-4 md:px-6">Evento</th><th class="py-3 md:py-4 px-4 md:px-6 text-center">Status</th><th class="py-3 md:py-4 px-4 md:px-6 text-center no-print">Ações</th></tr></thead>
@@ -175,7 +186,14 @@
                     </form>
                 </div>
                 <div class="bg-white border border-slate-200 rounded-xl shadow-sm print-area overflow-hidden">
-                    <div class="p-4 md:p-6 border-b border-slate-100"><h3 class="text-md md:text-lg font-bold text-slate-800">Arquivos Salvos</h3></div>
+                    <div class="p-4 md:p-6 border-b border-slate-100 flex flex-wrap justify-between items-center gap-3 no-print">
+                        <h3 class="text-md md:text-lg font-bold text-slate-800">Arquivos Salvos</h3>
+                        <!-- BARRA DE BUSCA -->
+                        <div class="relative w-full md:w-64">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-sm"></i>
+                            <input type="text" id="busca-docs" onkeyup="filtrarTabela('busca-docs', 'tabela-documentos')" placeholder="Buscar documento ou categoria..." class="w-full border border-slate-200 rounded-lg pl-9 pr-3 py-1.5 text-sm focus:outline-none focus:border-blue-500 transition">
+                        </div>
+                    </div>
                     <div class="overflow-x-auto scrollbar-hide w-full">
                         <table class="w-full text-left text-sm text-slate-700 min-w-[600px]">
                             <thead class="text-slate-500 text-[11px] font-bold uppercase border-b border-slate-100"><tr><th class="py-3 md:py-4 px-4 md:px-6">Título</th><th class="py-3 md:py-4 px-4 md:px-6">Categoria</th><th class="py-3 md:py-4 px-4 md:px-6 text-center no-print">Ações</th></tr></thead>
@@ -189,27 +207,27 @@
             <div id="aba-eleitores" class="tab-op hidden space-y-4 md:space-y-6">
                 <!-- FORMULÁRIO DE NOVO APOIADOR -->
                 <div class="bg-white border border-slate-200 rounded-xl p-4 md:p-6 shadow-sm no-print">
-                    <h3 class="text-sm font-bold text-slate-700 uppercase mb-4 border-b pb-2"><i class="fa-solid fa-user-plus mr-2 text-emerald-500"></i>Novo Apoiador / Eleitor</h3>
+                    <h3 class="text-sm font-bold text-slate-700 uppercase mb-4 border-b pb-2"><i class="fa-solid fa-user-plus mr-2 text-blue-600"></i>Novo Apoiador / Eleitor</h3>
                     <form onsubmit="cadastrarApoiadorAdmin(event)" class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                         <div>
                             <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Nome Completo *</label>
-                            <input type="text" id="eleitor-nome" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition">
+                            <input type="text" id="eleitor-nome" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-blue-500 transition">
                         </div>
                         <div>
                             <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">WhatsApp / Contato *</label>
-                            <input type="tel" id="eleitor-whatsapp" required placeholder="(91) 99999-9999" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition">
+                            <input type="tel" id="eleitor-whatsapp" required placeholder="(91) 99999-9999" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-blue-500 transition">
                         </div>
                         <div>
                             <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Bairro Regional *</label>
-                            <input type="text" id="eleitor-bairro" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition">
+                            <input type="text" id="eleitor-bairro" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-blue-500 transition">
                         </div>
                         <div>
                             <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Título de Eleitor (Opcional)</label>
-                            <input type="text" id="eleitor-titulo" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition">
+                            <input type="text" id="eleitor-titulo" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-blue-500 transition">
                         </div>
                         <div class="sm:col-span-2">
                             <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Demanda / Sugestão</label>
-                            <textarea id="eleitor-demanda" rows="2" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition resize-y"></textarea>
+                            <textarea id="eleitor-demanda" rows="2" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-blue-500 transition resize-y"></textarea>
                         </div>
                         <div class="sm:col-span-2 flex justify-end mt-2">
                             <button type="submit" class="btn-dinamico w-full sm:w-auto text-white px-8 py-2.5 rounded-lg text-xs font-bold transition">Confirmar e Cadastrar</button>
@@ -217,11 +235,18 @@
                     </form>
                 </div>
 
-                <!-- TABELA DE ELEITORES EXISTENTE -->
+                <!-- TABELA DE ELEITORES -->
                 <div class="bg-white border border-slate-200 rounded-xl shadow-sm print-area overflow-hidden">
                     <div class="p-4 md:p-6 border-b border-slate-100 flex flex-wrap justify-between items-center gap-3 no-print">
-                        <h3 class="text-md md:text-lg font-bold text-slate-800">Base de Apoiadores / Eleitores</h3>
-                        <button onclick="window.print()" class="bg-white border border-slate-200 hover:bg-slate-50 px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold flex items-center gap-2 transition"><i class="fa-solid fa-print"></i> Imprimir</button>
+                        <h3 class="text-md md:text-lg font-bold text-slate-800">Base de Apoiadores</h3>
+                        <div class="flex items-center gap-3 w-full md:w-auto">
+                            <!-- BARRA DE BUSCA -->
+                            <div class="relative w-full md:w-64">
+                                <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-sm"></i>
+                                <input type="text" id="busca-eleitores" onkeyup="filtrarTabela('busca-eleitores', 'tabela-eleitores')" placeholder="Buscar eleitor, bairro, telefone..." class="w-full border border-slate-200 rounded-lg pl-9 pr-3 py-1.5 text-sm focus:outline-none focus:border-blue-500 transition">
+                            </div>
+                            <button onclick="window.print()" class="bg-white border border-slate-200 hover:bg-slate-50 px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold flex items-center gap-2 transition whitespace-nowrap"><i class="fa-solid fa-print"></i> Imprimir</button>
+                        </div>
                     </div>
                     <div class="overflow-x-auto scrollbar-hide w-full">
                         <table class="w-full text-left text-sm text-slate-700 min-w-[800px]">
@@ -237,13 +262,13 @@
     <!-- MODAL DE ALERTA AUTOMÁTICO -->
     <div id="modal-alerta-login" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl w-full max-w-md border shadow-2xl overflow-hidden transform transition-all flex flex-col max-h-[90vh]">
-            <div class="bg-emerald-500 p-5 text-center relative flex-shrink-0">
+            <div class="bg-blue-600 p-5 text-center relative flex-shrink-0">
                 <button onclick="document.getElementById('modal-alerta-login').classList.add('hidden')" class="absolute top-4 right-4 text-white/80 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
                 <div class="w-12 h-12 md:w-16 md:h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-2 md:mb-3 shadow-lg">
-                    <i class="fa-solid fa-bell text-emerald-500 text-2xl md:text-3xl"></i>
+                    <i class="fa-solid fa-bell text-blue-600 text-2xl md:text-3xl"></i>
                 </div>
                 <h2 class="text-lg md:text-xl font-bold text-white tracking-wide">Resumo do Gabinete</h2>
-                <p class="text-emerald-50 text-xs mt-1">Aqui estão as suas prioridades de hoje!</p>
+                <p class="text-blue-100 text-xs mt-1">Aqui estão as suas prioridades de hoje!</p>
             </div>
             <div class="p-4 md:p-6 space-y-4 overflow-y-auto" id="conteudo-alerta-login"></div>
             <div class="p-4 border-t bg-slate-50 flex justify-center flex-shrink-0">
@@ -289,7 +314,7 @@
     <div id="modal-eleitor" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
         <div class="bg-white rounded-2xl w-full max-w-lg border shadow-2xl flex flex-col max-h-[90vh]">
             <div class="flex justify-between items-center border-b p-4 md:p-5 flex-shrink-0">
-                <h3 class="font-bold text-slate-800 text-sm uppercase"><i class="fa-solid fa-clipboard-user text-emerald-500 mr-2"></i>Ficha de Apoiador</h3>
+                <h3 class="font-bold text-slate-800 text-sm uppercase"><i class="fa-solid fa-clipboard-user text-blue-600 mr-2"></i>Ficha de Apoiador</h3>
                 <button onclick="document.getElementById('modal-eleitor').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <div id="conteudo-modal-eleitor" class="p-4 md:p-5 text-xs text-slate-700 space-y-3 overflow-y-auto"></div>
@@ -329,6 +354,30 @@
         let cacheFuncionarios = [];
         let cacheAgenda = [];
 
+        // ===== NOVA FUNÇÃO DE FILTRO / BUSCA =====
+        function filtrarTabela(inputId, tabelaId) {
+            const input = document.getElementById(inputId);
+            // Função para remover acentos (normaliza a string)
+            const removerAcentos = (str) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+            
+            const filter = removerAcentos(input.value);
+            const tbody = document.getElementById(tabelaId);
+            const trs = tbody.getElementsByTagName('tr');
+
+            for (let i = 0; i < trs.length; i++) {
+                // Ignorar a linha de "Nenhum registro" (que só tem 1 coluna)
+                if (trs[i].cells.length === 1 && trs[i].innerText.includes("Nenhum")) continue;
+                
+                const textoLinha = removerAcentos(trs[i].innerText);
+                if (textoLinha.indexOf(filter) > -1) {
+                    trs[i].style.display = "";
+                } else {
+                    trs[i].style.display = "none";
+                }
+            }
+        }
+        // ==========================================
+
         function toggleMenu() {
             const sidebar = document.getElementById('sidebar');
             const backdrop = document.getElementById('menu-backdrop');
@@ -342,21 +391,21 @@
         }
 
         async function autenticarGestor() {
-            const senhaDigitada = prompt("Digite a sua Chave de Acesso do Gabinete:");
-            if (!senhaDigitada) { window.location.href = "index.html"; return; }
+            const senhaDigitada = prompt("sis Jess - Digite a sua Chave de Acesso:");
+            if (!senhaDigitada) { window.location.reload(); return; }
 
             try {
                 const resposta = await fetch('/api', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'verificar_login_gestor', senha: senhaDigitada }) });
                 if (!resposta.ok) throw new Error("Erro na comunicação");
                 const dados = await resposta.json();
 
-                if (dados.erro) { alert("Erro do Banco: " + dados.erro); window.location.href = "index.html"; return; }
+                if (dados.erro) { alert("Erro do Banco: " + dados.erro); window.location.reload(); return; }
 
                 if (dados.autorizado) {
                     dadosGestorLogado = dados.gestor;
                     document.body.style.display = "flex";
 
-                    const nomeGabinete = dadosGestorLogado.nome_campanha_gabinete || 'Gabinete';
+                    const nomeGabinete = dadosGestorLogado.nome_campanha_gabinete || 'sis Jess';
                     document.getElementById('footer-unidade').innerText = nomeGabinete;
                     document.getElementById('badge-unidade').innerHTML = `Unidade: ${nomeGabinete.toUpperCase()}`;
                     document.getElementById('brand-name').innerText = nomeGabinete;
@@ -367,14 +416,14 @@
                         containerLogo.innerHTML = `<img src="${dadosGestorLogado.url_logo}" onerror="this.outerHTML='<span id=\\'icone-padrao\\'>${inicial}</span>'" class="w-full h-full object-contain p-1 bg-white">`;
                     } else { containerLogo.innerHTML = `<span id="icone-padrao">${inicial}</span>`; }
 
-                    const corCliente = dadosGestorLogado.cor_layout || '#10b981';
+                    const corCliente = dadosGestorLogado.cor_layout || '#2563eb';
                     document.getElementById('sub-brand').style.color = corCliente;
                     containerLogo.style.backgroundColor = corCliente;
                     document.querySelectorAll('.btn-dinamico').forEach(btn => { btn.style.backgroundColor = corCliente; });
 
                     navegarOperacional('aba-dashboard');
                 } else {
-                    alert(dados.mensagem || "Acesso negado."); window.location.href = "index.html";
+                    alert(dados.mensagem || "Acesso negado."); window.location.reload();
                 }
             } catch (erro) { alert("Falha de conexão com a API."); document.body.style.display = "flex"; }
         }
@@ -392,6 +441,12 @@
                 document.getElementById('sidebar').classList.add('-translate-x-full');
                 document.getElementById('menu-backdrop').classList.add('hidden');
             }
+
+            // Sempre que trocar de aba, limpamos os campos de busca
+            document.querySelectorAll('input[id^="busca-"]').forEach(input => {
+                input.value = '';
+                filtrarTabela(input.id, input.id.replace('busca-', 'tabela-').replace('docs', 'documentos').replace('rh', 'funcionarios'));
+            });
 
             if(idAba === 'aba-dashboard') carregarAvisosDashboard();
             if(idAba === 'aba-agenda') carregarAgenda();
@@ -453,7 +508,7 @@
 
         const toBase64 = file => new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = () => resolve(reader.result); reader.onerror = error => reject(error); });
 
-        // ---- RH & CRACHÁ (AGORA COM FOTO) ----
+        // ---- RH & CRACHÁ ----
         async function carregarFuncionarios() {
             const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_funcionarios', gestor_id: dadosGestorLogado.id }) });
             const d = await res.json(); cacheFuncionarios = d.funcionarios || [];
@@ -478,10 +533,12 @@
                         <button onclick="abrirModalEdicaoFunc(${f.id})" class="border bg-white px-2 py-1 rounded text-[10px]"><i class="fa-regular fa-pen-to-square"></i></button>
                         ${btnStatus}
                         <button onclick="excluirFuncionario(${f.id})" class="border bg-white text-rose-500 px-2 py-1 rounded text-[10px]"><i class="fa-solid fa-trash"></i></button>
-                        <button onclick="gerarCracha('${f.nome}', '${f.cargo}', '${f.url_foto || ''}')" title="Imprimir Crachá" class="border bg-white text-emerald-600 px-2 py-1 rounded text-[10px] font-bold"><i class="fa-regular fa-id-badge"></i></button>
+                        <button onclick="gerarCracha('${f.nome}', '${f.cargo}', '${f.url_foto || ''}')" title="Imprimir Crachá" class="border bg-white text-blue-600 px-2 py-1 rounded text-[10px] font-bold"><i class="fa-regular fa-id-badge"></i></button>
                     </td>
                 </tr>`;
             });
+            // Refiltra caso o usuário tenha deixado algo digitado na barra de busca
+            filtrarTabela('busca-rh', 'tabela-funcionarios');
         }
         
         async function cadastrarAssessor(e) {
@@ -539,15 +596,15 @@
             const nasc = f.data_nascimento ? new Date(f.data_nascimento + 'T00:00:00').toLocaleDateString('pt-BR') : 'Não informada';
             const imgHtml = f.url_foto ? `<div style="text-align:right;"><img src="${f.url_foto}" style="width:100px;height:130px;object-fit:cover;border:1px solid #ccc;border-radius:8px;"></div>` : '';
             const w = window.open('', '_blank');
-            w.document.write(`<html><head><title>Ficha - ${f.nome}</title><style>body{font-family:sans-serif;padding:30px;line-height:1.6;} h2{border-bottom:2px solid #333;pb:5px;}</style></head><body onload="window.print()"><div style="display:flex;justify-content:space-between;align-items:start;"><div><h2>FICHA DE COLABORADOR</h2><p><strong>Nome:</strong> ${f.nome}</p><p><strong>CPF/CNPJ:</strong> ${f.documento}</p><p><strong>Data de Nascimento:</strong> ${nasc}</p><p><strong>Cargo:</strong> ${f.cargo}</p><p><strong>Contato:</strong> ${f.whatsapp}</p><p><strong>E-mail:</strong> ${f.email}</p><p><strong>Dados Bancários:</strong> ${f.conta_bancaria}</p><p><strong>Endereço:</strong> ${f.endereco}</p><p><strong>Gabinete Vínculo:</strong> ${dadosGestorLogado.nome_campanha_gabinete}</p></div>${imgHtml}</div></body></html>`);
+            w.document.write(`<html><head><title>Ficha - ${f.nome}</title><style>body{font-family:sans-serif;padding:30px;line-height:1.6;} h2{border-bottom:2px solid #333;pb:5px;}</style></head><body onload="window.print()"><div style="display:flex;justify-content:space-between;align-items:start;"><div><h2>FICHA DE COLABORADOR</h2><p><strong>Nome:</strong> ${f.nome}</p><p><strong>CPF/CNPJ:</strong> ${f.documento}</p><p><strong>Data de Nascimento:</strong> ${nasc}</p><p><strong>Cargo:</strong> ${f.cargo}</p><p><strong>Contato:</strong> ${f.whatsapp}</p><p><strong>E-mail:</strong> ${f.email}</p><p><strong>Dados Bancários:</strong> ${f.conta_bancaria}</p><p><strong>Endereço:</strong> ${f.endereco}</p><p><strong>Unidade / Gabinete:</strong> ${dadosGestorLogado.nome_campanha_gabinete}</p></div>${imgHtml}</div></body></html>`);
             w.document.close();
         }
 
         function gerarCracha(nome, cargo, fotoUrl) {
             const imgHtml = fotoUrl ? `<img src="${fotoUrl}" style="width:110px;height:140px;object-fit:cover;margin:15px auto;border:2px solid #ddd;border-radius:8px;box-shadow: 0 4px 6px rgba(0,0,0,0.1);">` : `<div style="width:110px;height:140px;margin:15px auto;border:2px dashed #ccc;border-radius:8px;background:#f9f9f9;display:flex;align-items:center;justify-content:center;color:#999;font-size:12px;font-weight:bold;">SEM FOTO</div>`;
-            const corLogo = dadosGestorLogado.cor_layout || '#10b981';
+            const corLogo = dadosGestorLogado.cor_layout || '#2563eb';
             const win = window.open('', '_blank');
-            win.document.write(`<html><body onload="window.print()"><div style="border:1px solid #ccc;width:240px;height:380px;margin:50px auto;text-align:center;font-family:sans-serif;border-radius:12px;overflow:hidden;box-shadow:0 10px 15px rgba(0,0,0,0.1);"><div style="background-color:${corLogo};color:white;padding:12px 0;font-weight:bold;font-size:14px;letter-spacing:1px;text-transform:uppercase;">${dadosGestorLogado.nome_campanha_gabinete}</div>${imgHtml}<h3 style="margin:10px 0 5px 0;font-size:18px;color:#333;">${nome.toUpperCase()}</h3><p style="margin:0;color:${corLogo};font-weight:bold;font-size:14px;">${cargo}</p><div style="margin-top:20px;font-size:10px;color:#888;border-top:1px solid #eee;padding-top:10px;">Acesso Liberado</div></div></body></html>`);
+            win.document.write(`<html><body onload="window.print()"><div style="border:1px solid #ccc;width:240px;height:380px;margin:50px auto;text-align:center;font-family:sans-serif;border-radius:12px;overflow:hidden;box-shadow:0 10px 15px rgba(0,0,0,0.1);"><div style="background-color:${corLogo};color:white;padding:12px 0;font-weight:bold;font-size:14px;letter-spacing:1px;text-transform:uppercase;">${dadosGestorLogado.nome_campanha_gabinete}</div>${imgHtml}<h3 style="margin:10px 0 5px 0;font-size:18px;color:#333;">${nome.toUpperCase()}</h3><p style="margin:0;color:${corLogo};font-weight:bold;font-size:14px;">${cargo}</p><div style="margin-top:20px;font-size:10px;color:#888;border-top:1px solid #eee;padding-top:10px;">sis Jess - Acesso Liberado</div></div></body></html>`);
             win.document.close();
         }
 
@@ -571,6 +628,7 @@
                 const dataFormatada = a.data_evento ? new Date(a.data_evento + 'T00:00:00').toLocaleDateString('pt-BR') : ''; const horaFormatada = a.hora_evento ? a.hora_evento.substring(0, 5) : '--:--';
                 tbody.innerHTML += `<tr class="hover:bg-slate-50 text-xs border-b border-slate-50"><td class="py-3 px-4 md:px-6 font-semibold whitespace-nowrap">${dataFormatada} às ${horaFormatada}</td><td class="py-3 px-4 md:px-6"><div class="font-bold text-slate-700 min-w-[150px]">${a.titulo || '---'}</div>${justificativaHtml}</td><td class="py-3 px-4 md:px-6 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold border whitespace-nowrap ${statusCor}">${a.status || 'Confirmado'}</span></td><td class="py-3 px-4 md:px-6 flex justify-center gap-1.5 no-print"><button onclick="abrirModalStatusAgenda(${a.id}, 'Remarcado', '${a.data_evento || ''}', '${a.hora_evento || ''}')" class="border bg-white text-amber-600 hover:bg-amber-50 px-2 py-1 rounded text-[10px] font-medium transition whitespace-nowrap">Remarcar</button><button onclick="abrirModalStatusAgenda(${a.id}, 'Cancelado')" class="border bg-white text-rose-600 hover:bg-rose-50 px-2 py-1 rounded text-[10px] font-medium transition whitespace-nowrap">Cancelar</button><button onclick="excluirAgenda(${a.id})" class="text-slate-400 hover:text-rose-600 px-1 ml-1"><i class="fa-regular fa-trash-can"></i></button></td></tr>`;
             });
+            filtrarTabela('busca-agenda', 'tabela-agenda');
         }
         async function cadastrarCompromisso(e) {
             e.preventDefault(); const req = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'cadastrar_agenda', titulo: document.getElementById('age-titulo').value, data: document.getElementById('age-data').value, hora: document.getElementById('age-hora').value, gestor_id: dadosGestorLogado.id }) });
@@ -604,6 +662,7 @@
                 const btnStatus = e.status === 'Bloqueado' ? `<button onclick="mudarStatusEleitor(${e.id}, 'Ativo')" class="border bg-white text-emerald-600 px-2 py-1 rounded text-[10px] font-semibold whitespace-nowrap">Desbloquear</button>` : `<button onclick="mudarStatusEleitor(${e.id}, 'Bloqueado')" class="border bg-white text-rose-600 px-2 py-1 rounded text-[10px] font-semibold whitespace-nowrap">Bloquear</button>`;
                 tbody.innerHTML += `<tr class="hover:bg-slate-50 text-xs border-b border-slate-50"><td class="py-3 px-4 md:px-6 font-semibold whitespace-nowrap">${e.nome ? e.nome.toUpperCase() : '---'}</td><td class="py-3 px-4 md:px-6 whitespace-nowrap">${e.bairro || '---'}</td><td class="py-3 px-4 md:px-6 font-mono whitespace-nowrap">${e.whatsapp || '---'}</td><td class="py-3 px-4 md:px-6 text-center">${statusBadge}</td><td class="py-3 px-4 md:px-6 flex justify-center gap-1.5 no-print"><button onclick="abrirModalEleitor(${e.id})" class="border bg-white px-2 py-1 rounded text-[10px] font-semibold flex items-center whitespace-nowrap"><i class="fa-regular fa-eye mr-1"></i> Dados</button>${btnStatus}<button onclick="excluirEleitor(${e.id})" class="text-slate-400 hover:text-rose-500 px-1"><i class="fa-solid fa-trash"></i></button></td></tr>`;
             });
+            filtrarTabela('busca-eleitores', 'tabela-eleitores');
         }
         async function cadastrarApoiadorAdmin(e) {
             e.preventDefault(); const btn = e.target.querySelector('button[type="submit"]'); const txtOriginal = btn.innerText; btn.innerText = "Salvando..."; btn.disabled = true;
@@ -621,7 +680,8 @@
             const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_documentos_gestor', gestor_id: dadosGestorLogado.id }) });
             const d = await res.json(); const tbody = document.getElementById('tabela-documentos'); tbody.innerHTML = '';
             if (!d.documentos || !d.documentos.length) { tbody.innerHTML = '<tr><td colspan="3" class="p-4 md:p-6 text-slate-400 italic text-center">Sem documentos.</td></tr>'; return; }
-            d.documentos.forEach(doc => { const btn = doc.url_arquivo ? `<button onclick="window.open('${doc.url_arquivo}', '_blank')" class="text-emerald-600 font-semibold p-1"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>` : ''; tbody.innerHTML += `<tr class="hover:bg-slate-50 text-xs border-b border-slate-50"><td class="py-3 px-4 md:px-6 font-bold whitespace-nowrap">${doc.titulo || '---'}</td><td class="py-3 px-4 md:px-6 whitespace-nowrap">${doc.categoria || '---'}</td><td class="py-3 px-4 md:px-6 flex justify-center gap-4 items-center">${btn} <button onclick="excluirDoc(${doc.id})" class="text-rose-500 p-1"><i class="fa-solid fa-trash"></i></button></td></tr>`; });
+            d.documentos.forEach(doc => { const btn = doc.url_arquivo ? `<button onclick="window.open('${doc.url_arquivo}', '_blank')" class="text-blue-600 font-semibold p-1"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>` : ''; tbody.innerHTML += `<tr class="hover:bg-slate-50 text-xs border-b border-slate-50"><td class="py-3 px-4 md:px-6 font-bold whitespace-nowrap">${doc.titulo || '---'}</td><td class="py-3 px-4 md:px-6 whitespace-nowrap">${doc.categoria || '---'}</td><td class="py-3 px-4 md:px-6 flex justify-center gap-4 items-center">${btn} <button onclick="excluirDoc(${doc.id})" class="text-rose-500 p-1"><i class="fa-solid fa-trash"></i></button></td></tr>`; });
+            filtrarTabela('busca-docs', 'tabela-documentos');
         }
         async function cadastrarDoc(e) {
             e.preventDefault(); const btn = document.getElementById('btn-salvar-doc'); btn.innerText = "Enviando..."; btn.disabled = true; let urlFinalDoc = ""; const fileInput = document.getElementById('doc-file');

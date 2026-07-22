@@ -174,6 +174,7 @@ class handler(BaseHTTPRequestHandler):
                     "documento": dados.get('documento'),
                     "endereco": dados.get('endereco'),
                     "conta_bancaria": dados.get('conta_bancaria'),
+                    "data_nascimento": dados.get('data_nascimento'), # ADICIONADO AQUI
                     "gestor_id": self._safe_int(dados.get('gestor_id')),
                     "status": "Ativo"
                 }).encode('utf-8')
@@ -193,7 +194,8 @@ class handler(BaseHTTPRequestHandler):
                     "email": dados.get('email'),
                     "documento": dados.get('documento'),
                     "endereco": dados.get('endereco'),
-                    "conta_bancaria": dados.get('conta_bancaria')
+                    "conta_bancaria": dados.get('conta_bancaria'),
+                    "data_nascimento": dados.get('data_nascimento') # ADICIONADO AQUI
                 }).encode('utf-8')
                 headers = {'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json', 'Prefer': 'return=representation'}
                 req = urllib.request.Request(url, data=payload, headers=headers, method='PATCH')

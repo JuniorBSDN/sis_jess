@@ -183,6 +183,37 @@
 
             <!-- ABA ELEITORES -->
             <div id="aba-eleitores" class="tab-op hidden space-y-4 md:space-y-6">
+                <!-- FORMULÁRIO DE NOVO APOIADOR (INSERIDO AQUI) -->
+                <div class="bg-white border border-slate-200 rounded-xl p-4 md:p-6 shadow-sm no-print">
+                    <h3 class="text-sm font-bold text-slate-700 uppercase mb-4 border-b pb-2"><i class="fa-solid fa-user-plus mr-2 text-emerald-500"></i>Novo Apoiador / Eleitor</h3>
+                    <form onsubmit="cadastrarApoiadorAdmin(event)" class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Nome Completo *</label>
+                            <input type="text" id="eleitor-nome" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">WhatsApp / Contato *</label>
+                            <input type="tel" id="eleitor-whatsapp" required placeholder="(91) 99999-9999" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Bairro Regional *</label>
+                            <input type="text" id="eleitor-bairro" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Título de Eleitor (Opcional)</label>
+                            <input type="text" id="eleitor-titulo" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Demanda / Sugestão</label>
+                            <textarea id="eleitor-demanda" rows="2" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition resize-y"></textarea>
+                        </div>
+                        <div class="sm:col-span-2 flex justify-end mt-2">
+                            <button type="submit" class="btn-dinamico w-full sm:w-auto text-white px-8 py-2.5 rounded-lg text-xs font-bold transition">Confirmar e Cadastrar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- TABELA DE ELEITORES EXISTENTE -->
                 <div class="bg-white border border-slate-200 rounded-xl shadow-sm print-area overflow-hidden">
                     <div class="p-4 md:p-6 border-b border-slate-100 flex flex-wrap justify-between items-center gap-3 no-print">
                         <h3 class="text-md md:text-lg font-bold text-slate-800">Base de Apoiadores / Eleitores</h3>
@@ -210,9 +241,7 @@
                 <h2 class="text-lg md:text-xl font-bold text-white tracking-wide">Resumo do Gabinete</h2>
                 <p class="text-emerald-50 text-xs mt-1">Aqui estão as suas prioridades de hoje!</p>
             </div>
-            <div class="p-4 md:p-6 space-y-4 overflow-y-auto" id="conteudo-alerta-login">
-                <!-- Injetado via JS -->
-            </div>
+            <div class="p-4 md:p-6 space-y-4 overflow-y-auto" id="conteudo-alerta-login"></div>
             <div class="p-4 border-t bg-slate-50 flex justify-center flex-shrink-0">
                 <button onclick="document.getElementById('modal-alerta-login').classList.add('hidden')" class="bg-slate-800 hover:bg-slate-700 text-white font-bold w-full md:w-auto px-8 py-2.5 rounded-xl transition text-sm">Ciente, acessar sistema</button>
             </div>
@@ -290,7 +319,6 @@
         let cacheFuncionarios = [];
         let cacheAgenda = [];
 
-        // NOVO: Função para abrir e fechar o Menu Hambúrguer no Celular
         function toggleMenu() {
             const sidebar = document.getElementById('sidebar');
             const backdrop = document.getElementById('menu-backdrop');
@@ -350,7 +378,6 @@
             const btnAtivo = document.getElementById('btn-' + idAba);
             if(btnAtivo && dadosGestorLogado) { btnAtivo.className = "btn-menu w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-white rounded-xl transition shadow-sm"; btnAtivo.style.backgroundColor = "#1e293b"; }
 
-            // Fecha o menu automaticamente no celular ao clicar em uma aba
             if (window.innerWidth < 768) {
                 document.getElementById('sidebar').classList.add('-translate-x-full');
                 document.getElementById('menu-backdrop').classList.add('hidden');
@@ -489,6 +516,8 @@
             } catch (error) {} finally { btn.innerText = "Confirmar Alteração"; btn.disabled = false; }
         }
         async function excluirAgenda(id) { if(!confirm("Remover evento definitivamente?")) return; await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'excluir_agenda', id: id }) }); carregarAgenda(); }
+        
+        // ---- ELEITORES ----
         async function carregarEleitores() {
             const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_eleitores_gestor', gestor_id: dadosGestorLogado.id }) });
             const d = await res.json(); cacheEleitores = d.eleitores || []; const tbody = document.getElementById('tabela-eleitores'); tbody.innerHTML = '';
@@ -499,9 +528,48 @@
                 tbody.innerHTML += `<tr class="hover:bg-slate-50 text-xs border-b border-slate-50"><td class="py-3 px-4 md:px-6 font-semibold whitespace-nowrap">${e.nome ? e.nome.toUpperCase() : '---'}</td><td class="py-3 px-4 md:px-6 whitespace-nowrap">${e.bairro || '---'}</td><td class="py-3 px-4 md:px-6 font-mono whitespace-nowrap">${e.whatsapp || '---'}</td><td class="py-3 px-4 md:px-6 text-center">${statusBadge}</td><td class="py-3 px-4 md:px-6 flex justify-center gap-1.5 no-print"><button onclick="abrirModalEleitor(${e.id})" class="border bg-white px-2 py-1 rounded text-[10px] font-semibold flex items-center whitespace-nowrap"><i class="fa-regular fa-eye mr-1"></i> Dados</button>${btnStatus}<button onclick="excluirEleitor(${e.id})" class="text-slate-400 hover:text-rose-500 px-1"><i class="fa-solid fa-trash"></i></button></td></tr>`;
             });
         }
+
+        // NOVO: Cadastrar Apoiador pelo Admin
+        async function cadastrarApoiadorAdmin(e) {
+            e.preventDefault(); 
+            const btn = e.target.querySelector('button[type="submit"]'); 
+            const txtOriginal = btn.innerText; 
+            btn.innerText = "Salvando..."; btn.disabled = true;
+
+            try {
+                const req = await fetch('/api', { 
+                    method: 'POST', 
+                    headers: {'Content-Type': 'application/json'}, 
+                    body: JSON.stringify({ 
+                        action: 'salvar_apoiador', 
+                        nome: document.getElementById('eleitor-nome').value, 
+                        whatsapp: document.getElementById('eleitor-whatsapp').value, 
+                        bairro: document.getElementById('eleitor-bairro').value, 
+                        titulo: document.getElementById('eleitor-titulo').value, 
+                        demanda: document.getElementById('eleitor-demanda').value, 
+                        gestor_id: dadosGestorLogado.id 
+                    }) 
+                });
+                const res = await req.json(); 
+                if(res.erro) {
+                    alert("Erro: " + res.erro); 
+                } else { 
+                    e.target.reset(); 
+                    carregarEleitores(); 
+                }
+            } catch (error) {
+                alert("Falha de rede.");
+            } finally { 
+                btn.innerText = txtOriginal; 
+                btn.disabled = false; 
+            }
+        }
+
         function abrirModalEleitor(id) { const e = cacheEleitores.find(el => el.id === id); if(!e) return; document.getElementById('conteudo-modal-eleitor').innerHTML = `<div class="grid grid-cols-2 gap-2"><p><strong>Nome:</strong> ${e.nome || ''}</p><p><strong>WhatsApp:</strong> ${e.whatsapp || ''}</p><p><strong>Bairro:</strong> ${e.bairro || ''}</p><p><strong>Título Eleitoral:</strong> ${e.titulo || '---'}</p><p><strong>Status:</strong> ${e.status || 'Ativo'}</p></div><hr class="my-2"><p class="font-bold">Demanda Solicitada:</p><div class="bg-slate-50 p-3 rounded-lg border mt-1 text-slate-600 break-words">${e.demanda || 'Nenhuma registrada.'}</div>`; document.getElementById('modal-eleitor').classList.remove('hidden'); }
         async function mudarStatusEleitor(id, novoStatus) { await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'alterar_status_eleitor', id: id, status: novoStatus }) }); carregarEleitores(); }
         async function excluirEleitor(id) { if(!confirm("Remover eleitor?")) return; await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'excluir_eleitor', id: id }) }); document.getElementById('modal-eleitor').classList.add('hidden'); carregarEleitores(); }
+        
+        // ---- DOCUMENTOS ----
         const toBase64 = file => new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = () => resolve(reader.result); reader.onerror = error => reject(error); });
         async function carregarDocs() {
             const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_documentos_gestor', gestor_id: dadosGestorLogado.id }) });

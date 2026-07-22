@@ -5,6 +5,10 @@ import urllib.request
 import urllib.error
 import mimetypes
 import base64
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from datetime import datetime, timedelta
 
 class handler(BaseHTTPRequestHandler):
 
@@ -12,7 +16,7 @@ class handler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header('Content-type', 'application/json')
         self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
         self.send_header('Access-Control-Allow-Headers', 'Content-Type')
         self.end_headers()
 
@@ -23,10 +27,96 @@ class handler(BaseHTTPRequestHandler):
         return "https://scotyvkhwptckrvrjzdi.supabase.co"
 
     def _safe_int(self, value):
-        try:
-            return int(value) if value else None
-        except:
-            return None
+        try: return int(value) if value else None
+        except: return None
+
+    # NOVO: O Robô (Cron) bate aqui todos os dias via GET
+    def do_GET(self):
+        self._set_headers()
+        
+        # A Vercel vai acessar /api/cron automaticamente
+        if '/api/cron' in self.path:
+            sb_url = self._obter_url_supabase()
+            sb_key = os.environ.get('SUPABASE_SERVICE_KEY')
+            email_remetente = os.environ.get('EMAIL_SMTP')
+            senha_remetente = os.environ.get('SENHA_SMTP')
+            
+            if not email_remetente or not senha_remetente:
+                self.wfile.write(json.dumps({"erro": "Credenciais de e-mail não configuradas no Vercel"}).encode('utf-8'))
+                return
+
+            try:
+                # 1. Busca todos os Gestores Ativos
+                req_gest = urllib.request.Request(f"{sb_url}/rest/v1/gestores?status=eq.Ativo&select=id,nome_gestor,email,nome_campanha_gabinete", headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'}, method='GET')
+                with urllib.request.urlopen(req_gest) as response:
+                    gestores = json.loads(response.read().decode('utf-8'))
+
+                hoje = datetime.now()
+                limite = hoje + timedelta(days=7)
+                mes_atual = hoje.month
+
+                for gestor in gestores:
+                    if not gestor.get('email'): continue
+                    
+                    gid = gestor['id']
+                    
+                    # 2. Busca Agenda do Gestor
+                    req_ag = urllib.request.Request(f"{sb_url}/rest/v1/agenda?gestor_id=eq.{gid}&status=in.(Confirmado,Remarcado)", headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'}, method='GET')
+                    with urllib.request.urlopen(req_ag) as res_ag:
+                        agenda = json.loads(res_ag.read().decode('utf-8'))
+                    
+                    agenda_filtrada = []
+                    for a in agenda:
+                        if a.get('data_evento'):
+                            data_ev = datetime.strptime(a['data_evento'], '%Y-%m-%d')
+                            if hoje.date() <= data_ev.date() <= limite.date():
+                                agenda_filtrada.append(a)
+
+                    # 3. Busca Aniversariantes do Gestor
+                    req_func = urllib.request.Request(f"{sb_url}/rest/v1/funcionarios?gestor_id=eq.{gid}&status=eq.Ativo", headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'}, method='GET')
+                    with urllib.request.urlopen(req_func) as res_func:
+                        funcs = json.loads(res_func.read().decode('utf-8'))
+                    
+                    nivers = []
+                    for f in funcs:
+                        if f.get('data_nascimento'):
+                            parts = f['data_nascimento'].split('-')
+                            if len(parts) == 3 and int(parts[1]) == mes_atual:
+                                nivers.append(f)
+
+                    # 4. Dispara e-mail se houver avisos
+                    if agenda_filtrada or nivers:
+                        msg = MIMEMultipart()
+                        msg['From'] = email_remetente
+                        msg['To'] = gestor['email']
+                        msg['Subject'] = f"Resumo Diário - {gestor['nome_campanha_gabinete']}"
+                        
+                        corpo = f"Olá {gestor['nome_gestor']},\nAqui está o seu resumo automático:\n\n"
+                        corpo += "=== PRÓXIMOS COMPROMISSOS (7 DIAS) ===\n"
+                        if agenda_filtrada:
+                            for a in agenda_filtrada: corpo += f"- {a['data_evento']} às {a['hora_evento'][:5]}: {a['titulo']}\n"
+                        else: corpo += "Nenhum compromisso.\n"
+                        
+                        corpo += "\n=== ANIVERSARIANTES DO MÊS ===\n"
+                        if nivers:
+                            for f in nivers: corpo += f"- Dia {f['data_nascimento'].split('-')[2]}: {f['nome']} ({f['cargo']})\n"
+                        else: corpo += "Nenhum.\n"
+                        
+                        msg.attach(MIMEText(corpo, 'plain'))
+                        
+                        # Disparo SMTP (Configurado para o Gmail)
+                        servidor = smtplib.SMTP('smtp.gmail.com', 587)
+                        servidor.starttls()
+                        servidor.login(email_remetente, senha_remetente)
+                        servidor.send_message(msg)
+                        servidor.quit()
+
+                self.wfile.write(json.dumps({"sucesso": True, "msg": "E-mails enviados!"}).encode('utf-8'))
+            except Exception as e:
+                self.wfile.write(json.dumps({"erro": str(e)}).encode('utf-8'))
+            return
+
+        self.wfile.write(json.dumps({"status": "API Online"}).encode('utf-8'))
 
     def do_POST(self):
         self._set_headers()
@@ -144,7 +234,7 @@ class handler(BaseHTTPRequestHandler):
             # ==========================================
             elif action == 'verificar_login_gestor':
                 senha_input = dados.get('senha')
-                url = f"{sb_url}/rest/v1/gestores?senha_admin=eq.{senha_input}&status=eq.Ativo&select=id,nome_campanha_gabinete,cor_layout,url_logo"
+                url = f"{sb_url}/rest/v1/gestores?senha_admin=eq.{senha_input}&status=eq.Ativo&select=id,nome_campanha_gabinete,cor_layout,url_logo,whatsapp"
                 req = urllib.request.Request(url, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'}, method='GET')
                 with urllib.request.urlopen(req) as response:
                     res_data = json.loads(response.read().decode('utf-8'))
@@ -174,7 +264,7 @@ class handler(BaseHTTPRequestHandler):
                     "documento": dados.get('documento'),
                     "endereco": dados.get('endereco'),
                     "conta_bancaria": dados.get('conta_bancaria'),
-                    "data_nascimento": dados.get('data_nascimento'), # ADICIONADO AQUI
+                    "data_nascimento": dados.get('data_nascimento'),
                     "gestor_id": self._safe_int(dados.get('gestor_id')),
                     "status": "Ativo"
                 }).encode('utf-8')
@@ -195,7 +285,7 @@ class handler(BaseHTTPRequestHandler):
                     "documento": dados.get('documento'),
                     "endereco": dados.get('endereco'),
                     "conta_bancaria": dados.get('conta_bancaria'),
-                    "data_nascimento": dados.get('data_nascimento') # ADICIONADO AQUI
+                    "data_nascimento": dados.get('data_nascimento') 
                 }).encode('utf-8')
                 headers = {'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json', 'Prefer': 'return=representation'}
                 req = urllib.request.Request(url, data=payload, headers=headers, method='PATCH')

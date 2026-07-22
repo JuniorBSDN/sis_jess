@@ -30,6 +30,10 @@
             </div>
 
             <nav class="p-4 flex flex-col gap-1.5 mt-2">
+                <!-- NOVA ABA: INÍCIO / AVISOS -->
+                <button onclick="navegarOperacional('aba-dashboard')" id="btn-aba-dashboard" class="btn-menu w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition">
+                    <i class="fa-solid fa-house w-5 text-center"></i> Início / Avisos
+                </button>
                 <button onclick="navegarOperacional('aba-agenda')" id="btn-aba-agenda" class="btn-menu w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition">
                     <i class="fa-solid fa-calendar-days w-5 text-center"></i> Agenda
                 </button>
@@ -57,13 +61,40 @@
 
     <div class="flex-1 flex flex-col h-full overflow-hidden relative">
         <header class="h-20 bg-white border-b border-slate-200 px-10 flex items-center justify-between flex-shrink-0 z-10 no-print">
-            <h2 id="titulo-pagina-op" class="font-bold text-slate-800 text-[19px]">Equipe & Crachás</h2>
+            <h2 id="titulo-pagina-op" class="font-bold text-slate-800 text-[19px]">Painel de Controle</h2>
             <div id="badge-unidade" class="bg-slate-50 text-slate-600 text-xs font-bold px-4 py-2 rounded-full border border-slate-200 shadow-sm">
                 Unidade: CARREGANDO...
             </div>
         </header>
 
         <main class="flex-1 overflow-y-auto p-10 w-full">
+
+            <!-- NOVA ABA: DASHBOARD (AVISOS) -->
+            <div id="aba-dashboard" class="tab-op hidden space-y-6 no-print">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Widget de Reuniões -->
+                    <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6">
+                        <h3 class="text-sm font-bold text-slate-700 uppercase mb-4 border-b pb-2 flex items-center">
+                            <i class="fa-solid fa-bell text-amber-500 mr-2"></i>Avisos de Agenda (Próximos 7 dias)
+                        </h3>
+                        <div id="lista-avisos-agenda" class="space-y-3">
+                            <p class="text-xs text-slate-400">Analisando calendário...</p>
+                        </div>
+                    </div>
+
+                    <!-- Widget de Aniversariantes -->
+                    <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6">
+                        <h3 class="text-sm font-bold text-slate-700 uppercase mb-4 border-b pb-2 flex items-center">
+                            <i class="fa-solid fa-cake-candles text-rose-500 mr-2"></i>Aniversariantes do Mês
+                        </h3>
+                        <div id="lista-avisos-niver" class="space-y-3">
+                            <p class="text-xs text-slate-400">Analisando equipe...</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
 
             <!-- ABA RH -->
             <div id="aba-rh" class="tab-op hidden space-y-6">
@@ -72,12 +103,17 @@
                     <form onsubmit="cadastrarAssessor(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Nome Completo *</label><input type="text" id="func-nome" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
                         <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">CPF ou CNPJ *</label><input type="text" id="func-doc" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
+                        <!-- NOVO CAMPO: DATA DE NASCIMENTO -->
+                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Data de Nascimento</label><input type="date" id="func-nasc" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
+                        
                         <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Cargo / Setor *</label><input type="text" id="func-cargo" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
                         <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Telefone / WhatsApp *</label><input type="text" id="func-whats" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
                         <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">E-mail *</label><input type="email" id="func-email" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
+                        
                         <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Conta Bancária (Pix/Ag/Cc) *</label><input type="text" id="func-bank" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
                         <div class="md:col-span-2"><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Endereço Residencial Completo *</label><input type="text" id="func-end" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
-                        <div class="flex items-end"><button type="submit" class="btn-dinamico w-full text-white px-4 py-2 rounded-lg text-xs font-bold transition whitespace-nowrap h-[34px]">Cadastrar Colaborador</button></div>
+                        
+                        <div class="md:col-span-3 flex justify-end mt-2"><button type="submit" class="btn-dinamico text-white px-8 py-2.5 rounded-lg text-xs font-bold transition">Cadastrar Colaborador</button></div>
                     </form>
                 </div>
                 <div class="bg-white border border-slate-200 rounded-xl shadow-sm print-area">
@@ -154,7 +190,7 @@
         </main>
     </div>
 
-    <!-- Modais (Edição RH / Eleitor / Status Agenda) -->
+    <!-- Modal Edição RH -->
     <div id="modal-edicao-func" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
         <div class="bg-white rounded-2xl w-full max-w-2xl border p-6 shadow-2xl space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
@@ -165,11 +201,16 @@
                 <input type="hidden" id="edit-func-id">
                 <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Nome</label><input type="text" id="edit-func-nome" required class="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-xs bg-slate-50 focus:outline-none"></div>
                 <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">CPF/CNPJ</label><input type="text" id="edit-func-doc" required class="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-xs bg-slate-50 focus:outline-none"></div>
+                
+                <!-- NOVO CAMPO: DATA DE NASCIMENTO (EDIÇÃO) -->
+                <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Data Nasc.</label><input type="date" id="edit-func-nasc" class="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-xs bg-slate-50 focus:outline-none"></div>
+                
                 <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Cargo</label><input type="text" id="edit-func-cargo" required class="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-xs bg-slate-50 focus:outline-none"></div>
                 <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">WhatsApp</label><input type="text" id="edit-func-whats" required class="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-xs bg-slate-50 focus:outline-none"></div>
                 <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">E-mail</label><input type="email" id="edit-func-email" required class="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-xs bg-slate-50 focus:outline-none"></div>
                 <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Banco / Pix</label><input type="text" id="edit-func-bank" required class="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-xs bg-slate-50 focus:outline-none"></div>
                 <div class="md:col-span-2"><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Endereço</label><input type="text" id="edit-func-end" required class="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-xs bg-slate-50 focus:outline-none"></div>
+                
                 <div class="md:col-span-2 pt-2 border-t flex justify-end gap-2">
                     <button type="button" onclick="imprimirFichaFunc()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs px-4 py-2 rounded-lg transition">Imprimir Ficha</button>
                     <button type="submit" class="bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs px-6 py-2 rounded-lg transition">Salvar Dados</button>
@@ -178,6 +219,7 @@
         </div>
     </div>
 
+    <!-- Modal Eleitor -->
     <div id="modal-eleitor" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
         <div class="bg-white rounded-2xl w-full max-w-lg border p-6 shadow-2xl space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
@@ -188,7 +230,7 @@
         </div>
     </div>
 
-    <!-- Modal para Status da Agenda -->
+    <!-- Modal Status da Agenda -->
     <div id="modal-status-agenda" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
         <div class="bg-white rounded-2xl w-full max-w-md border p-6 shadow-2xl space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
@@ -212,7 +254,7 @@
 
                 <div>
                     <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Justificativa / Motivo</label>
-                    <textarea id="status-agenda-justificativa" rows="3" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none resize-none" placeholder="Digite o motivo do cancelamento ou remarcação..."></textarea>
+                    <textarea id="status-agenda-justificativa" rows="3" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none resize-none" placeholder="Digite o motivo..."></textarea>
                 </div>
                 
                 <div class="pt-2 border-t flex justify-end">
@@ -226,6 +268,7 @@
         let dadosGestorLogado = null;
         let cacheEleitores = [];
         let cacheFuncionarios = [];
+        let cacheAgenda = [];
 
         async function autenticarGestor() {
             const senhaDigitada = prompt("Digite a sua Chave de Acesso do Gabinete:");
@@ -260,7 +303,8 @@
                     containerLogo.style.backgroundColor = corCliente;
                     document.querySelectorAll('.btn-dinamico').forEach(btn => { btn.style.backgroundColor = corCliente; });
 
-                    navegarOperacional('aba-rh');
+                    // Ao logar, vai direto para o NOVO Painel de Avisos
+                    navegarOperacional('aba-dashboard');
                 } else {
                     alert(dados.mensagem || "Acesso negado."); window.location.href = "index.html";
                 }
@@ -272,18 +316,118 @@
         function navegarOperacional(idAba) {
             document.querySelectorAll('.tab-op').forEach(el => el.classList.add('hidden'));
             document.getElementById(idAba).classList.remove('hidden');
-            const titulos = { 'aba-agenda': 'Agenda Geral e Eventos', 'aba-documentos': 'Documentos & Arquivos', 'aba-eleitores': 'Base de Eleitores', 'aba-rh': 'Equipe & Crachás' };
+            
+            const titulos = { 
+                'aba-dashboard': 'Início e Avisos do Sistema',
+                'aba-agenda': 'Agenda Geral e Eventos', 
+                'aba-documentos': 'Documentos & Arquivos', 
+                'aba-eleitores': 'Base de Eleitores', 
+                'aba-rh': 'Equipe & Crachás' 
+            };
             document.getElementById('titulo-pagina-op').innerText = titulos[idAba];
+            
             document.querySelectorAll('.btn-menu').forEach(b => { b.className = "btn-menu w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition"; b.style.backgroundColor = "transparent"; });
             const btnAtivo = document.getElementById('btn-' + idAba);
             if(btnAtivo && dadosGestorLogado) { btnAtivo.className = "btn-menu w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-white rounded-xl transition shadow-sm"; btnAtivo.style.backgroundColor = "#1e293b"; }
 
+            if(idAba === 'aba-dashboard') carregarAvisosDashboard();
             if(idAba === 'aba-agenda') carregarAgenda();
             if(idAba === 'aba-documentos') carregarDocs();
             if(idAba === 'aba-eleitores') carregarEleitores();
             if(idAba === 'aba-rh') carregarFuncionarios();
         }
 
+        // =====================================
+        // NOVA FUNÇÃO: CARREGAR AVISOS (DASHBOARD)
+        // =====================================
+        async function carregarAvisosDashboard() {
+            try {
+                document.getElementById('lista-avisos-agenda').innerHTML = '<p class="text-xs text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Buscando dados...</p>';
+                document.getElementById('lista-avisos-niver').innerHTML = '<p class="text-xs text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Buscando dados...</p>';
+
+                // Busca Agenda e Equipe simultaneamente para economizar tempo
+                const [resA, resF] = await Promise.all([
+                    fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_agenda_gestor', gestor_id: dadosGestorLogado.id }) }),
+                    fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_funcionarios', gestor_id: dadosGestorLogado.id }) })
+                ]);
+                
+                const dataA = await resA.json();
+                const dataF = await resF.json();
+                cacheAgenda = dataA.agenda || [];
+                cacheFuncionarios = dataF.funcionarios || [];
+
+                const hoje = new Date();
+                hoje.setHours(0,0,0,0);
+                
+                // LÓGICA DE AVISO DA AGENDA (Próximos 7 dias)
+                const limiteAgenda = new Date(hoje);
+                limiteAgenda.setDate(limiteAgenda.getDate() + 7);
+                
+                let htmlAgenda = '';
+                cacheAgenda.filter(a => a.status === 'Confirmado' || a.status === 'Remarcado').forEach(a => {
+                    if(!a.data_evento) return;
+                    const dataEv = new Date(a.data_evento + 'T00:00:00');
+                    
+                    if(dataEv >= hoje && dataEv <= limiteAgenda) {
+                        const diasRestantes = Math.floor((dataEv - hoje) / (1000 * 60 * 60 * 24));
+                        let seloDia = '';
+                        if(diasRestantes === 0) seloDia = '<span class="text-rose-500 font-bold bg-rose-50 px-2 py-1 rounded">Hoje!</span>';
+                        else if(diasRestantes === 1) seloDia = '<span class="text-amber-500 font-bold bg-amber-50 px-2 py-1 rounded">Amanhã</span>';
+                        else seloDia = `<span class="text-slate-500 bg-slate-100 px-2 py-1 rounded">Em ${diasRestantes} dias</span>`;
+                        
+                        htmlAgenda += `
+                        <div class="p-3 border border-slate-100 rounded-lg flex justify-between items-center bg-white shadow-sm hover:shadow transition">
+                            <div class="text-xs">
+                                <p class="font-bold text-slate-700 text-[13px]">${a.titulo}</p>
+                                <p class="text-slate-500"><i class="fa-regular fa-calendar mr-1"></i>${dataEv.toLocaleDateString('pt-BR')} às ${a.hora_evento.substring(0,5)}</p>
+                            </div>
+                            <div class="text-[10px] tracking-wide">${seloDia}</div>
+                        </div>`;
+                    }
+                });
+                
+                if(htmlAgenda === '') htmlAgenda = '<div class="p-4 bg-slate-50 rounded-lg text-center text-xs text-slate-500 border border-slate-100"><i class="fa-regular fa-calendar-check text-2xl text-emerald-400 mb-2 block"></i>Nenhum compromisso marcado para os próximos 7 dias.</div>';
+                document.getElementById('lista-avisos-agenda').innerHTML = htmlAgenda;
+
+
+                // LÓGICA DE AVISO DE ANIVERSÁRIOS (Mês Atual)
+                const mesAtual = hoje.getMonth() + 1;
+                let htmlNiver = '';
+                
+                cacheFuncionarios.filter(f => f.status !== 'Inativo').forEach(f => {
+                    if(!f.data_nascimento) return;
+                    const parts = f.data_nascimento.split('-'); // O formato do DB é AAAA-MM-DD
+                    if(parts.length === 3) {
+                        const mesNasc = parseInt(parts[1], 10);
+                        const diaNasc = parseInt(parts[2], 10);
+                        
+                        if(mesNasc === mesAtual) {
+                            htmlNiver += `
+                            <div class="p-3 border border-slate-100 rounded-lg flex justify-between items-center bg-white shadow-sm hover:shadow transition">
+                                <div class="text-xs">
+                                    <p class="font-bold text-slate-700 text-[13px]">${f.nome.toUpperCase()}</p>
+                                    <p class="text-slate-500"><i class="fa-solid fa-id-badge mr-1"></i>${f.cargo}</p>
+                                </div>
+                                <div class="text-[11px] font-bold text-rose-500 bg-rose-50 border border-rose-100 px-3 py-1.5 rounded-lg shadow-sm">
+                                    <i class="fa-solid fa-gift mr-1"></i> Dia ${diaNasc}
+                                </div>
+                            </div>`;
+                        }
+                    }
+                });
+
+                if(htmlNiver === '') htmlNiver = '<div class="p-4 bg-slate-50 rounded-lg text-center text-xs text-slate-500 border border-slate-100"><i class="fa-solid fa-face-smile text-2xl text-slate-300 mb-2 block"></i>Nenhum colaborador faz aniversário este mês.</div>';
+                document.getElementById('lista-avisos-niver').innerHTML = htmlNiver;
+
+            } catch (err) {
+                document.getElementById('lista-avisos-agenda').innerHTML = '<p class="text-xs text-rose-500">Erro ao carregar avisos.</p>';
+                document.getElementById('lista-avisos-niver').innerHTML = '<p class="text-xs text-rose-500">Erro ao carregar aniversariantes.</p>';
+            }
+        }
+
+        // =====================================
+        // RH COM DATA DE NASCIMENTO
+        // =====================================
         async function carregarFuncionarios() {
             try {
                 const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_funcionarios', gestor_id: dadosGestorLogado.id }) });
@@ -323,23 +467,23 @@
             btn.innerText = "Salvando..."; btn.disabled = true;
             try {
                 const req = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({
-                    action: 'cadastrar_funcionario', nome: document.getElementById('func-nome').value, cargo: document.getElementById('func-cargo').value,
-                    whatsapp: document.getElementById('func-whats').value, email: document.getElementById('func-email').value, documento: document.getElementById('func-doc').value,
-                    endereco: document.getElementById('func-end').value, conta_bancaria: document.getElementById('func-bank').value, gestor_id: dadosGestorLogado.id
+                    action: 'cadastrar_funcionario', 
+                    nome: document.getElementById('func-nome').value, 
+                    cargo: document.getElementById('func-cargo').value,
+                    whatsapp: document.getElementById('func-whats').value, 
+                    email: document.getElementById('func-email').value, 
+                    documento: document.getElementById('func-doc').value,
+                    endereco: document.getElementById('func-end').value, 
+                    conta_bancaria: document.getElementById('func-bank').value,
+                    data_nascimento: document.getElementById('func-nasc').value, // SALVANDO A DATA AQUI
+                    gestor_id: dadosGestorLogado.id
                 })});
                 const res = await req.json();
 
-                if(res.erro) {
-                    alert("Atenção! Erro ao tentar salvar no banco de dados: " + res.erro);
-                } else {
-                    e.target.reset();
-                    carregarFuncionarios();
-                }
-            } catch (error) {
-                alert("Falha na comunicação com a API.");
-            } finally {
-                btn.innerText = "Cadastrar Colaborador"; btn.disabled = false;
-            }
+                if(res.erro) { alert("Erro ao tentar salvar no banco de dados: " + res.erro); } 
+                else { e.target.reset(); carregarFuncionarios(); }
+            } catch (error) { alert("Falha na comunicação com a API."); } 
+            finally { btn.innerText = "Cadastrar Colaborador"; btn.disabled = false; }
         }
 
         function abrirModalEdicaoFunc(id) {
@@ -347,6 +491,7 @@
             document.getElementById('edit-func-id').value = f.id;
             document.getElementById('edit-func-nome').value = f.nome || '';
             document.getElementById('edit-func-doc').value = f.documento || '';
+            document.getElementById('edit-func-nasc').value = f.data_nascimento || ''; // CARREGANDO A DATA AQUI
             document.getElementById('edit-func-cargo').value = f.cargo || '';
             document.getElementById('edit-func-whats').value = f.whatsapp || '';
             document.getElementById('edit-func-email').value = f.email || '';
@@ -358,18 +503,27 @@
         async function salvarEdicaoFunc(e) {
             e.preventDefault();
             const req = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({
-                action: 'editar_funcionario', id: document.getElementById('edit-func-id').value, nome: document.getElementById('edit-func-nome').value,
-                documento: document.getElementById('edit-func-doc').value, cargo: document.getElementById('edit-func-cargo').value, whatsapp: document.getElementById('edit-func-whats').value,
-                email: document.getElementById('edit-func-email').value, conta_bancaria: document.getElementById('edit-func-bank').value, endereco: document.getElementById('edit-func-end').value
+                action: 'editar_funcionario', 
+                id: document.getElementById('edit-func-id').value, 
+                nome: document.getElementById('edit-func-nome').value,
+                documento: document.getElementById('edit-func-doc').value, 
+                data_nascimento: document.getElementById('edit-func-nasc').value, // ATUALIZANDO A DATA
+                cargo: document.getElementById('edit-func-cargo').value, 
+                whatsapp: document.getElementById('edit-func-whats').value,
+                email: document.getElementById('edit-func-email').value, 
+                conta_bancaria: document.getElementById('edit-func-bank').value, 
+                endereco: document.getElementById('edit-func-end').value
             })});
             const res = await req.json();
-            if(res.erro) { alert("Erro: " + res.erro); } else { document.getElementById('modal-edicao-func').classList.add('hidden'); carregarFuncionarios(); }
+            if(res.erro) { alert("Erro: " + res.erro); } 
+            else { document.getElementById('modal-edicao-func').classList.add('hidden'); carregarFuncionarios(); }
         }
 
         function imprimirFichaFunc() {
             const id = document.getElementById('edit-func-id').value; const f = cacheFuncionarios.find(func => func.id == id); if(!f) return;
+            const nasc = f.data_nascimento ? new Date(f.data_nascimento + 'T00:00:00').toLocaleDateString('pt-BR') : 'Não informada';
             const w = window.open('', '_blank');
-            w.document.write(`<html><head><title>Ficha - ${f.nome}</title><style>body{font-family:sans-serif;padding:30px;line-height:1.6;} h2{border-bottom:2px solid #333;pb:5px;}</style></head><body onload="window.print()"><h2>FICHA DE COLABORADOR</h2><p><strong>Nome:</strong> ${f.nome}</p><p><strong>CPF/CNPJ:</strong> ${f.documento}</p><p><strong>Cargo:</strong> ${f.cargo}</p><p><strong>Contato:</strong> ${f.whatsapp}</p><p><strong>E-mail:</strong> ${f.email}</p><p><strong>Dados Bancários:</strong> ${f.conta_bancaria}</p><p><strong>Endereço:</strong> ${f.endereco}</p><p><strong>Gabinete Vínculo:</strong> ${dadosGestorLogado.nome_campanha_gabinete}</p></body></html>`);
+            w.document.write(`<html><head><title>Ficha - ${f.nome}</title><style>body{font-family:sans-serif;padding:30px;line-height:1.6;} h2{border-bottom:2px solid #333;pb:5px;}</style></head><body onload="window.print()"><h2>FICHA DE COLABORADOR</h2><p><strong>Nome:</strong> ${f.nome}</p><p><strong>CPF/CNPJ:</strong> ${f.documento}</p><p><strong>Data de Nascimento:</strong> ${nasc}</p><p><strong>Cargo:</strong> ${f.cargo}</p><p><strong>Contato:</strong> ${f.whatsapp}</p><p><strong>E-mail:</strong> ${f.email}</p><p><strong>Dados Bancários:</strong> ${f.conta_bancaria}</p><p><strong>Endereço:</strong> ${f.endereco}</p><p><strong>Gabinete Vínculo:</strong> ${dadosGestorLogado.nome_campanha_gabinete}</p></body></html>`);
             w.document.close();
         }
 
@@ -392,7 +546,7 @@
         }
 
         // =====================================
-        // AGENDA COM REMARCAÇÃO E JUSTIFICATIVA
+        // AGENDA
         // =====================================
         async function carregarAgenda() {
             try {
@@ -403,9 +557,7 @@
 
                 d.agenda.forEach(a => {
                     const statusCor = a.status === 'Cancelado' ? 'text-rose-500 bg-rose-50 border-rose-100' : (a.status === 'Remarcado' ? 'text-amber-600 bg-amber-50 border-amber-100' : 'text-emerald-600 bg-emerald-50 border-emerald-100');
-                    
                     const justificativaHtml = a.justificativa ? `<div class="text-[10px] text-slate-500 font-normal mt-1"><i class="fa-solid fa-quote-left text-slate-300 mr-1"></i>${a.justificativa}</div>` : '';
-                    
                     const dataFormatada = a.data_evento ? new Date(a.data_evento + 'T00:00:00').toLocaleDateString('pt-BR') : '';
                     const horaFormatada = a.hora_evento ? a.hora_evento.substring(0, 5) : '--:--';
 
@@ -476,10 +628,7 @@
                 const res = await req.json();
                 
                 if (res.erro) { alert("Erro ao salvar: " + res.erro); } 
-                else { 
-                    document.getElementById('modal-status-agenda').classList.add('hidden'); 
-                    carregarAgenda(); 
-                }
+                else { document.getElementById('modal-status-agenda').classList.add('hidden'); carregarAgenda(); }
             } catch (error) { alert("Falha na comunicação."); } 
             finally { btn.innerText = "Confirmar Alteração"; btn.disabled = false; }
         }
@@ -489,6 +638,9 @@
             await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'excluir_agenda', id: id }) }); carregarAgenda();
         }
 
+        // =====================================
+        // ELEITORES & DOCUMENTOS
+        // =====================================
         async function carregarEleitores() {
             try {
                 const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_eleitores_gestor', gestor_id: dadosGestorLogado.id }) });
@@ -557,14 +709,14 @@
             try {
                 if(fileInput.files.length > 0) {
                     const file = fileInput.files[0];
-                    if(file.size > 4 * 1024 * 1024) { alert("O arquivo excede o limite máximo seguro de 4MB."); btn.innerText = "Arquivar"; btn.disabled = false; return; }
+                    if(file.size > 4 * 1024 * 1024) { alert("O arquivo excede limite de 4MB."); btn.innerText = "Arquivar"; btn.disabled = false; return; }
                     const base64Str = await toBase64(file);
                     const uploadRes = await fetch('/api', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'upload_documento', file_base64: base64Str, filename: Date.now() + "_" + file.name.replace(/\s+/g, '_') }) });
                     const uploadData = await uploadRes.json(); if(uploadData.url_arquivo) urlFinalDoc = uploadData.url_arquivo;
                 }
                 const req = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'cadastrar_documento', titulo: document.getElementById('doc-titulo').value, categoria: document.getElementById('doc-cat').value, url_arquivo: urlFinalDoc, gestor_id: dadosGestorLogado.id }) });
                 const res = await req.json(); if(res.erro) { alert("Erro: " + res.erro); } else { e.target.reset(); carregarDocs(); }
-            } catch (error) { alert("Erro de comunicação no upload."); } finally { btn.innerText = "Arquivar"; btn.disabled = false; }
+            } catch (error) { alert("Erro de upload."); } finally { btn.innerText = "Arquivar"; btn.disabled = false; }
         }
 
         async function excluirDoc(id) {

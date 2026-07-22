@@ -69,10 +69,21 @@
 
         <main class="flex-1 overflow-y-auto p-10 w-full">
 
-            <!-- NOVA ABA: DASHBOARD (AVISOS) -->
+           <!-- NOVA ABA: DASHBOARD (AVISOS) -->
             <div id="aba-dashboard" class="tab-op hidden space-y-6 no-print">
+                
+                <!-- BOÃO DE DISPARO PARA O WHATSAPP MASTER -->
+                <div class="bg-slate-800 rounded-xl p-6 flex flex-col md:flex-row justify-between items-center shadow-lg gap-4">
+                    <div>
+                        <h3 class="text-white font-bold text-lg"><i class="fa-brands fa-whatsapp text-emerald-400 mr-2"></i>Assistente Virtual</h3>
+                        <p class="text-slate-400 text-xs mt-1">Gere e envie o relatório completo de avisos e aniversários direto para o WhatsApp do Gestor.</p>
+                    </div>
+                    <button onclick="gerarRelatorioWhatsApp()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-6 py-3 rounded-lg transition shadow-md whitespace-nowrap text-sm flex items-center">
+                        <i class="fa-solid fa-paper-plane mr-2"></i> Enviar Resumo ao Gestor
+                    </button>
+                </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    
                     <!-- Widget de Reuniões -->
                     <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6">
                         <h3 class="text-sm font-bold text-slate-700 uppercase mb-4 border-b pb-2 flex items-center">
@@ -92,7 +103,6 @@
                             <p class="text-xs text-slate-400">Analisando equipe...</p>
                         </div>
                     </div>
-
                 </div>
             </div>
 
@@ -723,8 +733,60 @@
             if(!confirm("Remover documento?")) return;
             await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'excluir_documento', id: id }) }); carregarDocs();
         }
+        
 
         window.onload = autenticarGestor;
+    
+    function gerarRelatorioWhatsApp() {
+            if (!dadosGestorLogado || !dadosGestorLogado.whatsapp) {
+                alert("Número de WhatsApp da Gestora não encontrado no cadastro.");
+                return;
+            }
+
+            // Pega estritamente o número da GESTORA
+            const numeroMaster = dadosGestorLogado.whatsapp.replace(/\D/g, ''); 
+            const hoje = new Date();
+            
+            let texto = `*RESUMO DIÁRIO - GABINETE* 🏢\n_Data: ${hoje.toLocaleDateString('pt-BR')}_\n\n`;
+
+            // Adiciona Agenda
+            texto += `*📅 SEUS PRÓXIMOS COMPROMISSOS:*\n`;
+            let temAgenda = false;
+            const limiteAgenda = new Date(); limiteAgenda.setDate(limiteAgenda.getDate() + 7);
+            
+            cacheAgenda.filter(a => a.status === 'Confirmado' || a.status === 'Remarcado').forEach(a => {
+                if(!a.data_evento) return;
+                const dataEv = new Date(a.data_evento + 'T00:00:00');
+                if(dataEv >= hoje.setHours(0,0,0,0) && dataEv <= limiteAgenda) {
+                    temAgenda = true;
+                    texto += `• ${a.titulo}\n  ↳ ${dataEv.toLocaleDateString('pt-BR')} às ${a.hora_evento.substring(0,5)}\n`;
+                }
+            });
+            if(!temAgenda) texto += `Nenhum compromisso marcado para os próximos 7 dias.\n`;
+
+            texto += `\n`;
+
+            // Adiciona Aniversários (Focado em lembrar a Gestora)
+            texto += `*🎂 LEMBRETE DE ANIVERSÁRIOS:*\n_Não esqueça de parabenizar sua equipe este mês!_\n\n`;
+            let temNiver = false;
+            const mesAtual = (new Date()).getMonth() + 1;
+            
+            cacheFuncionarios.filter(f => f.status !== 'Inativo').forEach(f => {
+                if(!f.data_nascimento) return;
+                const parts = f.data_nascimento.split('-');
+                if(parts.length === 3 && parseInt(parts[1], 10) === mesAtual) {
+                    temNiver = true;
+                    texto += `🎉 Dia ${parts[2]} - ${f.nome.toUpperCase()} (${f.cargo})\n`;
+                }
+            });
+            if(!temNiver) texto += `Nenhum colaborador faz aniversário este mês.\n`;
+
+            texto += `\n_Mensagem gerada pelo seu Assistente Virtual._`;
+
+            // Abre o WhatsApp enviando o lembrete para a própria GESTORA
+            const url = `https://wa.me/55${numeroMaster}?text=${encodeURIComponent(texto)}`;
+            window.open(url, '_blank');
+        }
     </script>
 </body>
 </html>

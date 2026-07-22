@@ -30,11 +30,10 @@ class handler(BaseHTTPRequestHandler):
         try: return int(value) if value else None
         except: return None
 
-    # NOVO: O Robô (Cron) bate aqui todos os dias via GET
+    # O Robô (Cron) bate aqui todos os dias via GET
     def do_GET(self):
         self._set_headers()
         
-        # A Vercel vai acessar /api/cron automaticamente
         if '/api/cron' in self.path:
             sb_url = self._obter_url_supabase()
             sb_key = os.environ.get('SUPABASE_SERVICE_KEY')
@@ -46,7 +45,6 @@ class handler(BaseHTTPRequestHandler):
                 return
 
             try:
-                # 1. Busca todos os Gestores Ativos
                 req_gest = urllib.request.Request(f"{sb_url}/rest/v1/gestores?status=eq.Ativo&select=id,nome_gestor,email,nome_campanha_gabinete", headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'}, method='GET')
                 with urllib.request.urlopen(req_gest) as response:
                     gestores = json.loads(response.read().decode('utf-8'))
@@ -60,7 +58,6 @@ class handler(BaseHTTPRequestHandler):
                     
                     gid = gestor['id']
                     
-                    # 2. Busca Agenda do Gestor
                     req_ag = urllib.request.Request(f"{sb_url}/rest/v1/agenda?gestor_id=eq.{gid}&status=in.(Confirmado,Remarcado)", headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'}, method='GET')
                     with urllib.request.urlopen(req_ag) as res_ag:
                         agenda = json.loads(res_ag.read().decode('utf-8'))
@@ -72,7 +69,6 @@ class handler(BaseHTTPRequestHandler):
                             if hoje.date() <= data_ev.date() <= limite.date():
                                 agenda_filtrada.append(a)
 
-                    # 3. Busca Aniversariantes do Gestor
                     req_func = urllib.request.Request(f"{sb_url}/rest/v1/funcionarios?gestor_id=eq.{gid}&status=eq.Ativo", headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}'}, method='GET')
                     with urllib.request.urlopen(req_func) as res_func:
                         funcs = json.loads(res_func.read().decode('utf-8'))
@@ -84,7 +80,6 @@ class handler(BaseHTTPRequestHandler):
                             if len(parts) == 3 and int(parts[1]) == mes_atual:
                                 nivers.append(f)
 
-                    # 4. Dispara e-mail se houver avisos
                     if agenda_filtrada or nivers:
                         msg = MIMEMultipart()
                         msg['From'] = email_remetente
@@ -104,7 +99,6 @@ class handler(BaseHTTPRequestHandler):
                         
                         msg.attach(MIMEText(corpo, 'plain'))
                         
-                        # Disparo SMTP (Configurado para o Gmail)
                         servidor = smtplib.SMTP('smtp.gmail.com', 587)
                         servidor.starttls()
                         servidor.login(email_remetente, senha_remetente)
@@ -244,7 +238,31 @@ class handler(BaseHTTPRequestHandler):
                     self.wfile.write(json.dumps({"autorizado": False, "mensagem": "Acesso suspenso ou inválido."}).encode('utf-8'))
                 return
 
-            # --- FUNCIONÁRIOS (RH) ---
+            # --- FUNCIONÁRIOS (RH) COM FOTO ---
+            
+            # Rota Nova: Upload de Foto 3x4
+            elif action == 'upload_foto':
+                file_base64 = dados.get('file_base64')
+                filename = dados.get('filename')
+                file_bytes = base64.b64decode(file_base64.split(",")[-1])
+                url_storage = f"{sb_url}/storage/v1/object/fotos/{filename}"
+                content_type = mimetypes.guess_type(filename)[0] or 'image/jpeg'
+
+                req = urllib.request.Request(url_storage, data=file_bytes, headers={'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': content_type}, method='POST')
+                try:
+                    with urllib.request.urlopen(req): pass
+                except urllib.error.HTTPError as e:
+                    if e.code == 404:
+                        self.wfile.write(json.dumps({"erro": "A pasta 'fotos' não existe no Supabase. Crie-a no painel do Supabase."}).encode('utf-8'))
+                        return
+                    else:
+                        self.wfile.write(json.dumps({"erro": f"Erro Storage Fotos: {e.code}"}).encode('utf-8'))
+                        return
+
+                url_publica = f"{sb_url}/storage/v1/object/public/fotos/{filename}"
+                self.wfile.write(json.dumps({"sucesso": True, "url_foto": url_publica}).encode('utf-8'))
+                return
+
             elif action == 'listar_funcionarios':
                 gestor_id = dados.get('gestor_id')
                 url = f"{sb_url}/rest/v1/funcionarios?gestor_id=eq.{gestor_id}&order=id.desc"
@@ -265,6 +283,7 @@ class handler(BaseHTTPRequestHandler):
                     "endereco": dados.get('endereco'),
                     "conta_bancaria": dados.get('conta_bancaria'),
                     "data_nascimento": dados.get('data_nascimento'),
+                    "url_foto": dados.get('url_foto'),
                     "gestor_id": self._safe_int(dados.get('gestor_id')),
                     "status": "Ativo"
                 }).encode('utf-8')
@@ -277,7 +296,7 @@ class handler(BaseHTTPRequestHandler):
             elif action == 'editar_funcionario':
                 fid = dados.get('id')
                 url = f"{sb_url}/rest/v1/funcionarios?id=eq.{fid}"
-                payload = json.dumps({
+                body = {
                     "nome": dados.get('nome'),
                     "whatsapp": dados.get('whatsapp'),
                     "cargo": dados.get('cargo'),
@@ -286,7 +305,11 @@ class handler(BaseHTTPRequestHandler):
                     "endereco": dados.get('endereco'),
                     "conta_bancaria": dados.get('conta_bancaria'),
                     "data_nascimento": dados.get('data_nascimento') 
-                }).encode('utf-8')
+                }
+                if 'url_foto' in dados and dados['url_foto']:
+                    body["url_foto"] = dados.get('url_foto')
+
+                payload = json.dumps(body).encode('utf-8')
                 headers = {'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json', 'Prefer': 'return=representation'}
                 req = urllib.request.Request(url, data=payload, headers=headers, method='PATCH')
                 with urllib.request.urlopen(req): pass

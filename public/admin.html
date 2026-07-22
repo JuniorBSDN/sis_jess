@@ -19,7 +19,6 @@
 
     <aside class="w-[260px] min-w-[260px] bg-[#0f1e36] text-slate-300 flex flex-col justify-between flex-shrink-0 z-20 shadow-xl no-print">
         <div>
-            <!-- Container do Logo Atualizado -->
             <div class="p-6 flex items-center gap-3 border-b border-slate-800/50">
                 <div id="container-logo" class="w-12 h-12 rounded-lg bg-emerald-500 flex items-center justify-center shadow-lg text-white font-bold text-2xl flex-shrink-0 overflow-hidden">
                     <span id="icone-padrao">sJ</span>
@@ -155,7 +154,7 @@
         </main>
     </div>
 
-    <!-- Modais (Edição / Eleitor) -->
+    <!-- Modais (Edição RH / Eleitor / Status Agenda) -->
     <div id="modal-edicao-func" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
         <div class="bg-white rounded-2xl w-full max-w-2xl border p-6 shadow-2xl space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
@@ -189,6 +188,40 @@
         </div>
     </div>
 
+    <!-- NOVO: Modal para Status da Agenda -->
+    <div id="modal-status-agenda" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
+        <div class="bg-white rounded-2xl w-full max-w-md border p-6 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 id="titulo-modal-agenda" class="font-bold text-slate-800 text-sm uppercase">Alterar Status</h3>
+                <button onclick="document.getElementById('modal-status-agenda').classList.add('hidden')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form onsubmit="salvarStatusAgenda(event)" class="space-y-4">
+                <input type="hidden" id="status-agenda-id">
+                <input type="hidden" id="status-agenda-acao">
+                
+                <div id="container-data-hora-remarcar" class="hidden grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Nova Data</label>
+                        <input type="date" id="status-agenda-data" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Novo Horário</label>
+                        <input type="time" id="status-agenda-hora" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Justificativa / Motivo</label>
+                    <textarea id="status-agenda-justificativa" rows="3" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none resize-none" placeholder="Digite o motivo do cancelamento ou remarcação..."></textarea>
+                </div>
+                
+                <div class="pt-2 border-t flex justify-end">
+                    <button type="submit" id="btn-salvar-status-agenda" class="bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs px-6 py-2 rounded-lg transition">Confirmar Alteração</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         let dadosGestorLogado = null;
         let cacheEleitores = [];
@@ -197,24 +230,23 @@
         async function autenticarGestor() {
             const senhaDigitada = prompt("Digite a sua Chave de Acesso do Gabinete:");
             if (!senhaDigitada) { window.location.href = "index.html"; return; }
-            
+
             try {
                 const resposta = await fetch('/api', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'verificar_login_gestor', senha: senhaDigitada }) });
                 if (!resposta.ok) throw new Error("Erro na comunicação");
                 const dados = await resposta.json();
-                
+
                 if (dados.erro) { alert("Erro do Banco: " + dados.erro); window.location.href = "index.html"; return; }
-                
+
                 if (dados.autorizado) {
-                    dadosGestorLogado = dados.gestor; 
+                    dadosGestorLogado = dados.gestor;
                     document.body.style.display = "flex";
-                    
+
                     const nomeGabinete = dadosGestorLogado.nome_campanha_gabinete || 'Gabinete';
                     document.getElementById('footer-unidade').innerText = nomeGabinete;
                     document.getElementById('badge-unidade').innerHTML = `Unidade: ${nomeGabinete.toUpperCase()}`;
                     document.getElementById('brand-name').innerText = nomeGabinete;
-                    
-                    // Renderização do Logotipo restaurada e segura
+
                     const containerLogo = document.getElementById('container-logo');
                     const inicial = nomeGabinete.charAt(0).toUpperCase();
                     if (dadosGestorLogado.url_logo) {
@@ -227,13 +259,13 @@
                     document.getElementById('sub-brand').style.color = corCliente;
                     containerLogo.style.backgroundColor = corCliente;
                     document.querySelectorAll('.btn-dinamico').forEach(btn => { btn.style.backgroundColor = corCliente; });
-                    
+
                     navegarOperacional('aba-rh');
-                } else { 
-                    alert(dados.mensagem || "Acesso negado."); window.location.href = "index.html"; 
+                } else {
+                    alert(dados.mensagem || "Acesso negado."); window.location.href = "index.html";
                 }
-            } catch (erro) { 
-                alert("Falha de conexão com a API."); document.body.style.display = "flex"; 
+            } catch (erro) {
+                alert("Falha de conexão com a API."); document.body.style.display = "flex";
             }
         }
 
@@ -245,7 +277,7 @@
             document.querySelectorAll('.btn-menu').forEach(b => { b.className = "btn-menu w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition"; b.style.backgroundColor = "transparent"; });
             const btnAtivo = document.getElementById('btn-' + idAba);
             if(btnAtivo && dadosGestorLogado) { btnAtivo.className = "btn-menu w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-white rounded-xl transition shadow-sm"; btnAtivo.style.backgroundColor = "#1e293b"; }
-            
+
             if(idAba === 'aba-agenda') carregarAgenda();
             if(idAba === 'aba-documentos') carregarDocs();
             if(idAba === 'aba-eleitores') carregarEleitores();
@@ -255,10 +287,10 @@
         async function carregarFuncionarios() {
             try {
                 const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_funcionarios', gestor_id: dadosGestorLogado.id }) });
-                const d = await res.json(); 
+                const d = await res.json();
                 cacheFuncionarios = d.funcionarios || [];
                 const tbody = document.getElementById('tabela-funcionarios');
-                
+
                 tbody.innerHTML = '';
                 if (!cacheFuncionarios.length) { tbody.innerHTML = '<tr><td colspan="6" class="p-6 text-slate-400 italic text-center">Nenhum colaborador registrado.</td></tr>'; return; }
 
@@ -286,8 +318,8 @@
         }
 
         async function cadastrarAssessor(e) {
-            e.preventDefault(); 
-            const btn = e.target.querySelector('button[type="submit"]'); 
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
             btn.innerText = "Salvando..."; btn.disabled = true;
             try {
                 const req = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({
@@ -296,18 +328,17 @@
                     endereco: document.getElementById('func-end').value, conta_bancaria: document.getElementById('func-bank').value, gestor_id: dadosGestorLogado.id
                 })});
                 const res = await req.json();
-                
-                // Validação severa adicionada aqui para parar de ocultar os erros
-                if(res.erro) { 
-                    alert("Atenção! Erro ao tentar salvar no banco de dados: " + res.erro + " (Possivelmente colunas ausentes no Supabase)"); 
-                } else { 
-                    e.target.reset(); 
-                    carregarFuncionarios(); 
+
+                if(res.erro) {
+                    alert("Atenção! Erro ao tentar salvar no banco de dados: " + res.erro);
+                } else {
+                    e.target.reset();
+                    carregarFuncionarios();
                 }
-            } catch (error) { 
-                alert("Falha na comunicação com a API."); 
-            } finally { 
-                btn.innerText = "Cadastrar Colaborador"; btn.disabled = false; 
+            } catch (error) {
+                alert("Falha na comunicação com a API.");
+            } finally {
+                btn.innerText = "Cadastrar Colaborador"; btn.disabled = false;
             }
         }
 
@@ -360,6 +391,9 @@
             win.document.close();
         }
 
+        // =====================================
+        // AGENDA COM REMARCAÇÃO E JUSTIFICATIVA
+        // =====================================
         async function carregarAgenda() {
             try {
                 const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_agenda_gestor', gestor_id: dadosGestorLogado.id }) });
@@ -369,14 +403,22 @@
 
                 d.agenda.forEach(a => {
                     const statusCor = a.status === 'Cancelado' ? 'text-rose-500 bg-rose-50 border-rose-100' : (a.status === 'Remarcado' ? 'text-amber-600 bg-amber-50 border-amber-100' : 'text-emerald-600 bg-emerald-50 border-emerald-100');
+                    
+                    // Lógica para mostrar a justificativa elegantemente
+                    const justificativaHtml = a.justificativa ? `<div class="text-[10px] text-slate-500 font-normal mt-1"><i class="fa-solid fa-quote-left text-slate-300 mr-1"></i>${a.justificativa}</div>` : '';
+                    
+                    // Tratamento seguro de Data e Hora
+                    const dataFormatada = a.data_evento ? new Date(a.data_evento + 'T00:00:00').toLocaleDateString('pt-BR') : '';
+                    const horaFormatada = a.hora_evento ? a.hora_evento.substring(0, 5) : '--:--';
+
                     tbody.innerHTML += `<tr class="hover:bg-slate-50 text-xs">
-                        <td class="py-3 px-6 font-semibold">${a.data_evento ? new Date(a.data_evento).toLocaleDateString('pt-BR') : ''} às ${a.hora_evento || '--:--'}</td>
-                        <td class="py-3 px-6 font-bold text-slate-700">${a.titulo || '---'}</td>
+                        <td class="py-3 px-6 font-semibold">${dataFormatada} às ${horaFormatada}</td>
+                        <td class="py-3 px-6"><div class="font-bold text-slate-700">${a.titulo || '---'}</div>${justificativaHtml}</td>
                         <td class="py-3 px-6 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold border ${statusCor}">${a.status || 'Confirmado'}</span></td>
                         <td class="py-3 px-6 flex justify-center gap-1.5 no-print">
-                            <button onclick="mudarStatusAgenda(${a.id}, 'Remarcado')" class="border bg-white text-amber-600 px-2 py-0.5 rounded text-[10px] font-medium">Remarcar</button>
-                            <button onclick="mudarStatusAgenda(${a.id}, 'Cancelado')" class="border bg-white text-rose-600 px-2 py-0.5 rounded text-[10px] font-medium">Cancelar</button>
-                            <button onclick="excluirAgenda(${a.id})" class="text-slate-400 hover:text-rose-600 px-1"><i class="fa-regular fa-trash-can"></i></button>
+                            <button onclick="abrirModalStatusAgenda(${a.id}, 'Remarcado', '${a.data_evento || ''}', '${a.hora_evento || ''}')" class="border bg-white text-amber-600 hover:bg-amber-50 px-2 py-0.5 rounded text-[10px] font-medium transition">Remarcar</button>
+                            <button onclick="abrirModalStatusAgenda(${a.id}, 'Cancelado')" class="border bg-white text-rose-600 hover:bg-rose-50 px-2 py-0.5 rounded text-[10px] font-medium transition">Cancelar</button>
+                            <button onclick="excluirAgenda(${a.id})" class="text-slate-400 hover:text-rose-600 px-1 ml-1"><i class="fa-regular fa-trash-can"></i></button>
                         </td>
                     </tr>`;
                 });
@@ -389,12 +431,66 @@
             const res = await req.json(); if(res.erro) { alert("Erro: " + res.erro); } else { e.target.reset(); carregarAgenda(); }
         }
 
-        async function mudarStatusAgenda(id, novoStatus) {
-            await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'alterar_status_agenda', id: id, status: novoStatus }) }); carregarAgenda();
+        // Função que abre a janela para Remarcar ou Cancelar
+        function abrirModalStatusAgenda(id, acao, dataAtual = '', horaAtual = '') {
+            document.getElementById('status-agenda-id').value = id;
+            document.getElementById('status-agenda-acao').value = acao;
+            document.getElementById('status-agenda-justificativa').value = '';
+            
+            const containerDataHora = document.getElementById('container-data-hora-remarcar');
+            const inputData = document.getElementById('status-agenda-data');
+            const inputHora = document.getElementById('status-agenda-hora');
+
+            if (acao === 'Remarcado') {
+                document.getElementById('titulo-modal-agenda').innerHTML = '<i class="fa-solid fa-clock-rotate-left mr-2 text-amber-500"></i>Remarcar Evento';
+                containerDataHora.classList.remove('hidden');
+                inputData.required = true;
+                inputHora.required = true;
+                inputData.value = dataAtual;
+                inputHora.value = horaAtual ? horaAtual.substring(0, 5) : '';
+            } else {
+                document.getElementById('titulo-modal-agenda').innerHTML = '<i class="fa-solid fa-ban mr-2 text-rose-500"></i>Cancelar Evento';
+                containerDataHora.classList.add('hidden');
+                inputData.required = false;
+                inputHora.required = false;
+            }
+            
+            document.getElementById('modal-status-agenda').classList.remove('hidden');
+        }
+
+        // Função que envia a remarcação ou cancelamento com a justificativa
+        async function salvarStatusAgenda(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-salvar-status-agenda');
+            btn.innerText = "Salvando..."; btn.disabled = true;
+            
+            try {
+                const id = document.getElementById('status-agenda-id').value;
+                const status = document.getElementById('status-agenda-acao').value;
+                const justificativa = document.getElementById('status-agenda-justificativa').value;
+                
+                let payload = { action: 'alterar_status_agenda', id: id, status: status, justificativa: justificativa };
+                
+                // Só envia nova data se for Remarcação
+                if (status === 'Remarcado') {
+                    payload.data = document.getElementById('status-agenda-data').value;
+                    payload.hora = document.getElementById('status-agenda-hora').value;
+                }
+
+                const req = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
+                const res = await req.json();
+                
+                if (res.erro) { alert("Erro ao salvar: " + res.erro); } 
+                else { 
+                    document.getElementById('modal-status-agenda').classList.add('hidden'); 
+                    carregarAgenda(); 
+                }
+            } catch (error) { alert("Falha na comunicação."); } 
+            finally { btn.innerText = "Confirmar Alteração"; btn.disabled = false; }
         }
 
         async function excluirAgenda(id) {
-            if(!confirm("Remover evento?")) return;
+            if(!confirm("Remover evento definitivamente?")) return;
             await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'excluir_agenda', id: id }) }); carregarAgenda();
         }
 

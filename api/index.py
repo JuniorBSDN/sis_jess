@@ -63,7 +63,12 @@ class handler(BaseHTTPRequestHandler):
                 try:
                     with urllib.request.urlopen(req): pass
                 except urllib.error.HTTPError as e:
-                    if e.code != 400: raise e
+                    if e.code == 404:
+                        self.wfile.write(json.dumps({"erro": "A pasta 'logos' não existe no Storage do Supabase."}).encode('utf-8'))
+                        return
+                    else:
+                        self.wfile.write(json.dumps({"erro": f"Erro Storage Logos: {e.code}"}).encode('utf-8'))
+                        return
 
                 url_publica = f"{sb_url}/storage/v1/object/public/logos/{filename}"
                 self.wfile.write(json.dumps({"sucesso": True, "url_logo": url_publica}).encode('utf-8'))
@@ -290,15 +295,11 @@ class handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
                 return
 
-            # -- AQUI É A NOVA LÓGICA DE REMARCAÇÃO / CANCELAMENTO --
             elif action == 'alterar_status_agenda':
                 aid = dados.get('id')
                 url = f"{sb_url}/rest/v1/agenda?id=eq.{aid}"
-                
-                # Monta os dados que serão salvos
                 update_data = {"status": dados.get('status')}
                 
-                # Se for enviado nova data/hora ou justificativa, nós salvamos!
                 if dados.get('data'): update_data["data_evento"] = dados.get('data')
                 if dados.get('hora'): update_data["hora_evento"] = dados.get('hora')
                 if 'justificativa' in dados: update_data["justificativa"] = dados.get('justificativa')
@@ -330,7 +331,12 @@ class handler(BaseHTTPRequestHandler):
                 try:
                     with urllib.request.urlopen(req): pass
                 except urllib.error.HTTPError as e:
-                    if e.code != 400: raise e
+                    if e.code == 404:
+                        self.wfile.write(json.dumps({"erro": "A pasta (Bucket) 'documentos' não existe no Supabase. Crie-a no painel do Supabase."}).encode('utf-8'))
+                        return
+                    else:
+                        self.wfile.write(json.dumps({"erro": f"Erro Storage Documentos: {e.code}"}).encode('utf-8'))
+                        return
 
                 url_publica = f"{sb_url}/storage/v1/object/public/documentos/{filename}"
                 self.wfile.write(json.dumps({"sucesso": True, "url_arquivo": url_publica}).encode('utf-8'))

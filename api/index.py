@@ -290,10 +290,20 @@ class handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"sucesso": True}).encode('utf-8'))
                 return
 
+            # -- AQUI É A NOVA LÓGICA DE REMARCAÇÃO / CANCELAMENTO --
             elif action == 'alterar_status_agenda':
                 aid = dados.get('id')
                 url = f"{sb_url}/rest/v1/agenda?id=eq.{aid}"
-                payload = json.dumps({"status": dados.get('status')}).encode('utf-8')
+                
+                # Monta os dados que serão salvos
+                update_data = {"status": dados.get('status')}
+                
+                # Se for enviado nova data/hora ou justificativa, nós salvamos!
+                if dados.get('data'): update_data["data_evento"] = dados.get('data')
+                if dados.get('hora'): update_data["hora_evento"] = dados.get('hora')
+                if 'justificativa' in dados: update_data["justificativa"] = dados.get('justificativa')
+                
+                payload = json.dumps(update_data).encode('utf-8')
                 headers = {'apikey': sb_key, 'Authorization': f'Bearer {sb_key}', 'Content-Type': 'application/json', 'Prefer': 'return=representation'}
                 req = urllib.request.Request(url, data=payload, headers=headers, method='PATCH')
                 with urllib.request.urlopen(req): pass

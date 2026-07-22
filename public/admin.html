@@ -30,7 +30,6 @@
             </div>
 
             <nav class="p-4 flex flex-col gap-1.5 mt-2">
-                <!-- NOVA ABA: INÍCIO / AVISOS -->
                 <button onclick="navegarOperacional('aba-dashboard')" id="btn-aba-dashboard" class="btn-menu w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition">
                     <i class="fa-solid fa-house w-5 text-center"></i> Início / Avisos
                 </button>
@@ -69,22 +68,9 @@
 
         <main class="flex-1 overflow-y-auto p-10 w-full">
 
-           <!-- NOVA ABA: DASHBOARD (AVISOS) -->
+            <!-- ABA: DASHBOARD -->
             <div id="aba-dashboard" class="tab-op hidden space-y-6 no-print">
-                
-                <!-- BOÃO DE DISPARO PARA O WHATSAPP MASTER -->
-                <div class="bg-slate-800 rounded-xl p-6 flex flex-col md:flex-row justify-between items-center shadow-lg gap-4">
-                    <div>
-                        <h3 class="text-white font-bold text-lg"><i class="fa-brands fa-whatsapp text-emerald-400 mr-2"></i>Assistente Virtual</h3>
-                        <p class="text-slate-400 text-xs mt-1">Gere e envie o relatório completo de avisos e aniversários direto para o WhatsApp do Gestor.</p>
-                    </div>
-                    <button onclick="gerarRelatorioWhatsApp()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-6 py-3 rounded-lg transition shadow-md whitespace-nowrap text-sm flex items-center">
-                        <i class="fa-solid fa-paper-plane mr-2"></i> Enviar Resumo ao Gestor
-                    </button>
-                </div>
-
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Widget de Reuniões -->
                     <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6">
                         <h3 class="text-sm font-bold text-slate-700 uppercase mb-4 border-b pb-2 flex items-center">
                             <i class="fa-solid fa-bell text-amber-500 mr-2"></i>Avisos de Agenda (Próximos 7 dias)
@@ -93,8 +79,6 @@
                             <p class="text-xs text-slate-400">Analisando calendário...</p>
                         </div>
                     </div>
-
-                    <!-- Widget de Aniversariantes -->
                     <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6">
                         <h3 class="text-sm font-bold text-slate-700 uppercase mb-4 border-b pb-2 flex items-center">
                             <i class="fa-solid fa-cake-candles text-rose-500 mr-2"></i>Aniversariantes do Mês
@@ -108,21 +92,18 @@
 
             <!-- ABA RH -->
             <div id="aba-rh" class="tab-op hidden space-y-6">
+                <!-- Mantém o mesmo form perfeito que já funcionava -->
                 <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm no-print">
                     <h3 class="text-sm font-bold text-slate-700 uppercase mb-4 border-b pb-2"><i class="fa-solid fa-user-plus mr-2 text-emerald-500"></i>Novo Colaborador</h3>
                     <form onsubmit="cadastrarAssessor(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Nome Completo *</label><input type="text" id="func-nome" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
                         <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">CPF ou CNPJ *</label><input type="text" id="func-doc" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
-                        <!-- NOVO CAMPO: DATA DE NASCIMENTO -->
                         <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Data de Nascimento</label><input type="date" id="func-nasc" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
-                        
                         <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Cargo / Setor *</label><input type="text" id="func-cargo" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
                         <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Telefone / WhatsApp *</label><input type="text" id="func-whats" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
                         <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">E-mail *</label><input type="email" id="func-email" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
-                        
                         <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Conta Bancária (Pix/Ag/Cc) *</label><input type="text" id="func-bank" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
                         <div class="md:col-span-2"><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Endereço Residencial Completo *</label><input type="text" id="func-end" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
-                        
                         <div class="md:col-span-3 flex justify-end mt-2"><button type="submit" class="btn-dinamico text-white px-8 py-2.5 rounded-lg text-xs font-bold transition">Cadastrar Colaborador</button></div>
                     </form>
                 </div>
@@ -200,79 +181,30 @@
         </main>
     </div>
 
-    <!-- Modal Edição RH -->
-    <div id="modal-edicao-func" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
-        <div class="bg-white rounded-2xl w-full max-w-2xl border p-6 shadow-2xl space-y-4">
-            <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="font-bold text-slate-800 text-sm uppercase">Ficha Operacional / Alteração</h3>
-                <button onclick="document.getElementById('modal-edicao-func').classList.add('hidden')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <form onsubmit="salvarEdicaoFunc(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input type="hidden" id="edit-func-id">
-                <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Nome</label><input type="text" id="edit-func-nome" required class="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-xs bg-slate-50 focus:outline-none"></div>
-                <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">CPF/CNPJ</label><input type="text" id="edit-func-doc" required class="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-xs bg-slate-50 focus:outline-none"></div>
-                
-                <!-- NOVO CAMPO: DATA DE NASCIMENTO (EDIÇÃO) -->
-                <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Data Nasc.</label><input type="date" id="edit-func-nasc" class="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-xs bg-slate-50 focus:outline-none"></div>
-                
-                <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Cargo</label><input type="text" id="edit-func-cargo" required class="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-xs bg-slate-50 focus:outline-none"></div>
-                <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">WhatsApp</label><input type="text" id="edit-func-whats" required class="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-xs bg-slate-50 focus:outline-none"></div>
-                <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">E-mail</label><input type="email" id="edit-func-email" required class="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-xs bg-slate-50 focus:outline-none"></div>
-                <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Banco / Pix</label><input type="text" id="edit-func-bank" required class="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-xs bg-slate-50 focus:outline-none"></div>
-                <div class="md:col-span-2"><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Endereço</label><input type="text" id="edit-func-end" required class="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-xs bg-slate-50 focus:outline-none"></div>
-                
-                <div class="md:col-span-2 pt-2 border-t flex justify-end gap-2">
-                    <button type="button" onclick="imprimirFichaFunc()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs px-4 py-2 rounded-lg transition">Imprimir Ficha</button>
-                    <button type="submit" class="bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs px-6 py-2 rounded-lg transition">Salvar Dados</button>
+    <!-- MODAL DE ALERTA AUTOMÁTICO (NOVO) -->
+    <div id="modal-alerta-login" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl w-full max-w-md border shadow-2xl overflow-hidden transform transition-all">
+            <div class="bg-emerald-500 p-5 text-center relative">
+                <button onclick="document.getElementById('modal-alerta-login').classList.add('hidden')" class="absolute top-4 right-4 text-white/80 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+                <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+                    <i class="fa-solid fa-bell text-emerald-500 text-3xl"></i>
                 </div>
-            </form>
+                <h2 class="text-xl font-bold text-white tracking-wide">Resumo do Gabinete</h2>
+                <p class="text-emerald-50 text-xs mt-1">Aqui estão as suas prioridades de hoje!</p>
+            </div>
+            <div class="p-6 space-y-4 max-h-[60vh] overflow-y-auto" id="conteudo-alerta-login">
+                <!-- Injetado via JS -->
+            </div>
+            <div class="p-4 border-t bg-slate-50 flex justify-center">
+                <button onclick="document.getElementById('modal-alerta-login').classList.add('hidden')" class="bg-slate-800 hover:bg-slate-700 text-white font-bold px-8 py-2.5 rounded-xl transition text-sm">Ciente, acessar sistema</button>
+            </div>
         </div>
     </div>
 
-    <!-- Modal Eleitor -->
-    <div id="modal-eleitor" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
-        <div class="bg-white rounded-2xl w-full max-w-lg border p-6 shadow-2xl space-y-4">
-            <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="font-bold text-slate-800 text-sm uppercase"><i class="fa-solid fa-clipboard-user text-emerald-500 mr-2"></i>Ficha de Apoiador</h3>
-                <button onclick="document.getElementById('modal-eleitor').classList.add('hidden')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <div id="conteudo-modal-eleitor" class="text-xs text-slate-700 space-y-3"></div>
-        </div>
-    </div>
-
-    <!-- Modal Status da Agenda -->
-    <div id="modal-status-agenda" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
-        <div class="bg-white rounded-2xl w-full max-w-md border p-6 shadow-2xl space-y-4">
-            <div class="flex justify-between items-center border-b pb-3">
-                <h3 id="titulo-modal-agenda" class="font-bold text-slate-800 text-sm uppercase">Alterar Status</h3>
-                <button onclick="document.getElementById('modal-status-agenda').classList.add('hidden')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <form onsubmit="salvarStatusAgenda(event)" class="space-y-4">
-                <input type="hidden" id="status-agenda-id">
-                <input type="hidden" id="status-agenda-acao">
-                
-                <div id="container-data-hora-remarcar" class="hidden grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Nova Data</label>
-                        <input type="date" id="status-agenda-data" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Novo Horário</label>
-                        <input type="time" id="status-agenda-hora" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Justificativa / Motivo</label>
-                    <textarea id="status-agenda-justificativa" rows="3" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none resize-none" placeholder="Digite o motivo..."></textarea>
-                </div>
-                
-                <div class="pt-2 border-t flex justify-end">
-                    <button type="submit" id="btn-salvar-status-agenda" class="bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs px-6 py-2 rounded-lg transition">Confirmar Alteração</button>
-                </div>
-            </form>
-        </div>
-    </div>
+    <!-- Demais Modais Operacionais (Edição / Eleitor / Status) permanecem ocultos aqui -->
+    <div id="modal-edicao-func" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print"><div class="bg-white rounded-2xl w-full max-w-2xl border p-6 shadow-2xl space-y-4"><div class="flex justify-between items-center border-b pb-3"><h3 class="font-bold text-slate-800 text-sm uppercase">Ficha / Alteração</h3><button onclick="document.getElementById('modal-edicao-func').classList.add('hidden')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button></div><form onsubmit="salvarEdicaoFunc(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4"><input type="hidden" id="edit-func-id"><div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Nome</label><input type="text" id="edit-func-nome" required class="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-xs bg-slate-50 focus:outline-none"></div><div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">CPF/CNPJ</label><input type="text" id="edit-func-doc" required class="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-xs bg-slate-50 focus:outline-none"></div><div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Data Nasc.</label><input type="date" id="edit-func-nasc" class="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-xs bg-slate-50 focus:outline-none"></div><div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Cargo</label><input type="text" id="edit-func-cargo" required class="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-xs bg-slate-50 focus:outline-none"></div><div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">WhatsApp</label><input type="text" id="edit-func-whats" required class="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-xs bg-slate-50 focus:outline-none"></div><div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">E-mail</label><input type="email" id="edit-func-email" required class="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-xs bg-slate-50 focus:outline-none"></div><div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Banco / Pix</label><input type="text" id="edit-func-bank" required class="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-xs bg-slate-50 focus:outline-none"></div><div class="md:col-span-2"><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Endereço</label><input type="text" id="edit-func-end" required class="w-full border border-slate-200 rounded-lg px-3 py-1.5 text-xs bg-slate-50 focus:outline-none"></div><div class="md:col-span-2 pt-2 border-t flex justify-end gap-2"><button type="button" onclick="imprimirFichaFunc()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs px-4 py-2 rounded-lg transition">Imprimir Ficha</button><button type="submit" class="bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs px-6 py-2 rounded-lg transition">Salvar Dados</button></div></form></div></div>
+    <div id="modal-eleitor" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print"><div class="bg-white rounded-2xl w-full max-w-lg border p-6 shadow-2xl space-y-4"><div class="flex justify-between items-center border-b pb-3"><h3 class="font-bold text-slate-800 text-sm uppercase"><i class="fa-solid fa-clipboard-user text-emerald-500 mr-2"></i>Ficha de Apoiador</h3><button onclick="document.getElementById('modal-eleitor').classList.add('hidden')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button></div><div id="conteudo-modal-eleitor" class="text-xs text-slate-700 space-y-3"></div></div></div>
+    <div id="modal-status-agenda" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print"><div class="bg-white rounded-2xl w-full max-w-md border p-6 shadow-2xl space-y-4"><div class="flex justify-between items-center border-b pb-3"><h3 id="titulo-modal-agenda" class="font-bold text-slate-800 text-sm uppercase">Alterar Status</h3><button onclick="document.getElementById('modal-status-agenda').classList.add('hidden')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button></div><form onsubmit="salvarStatusAgenda(event)" class="space-y-4"><input type="hidden" id="status-agenda-id"><input type="hidden" id="status-agenda-acao"><div id="container-data-hora-remarcar" class="hidden grid grid-cols-2 gap-4"><div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Nova Data</label><input type="date" id="status-agenda-data" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none"></div><div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Novo Horário</label><input type="time" id="status-agenda-hora" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none"></div></div><div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Justificativa / Motivo</label><textarea id="status-agenda-justificativa" rows="3" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none resize-none" placeholder="Digite o motivo..."></textarea></div><div class="pt-2 border-t flex justify-end"><button type="submit" id="btn-salvar-status-agenda" class="bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs px-6 py-2 rounded-lg transition">Confirmar Alteração</button></div></form></div></div>
 
     <script>
         let dadosGestorLogado = null;
@@ -304,38 +236,25 @@
                     const inicial = nomeGabinete.charAt(0).toUpperCase();
                     if (dadosGestorLogado.url_logo) {
                         containerLogo.innerHTML = `<img src="${dadosGestorLogado.url_logo}" onerror="this.outerHTML='<span id=\\'icone-padrao\\'>${inicial}</span>'" class="w-full h-full object-contain p-1 bg-white">`;
-                    } else {
-                        containerLogo.innerHTML = `<span id="icone-padrao">${inicial}</span>`;
-                    }
+                    } else { containerLogo.innerHTML = `<span id="icone-padrao">${inicial}</span>`; }
 
                     const corCliente = dadosGestorLogado.cor_layout || '#10b981';
                     document.getElementById('sub-brand').style.color = corCliente;
                     containerLogo.style.backgroundColor = corCliente;
                     document.querySelectorAll('.btn-dinamico').forEach(btn => { btn.style.backgroundColor = corCliente; });
 
-                    // Ao logar, vai direto para o NOVO Painel de Avisos
                     navegarOperacional('aba-dashboard');
                 } else {
                     alert(dados.mensagem || "Acesso negado."); window.location.href = "index.html";
                 }
-            } catch (erro) {
-                alert("Falha de conexão com a API."); document.body.style.display = "flex";
-            }
+            } catch (erro) { alert("Falha de conexão com a API."); document.body.style.display = "flex"; }
         }
 
         function navegarOperacional(idAba) {
             document.querySelectorAll('.tab-op').forEach(el => el.classList.add('hidden'));
             document.getElementById(idAba).classList.remove('hidden');
-            
-            const titulos = { 
-                'aba-dashboard': 'Início e Avisos do Sistema',
-                'aba-agenda': 'Agenda Geral e Eventos', 
-                'aba-documentos': 'Documentos & Arquivos', 
-                'aba-eleitores': 'Base de Eleitores', 
-                'aba-rh': 'Equipe & Crachás' 
-            };
+            const titulos = { 'aba-dashboard': 'Início e Avisos do Sistema', 'aba-agenda': 'Agenda Geral e Eventos', 'aba-documentos': 'Documentos & Arquivos', 'aba-eleitores': 'Base de Eleitores', 'aba-rh': 'Equipe & Crachás' };
             document.getElementById('titulo-pagina-op').innerText = titulos[idAba];
-            
             document.querySelectorAll('.btn-menu').forEach(b => { b.className = "btn-menu w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition"; b.style.backgroundColor = "transparent"; });
             const btnAtivo = document.getElementById('btn-' + idAba);
             if(btnAtivo && dadosGestorLogado) { btnAtivo.className = "btn-menu w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-white rounded-xl transition shadow-sm"; btnAtivo.style.backgroundColor = "#1e293b"; }
@@ -347,446 +266,158 @@
             if(idAba === 'aba-rh') carregarFuncionarios();
         }
 
-        // =====================================
-        // NOVA FUNÇÃO: CARREGAR AVISOS (DASHBOARD)
-        // =====================================
         async function carregarAvisosDashboard() {
             try {
-                document.getElementById('lista-avisos-agenda').innerHTML = '<p class="text-xs text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Buscando dados...</p>';
-                document.getElementById('lista-avisos-niver').innerHTML = '<p class="text-xs text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Buscando dados...</p>';
-
-                // Busca Agenda e Equipe simultaneamente para economizar tempo
                 const [resA, resF] = await Promise.all([
                     fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_agenda_gestor', gestor_id: dadosGestorLogado.id }) }),
                     fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_funcionarios', gestor_id: dadosGestorLogado.id }) })
                 ]);
-                
-                const dataA = await resA.json();
-                const dataF = await resF.json();
-                cacheAgenda = dataA.agenda || [];
-                cacheFuncionarios = dataF.funcionarios || [];
+                const dataA = await resA.json(); const dataF = await resF.json();
+                cacheAgenda = dataA.agenda || []; cacheFuncionarios = dataF.funcionarios || [];
 
-                const hoje = new Date();
-                hoje.setHours(0,0,0,0);
+                const hoje = new Date(); hoje.setHours(0,0,0,0);
+                const limiteAgenda = new Date(hoje); limiteAgenda.setDate(limiteAgenda.getDate() + 7);
                 
-                // LÓGICA DE AVISO DA AGENDA (Próximos 7 dias)
-                const limiteAgenda = new Date(hoje);
-                limiteAgenda.setDate(limiteAgenda.getDate() + 7);
+                let htmlAgenda = ''; let textoAlertaPopup = '';
                 
-                let htmlAgenda = '';
                 cacheAgenda.filter(a => a.status === 'Confirmado' || a.status === 'Remarcado').forEach(a => {
                     if(!a.data_evento) return;
                     const dataEv = new Date(a.data_evento + 'T00:00:00');
-                    
                     if(dataEv >= hoje && dataEv <= limiteAgenda) {
                         const diasRestantes = Math.floor((dataEv - hoje) / (1000 * 60 * 60 * 24));
-                        let seloDia = '';
-                        if(diasRestantes === 0) seloDia = '<span class="text-rose-500 font-bold bg-rose-50 px-2 py-1 rounded">Hoje!</span>';
-                        else if(diasRestantes === 1) seloDia = '<span class="text-amber-500 font-bold bg-amber-50 px-2 py-1 rounded">Amanhã</span>';
-                        else seloDia = `<span class="text-slate-500 bg-slate-100 px-2 py-1 rounded">Em ${diasRestantes} dias</span>`;
-                        
-                        htmlAgenda += `
-                        <div class="p-3 border border-slate-100 rounded-lg flex justify-between items-center bg-white shadow-sm hover:shadow transition">
-                            <div class="text-xs">
-                                <p class="font-bold text-slate-700 text-[13px]">${a.titulo}</p>
-                                <p class="text-slate-500"><i class="fa-regular fa-calendar mr-1"></i>${dataEv.toLocaleDateString('pt-BR')} às ${a.hora_evento.substring(0,5)}</p>
-                            </div>
-                            <div class="text-[10px] tracking-wide">${seloDia}</div>
-                        </div>`;
+                        let seloDia = diasRestantes === 0 ? '<span class="text-rose-500 bg-rose-50 px-2 py-1 rounded">Hoje!</span>' : (diasRestantes === 1 ? '<span class="text-amber-500 bg-amber-50 px-2 py-1 rounded">Amanhã</span>' : `<span class="text-slate-500 bg-slate-100 px-2 py-1 rounded">Em ${diasRestantes} dias</span>`);
+                        htmlAgenda += `<div class="p-3 border border-slate-100 rounded-lg flex justify-between items-center bg-white shadow-sm"><div class="text-xs"><p class="font-bold text-slate-700">${a.titulo}</p><p class="text-slate-500">${dataEv.toLocaleDateString('pt-BR')} às ${a.hora_evento.substring(0,5)}</p></div><div class="text-[10px] font-bold tracking-wide">${seloDia}</div></div>`;
+                        textoAlertaPopup += `<div class="bg-amber-50 border border-amber-100 p-3 rounded-lg"><h4 class="text-amber-800 font-bold text-xs"><i class="fa-regular fa-calendar mr-2"></i>${a.titulo}</h4><p class="text-amber-600 text-[11px] mt-1">${dataEv.toLocaleDateString('pt-BR')} às ${a.hora_evento.substring(0,5)} (${seloDia.replace(/<[^>]*>?/gm, '')})</p></div>`;
                     }
                 });
                 
-                if(htmlAgenda === '') htmlAgenda = '<div class="p-4 bg-slate-50 rounded-lg text-center text-xs text-slate-500 border border-slate-100"><i class="fa-regular fa-calendar-check text-2xl text-emerald-400 mb-2 block"></i>Nenhum compromisso marcado para os próximos 7 dias.</div>';
+                if(htmlAgenda === '') htmlAgenda = '<div class="p-4 bg-slate-50 rounded-lg text-center text-xs text-slate-500 border border-slate-100">Nenhum compromisso para os próximos 7 dias.</div>';
                 document.getElementById('lista-avisos-agenda').innerHTML = htmlAgenda;
 
-
-                // LÓGICA DE AVISO DE ANIVERSÁRIOS (Mês Atual)
                 const mesAtual = hoje.getMonth() + 1;
                 let htmlNiver = '';
                 
                 cacheFuncionarios.filter(f => f.status !== 'Inativo').forEach(f => {
                     if(!f.data_nascimento) return;
-                    const parts = f.data_nascimento.split('-'); // O formato do DB é AAAA-MM-DD
-                    if(parts.length === 3) {
-                        const mesNasc = parseInt(parts[1], 10);
-                        const diaNasc = parseInt(parts[2], 10);
-                        
-                        if(mesNasc === mesAtual) {
-                            htmlNiver += `
-                            <div class="p-3 border border-slate-100 rounded-lg flex justify-between items-center bg-white shadow-sm hover:shadow transition">
-                                <div class="text-xs">
-                                    <p class="font-bold text-slate-700 text-[13px]">${f.nome.toUpperCase()}</p>
-                                    <p class="text-slate-500"><i class="fa-solid fa-id-badge mr-1"></i>${f.cargo}</p>
-                                </div>
-                                <div class="text-[11px] font-bold text-rose-500 bg-rose-50 border border-rose-100 px-3 py-1.5 rounded-lg shadow-sm">
-                                    <i class="fa-solid fa-gift mr-1"></i> Dia ${diaNasc}
-                                </div>
-                            </div>`;
-                        }
+                    const parts = f.data_nascimento.split('-');
+                    if(parts.length === 3 && parseInt(parts[1], 10) === mesAtual) {
+                        htmlNiver += `<div class="p-3 border border-slate-100 rounded-lg flex justify-between items-center bg-white shadow-sm"><div class="text-xs"><p class="font-bold text-slate-700">${f.nome.toUpperCase()}</p><p class="text-slate-500">${f.cargo}</p></div><div class="text-[11px] font-bold text-rose-500 bg-rose-50 border border-rose-100 px-3 py-1.5 rounded-lg shadow-sm"><i class="fa-solid fa-gift mr-1"></i> Dia ${parts[2]}</div></div>`;
+                        textoAlertaPopup += `<div class="bg-rose-50 border border-rose-100 p-3 rounded-lg"><h4 class="text-rose-800 font-bold text-xs"><i class="fa-solid fa-cake-candles mr-2"></i>Aniversário: ${f.nome.toUpperCase()}</h4><p class="text-rose-600 text-[11px] mt-1">Dia ${parts[2]} - Não se esqueça de parabenizar!</p></div>`;
                     }
                 });
 
-                if(htmlNiver === '') htmlNiver = '<div class="p-4 bg-slate-50 rounded-lg text-center text-xs text-slate-500 border border-slate-100"><i class="fa-solid fa-face-smile text-2xl text-slate-300 mb-2 block"></i>Nenhum colaborador faz aniversário este mês.</div>';
+                if(htmlNiver === '') htmlNiver = '<div class="p-4 bg-slate-50 rounded-lg text-center text-xs text-slate-500 border border-slate-100">Nenhum aniversário este mês.</div>';
                 document.getElementById('lista-avisos-niver').innerHTML = htmlNiver;
 
-            } catch (err) {
-                document.getElementById('lista-avisos-agenda').innerHTML = '<p class="text-xs text-rose-500">Erro ao carregar avisos.</p>';
-                document.getElementById('lista-avisos-niver').innerHTML = '<p class="text-xs text-rose-500">Erro ao carregar aniversariantes.</p>';
-            }
+                // LÓGICA DO POPUP AUTOMÁTICO
+                if (textoAlertaPopup !== '') {
+                    document.getElementById('conteudo-alerta-login').innerHTML = textoAlertaPopup;
+                    document.getElementById('modal-alerta-login').classList.remove('hidden');
+                }
+
+            } catch (err) {}
         }
 
-        // =====================================
-        // RH COM DATA DE NASCIMENTO
-        // =====================================
+        // Funções de CRUD normais (RH, Agenda, Docs, Eleitores)...
         async function carregarFuncionarios() {
-            try {
-                const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_funcionarios', gestor_id: dadosGestorLogado.id }) });
-                const d = await res.json();
-                cacheFuncionarios = d.funcionarios || [];
-                const tbody = document.getElementById('tabela-funcionarios');
-
-                tbody.innerHTML = '';
-                if (!cacheFuncionarios.length) { tbody.innerHTML = '<tr><td colspan="6" class="p-6 text-slate-400 italic text-center">Nenhum colaborador registrado.</td></tr>'; return; }
-
-                cacheFuncionarios.forEach(f => {
-                    const isAtivo = (f.status !== 'Inativo');
-                    const statusBadge = isAtivo ? '<span class="bg-emerald-50 text-emerald-500 border border-emerald-100 px-2 py-0.5 rounded text-[10px] font-bold">Ativa</span>' : '<span class="bg-rose-50 text-rose-600 border border-rose-100 px-2 py-0.5 rounded text-[10px] font-bold">Bloqueada</span>';
-                    const btnStatus = isAtivo ? `<button onclick="mudarStatusFuncionario(${f.id}, 'Ativo')" title="Bloquear" class="border bg-white text-slate-600 px-1.5 py-0.5 rounded hover:bg-slate-50"><i class="fa-solid fa-ban text-rose-400 text-[10px]"></i></button>` : `<button onclick="mudarStatusFuncionario(${f.id}, 'Inativo')" title="Liberar" class="border bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded hover:bg-emerald-100"><i class="fa-solid fa-check text-[10px]"></i></button>`;
-
-                    tbody.innerHTML += `
-                        <tr class="hover:bg-slate-50 transition-colors text-xs">
-                            <td class="py-2 px-6 font-semibold">${f.nome ? f.nome.toUpperCase() : '---'}</td>
-                            <td class="py-2 px-6 font-mono">${f.documento || '---'}</td>
-                            <td class="py-2 px-6">${f.cargo || '---'}</td>
-                            <td class="py-2 px-6 font-mono">${f.whatsapp || '---'}</td>
-                            <td class="py-2 px-6 text-center">${statusBadge}</td>
-                            <td class="py-2 px-6 flex justify-center gap-1 no-print">
-                                <button onclick="abrirModalEdicaoFunc(${f.id})" title="Alterar/Visualizar" class="border bg-white px-2 py-0.5 rounded text-[10px]"><i class="fa-regular fa-pen-to-square"></i></button>
-                                ${btnStatus}
-                                <button onclick="excluirFuncionario(${f.id})" title="Excluir" class="border bg-white text-rose-500 px-2 py-0.5 rounded text-[10px]"><i class="fa-solid fa-trash"></i></button>
-                                <button onclick="gerarCracha('${f.nome}', '${f.cargo}')" title="Crachá" class="border bg-white px-2 py-0.5 rounded text-[10px]"><i class="fa-regular fa-id-badge"></i></button>
-                            </td>
-                        </tr>`;
-                });
-            } catch (err) { document.getElementById('tabela-funcionarios').innerHTML = `<tr><td colspan="6" class="p-4 text-rose-500 font-bold text-center">Erro ao carregar dados.</td></tr>`; }
+            const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_funcionarios', gestor_id: dadosGestorLogado.id }) });
+            const d = await res.json(); cacheFuncionarios = d.funcionarios || [];
+            const tbody = document.getElementById('tabela-funcionarios'); tbody.innerHTML = '';
+            if (!cacheFuncionarios.length) { tbody.innerHTML = '<tr><td colspan="6" class="p-6 text-slate-400 italic text-center">Nenhum colaborador registrado.</td></tr>'; return; }
+            cacheFuncionarios.forEach(f => {
+                const isAtivo = (f.status !== 'Inativo');
+                const statusBadge = isAtivo ? '<span class="bg-emerald-50 text-emerald-500 border border-emerald-100 px-2 py-0.5 rounded text-[10px] font-bold">Ativa</span>' : '<span class="bg-rose-50 text-rose-600 border border-rose-100 px-2 py-0.5 rounded text-[10px] font-bold">Bloqueada</span>';
+                const btnStatus = isAtivo ? `<button onclick="mudarStatusFuncionario(${f.id}, 'Ativo')" class="border bg-white text-slate-600 px-1.5 py-0.5 rounded hover:bg-slate-50"><i class="fa-solid fa-ban text-rose-400 text-[10px]"></i></button>` : `<button onclick="mudarStatusFuncionario(${f.id}, 'Inativo')" class="border bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded hover:bg-emerald-100"><i class="fa-solid fa-check text-[10px]"></i></button>`;
+                tbody.innerHTML += `<tr class="hover:bg-slate-50 transition-colors text-xs"><td class="py-2 px-6 font-semibold">${f.nome ? f.nome.toUpperCase() : '---'}</td><td class="py-2 px-6 font-mono">${f.documento || '---'}</td><td class="py-2 px-6">${f.cargo || '---'}</td><td class="py-2 px-6 font-mono">${f.whatsapp || '---'}</td><td class="py-2 px-6 text-center">${statusBadge}</td><td class="py-2 px-6 flex justify-center gap-1 no-print"><button onclick="abrirModalEdicaoFunc(${f.id})" class="border bg-white px-2 py-0.5 rounded text-[10px]"><i class="fa-regular fa-pen-to-square"></i></button>${btnStatus}<button onclick="excluirFuncionario(${f.id})" class="border bg-white text-rose-500 px-2 py-0.5 rounded text-[10px]"><i class="fa-solid fa-trash"></i></button></td></tr>`;
+            });
         }
-
         async function cadastrarAssessor(e) {
-            e.preventDefault();
-            const btn = e.target.querySelector('button[type="submit"]');
-            btn.innerText = "Salvando..."; btn.disabled = true;
+            e.preventDefault(); const btn = e.target.querySelector('button[type="submit"]'); btn.innerText = "Salvando..."; btn.disabled = true;
             try {
-                const req = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({
-                    action: 'cadastrar_funcionario', 
-                    nome: document.getElementById('func-nome').value, 
-                    cargo: document.getElementById('func-cargo').value,
-                    whatsapp: document.getElementById('func-whats').value, 
-                    email: document.getElementById('func-email').value, 
-                    documento: document.getElementById('func-doc').value,
-                    endereco: document.getElementById('func-end').value, 
-                    conta_bancaria: document.getElementById('func-bank').value,
-                    data_nascimento: document.getElementById('func-nasc').value, // SALVANDO A DATA AQUI
-                    gestor_id: dadosGestorLogado.id
-                })});
-                const res = await req.json();
-
-                if(res.erro) { alert("Erro ao tentar salvar no banco de dados: " + res.erro); } 
-                else { e.target.reset(); carregarFuncionarios(); }
-            } catch (error) { alert("Falha na comunicação com a API."); } 
-            finally { btn.innerText = "Cadastrar Colaborador"; btn.disabled = false; }
+                const req = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'cadastrar_funcionario', nome: document.getElementById('func-nome').value, cargo: document.getElementById('func-cargo').value, whatsapp: document.getElementById('func-whats').value, email: document.getElementById('func-email').value, documento: document.getElementById('func-doc').value, endereco: document.getElementById('func-end').value, conta_bancaria: document.getElementById('func-bank').value, data_nascimento: document.getElementById('func-nasc').value, gestor_id: dadosGestorLogado.id }) });
+                const res = await req.json(); if(res.erro) alert("Erro: " + res.erro); else { e.target.reset(); carregarFuncionarios(); }
+            } catch (error) {} finally { btn.innerText = "Cadastrar Colaborador"; btn.disabled = false; }
         }
-
         function abrirModalEdicaoFunc(id) {
             const f = cacheFuncionarios.find(func => func.id === id); if(!f) return;
-            document.getElementById('edit-func-id').value = f.id;
-            document.getElementById('edit-func-nome').value = f.nome || '';
-            document.getElementById('edit-func-doc').value = f.documento || '';
-            document.getElementById('edit-func-nasc').value = f.data_nascimento || ''; // CARREGANDO A DATA AQUI
-            document.getElementById('edit-func-cargo').value = f.cargo || '';
-            document.getElementById('edit-func-whats').value = f.whatsapp || '';
-            document.getElementById('edit-func-email').value = f.email || '';
-            document.getElementById('edit-func-bank').value = f.conta_bancaria || '';
-            document.getElementById('edit-func-end').value = f.endereco || '';
+            document.getElementById('edit-func-id').value = f.id; document.getElementById('edit-func-nome').value = f.nome || ''; document.getElementById('edit-func-doc').value = f.documento || ''; document.getElementById('edit-func-nasc').value = f.data_nascimento || ''; document.getElementById('edit-func-cargo').value = f.cargo || ''; document.getElementById('edit-func-whats').value = f.whatsapp || ''; document.getElementById('edit-func-email').value = f.email || ''; document.getElementById('edit-func-bank').value = f.conta_bancaria || ''; document.getElementById('edit-func-end').value = f.endereco || '';
             document.getElementById('modal-edicao-func').classList.remove('hidden');
         }
-
         async function salvarEdicaoFunc(e) {
-            e.preventDefault();
-            const req = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({
-                action: 'editar_funcionario', 
-                id: document.getElementById('edit-func-id').value, 
-                nome: document.getElementById('edit-func-nome').value,
-                documento: document.getElementById('edit-func-doc').value, 
-                data_nascimento: document.getElementById('edit-func-nasc').value, // ATUALIZANDO A DATA
-                cargo: document.getElementById('edit-func-cargo').value, 
-                whatsapp: document.getElementById('edit-func-whats').value,
-                email: document.getElementById('edit-func-email').value, 
-                conta_bancaria: document.getElementById('edit-func-bank').value, 
-                endereco: document.getElementById('edit-func-end').value
-            })});
-            const res = await req.json();
-            if(res.erro) { alert("Erro: " + res.erro); } 
-            else { document.getElementById('modal-edicao-func').classList.add('hidden'); carregarFuncionarios(); }
+            e.preventDefault(); const req = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'editar_funcionario', id: document.getElementById('edit-func-id').value, nome: document.getElementById('edit-func-nome').value, documento: document.getElementById('edit-func-doc').value, data_nascimento: document.getElementById('edit-func-nasc').value, cargo: document.getElementById('edit-func-cargo').value, whatsapp: document.getElementById('edit-func-whats').value, email: document.getElementById('edit-func-email').value, conta_bancaria: document.getElementById('edit-func-bank').value, endereco: document.getElementById('edit-func-end').value }) });
+            const res = await req.json(); if(res.erro) alert("Erro: " + res.erro); else { document.getElementById('modal-edicao-func').classList.add('hidden'); carregarFuncionarios(); }
         }
-
-        function imprimirFichaFunc() {
-            const id = document.getElementById('edit-func-id').value; const f = cacheFuncionarios.find(func => func.id == id); if(!f) return;
-            const nasc = f.data_nascimento ? new Date(f.data_nascimento + 'T00:00:00').toLocaleDateString('pt-BR') : 'Não informada';
-            const w = window.open('', '_blank');
-            w.document.write(`<html><head><title>Ficha - ${f.nome}</title><style>body{font-family:sans-serif;padding:30px;line-height:1.6;} h2{border-bottom:2px solid #333;pb:5px;}</style></head><body onload="window.print()"><h2>FICHA DE COLABORADOR</h2><p><strong>Nome:</strong> ${f.nome}</p><p><strong>CPF/CNPJ:</strong> ${f.documento}</p><p><strong>Data de Nascimento:</strong> ${nasc}</p><p><strong>Cargo:</strong> ${f.cargo}</p><p><strong>Contato:</strong> ${f.whatsapp}</p><p><strong>E-mail:</strong> ${f.email}</p><p><strong>Dados Bancários:</strong> ${f.conta_bancaria}</p><p><strong>Endereço:</strong> ${f.endereco}</p><p><strong>Gabinete Vínculo:</strong> ${dadosGestorLogado.nome_campanha_gabinete}</p></body></html>`);
-            w.document.close();
-        }
-
         async function mudarStatusFuncionario(id, statusBR) {
             const novo = statusBR === 'Ativo' ? 'Inativo' : 'Ativo';
-            await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'alterar_status_funcionario', id: id, status: novo }) });
-            carregarFuncionarios();
+            await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'alterar_status_funcionario', id: id, status: novo }) }); carregarFuncionarios();
         }
-
         async function excluirFuncionario(id) {
             if(!confirm("Apagar permanentemente?")) return;
-            await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'excluir_funcionario', id: id }) });
-            carregarFuncionarios();
+            await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'excluir_funcionario', id: id }) }); carregarFuncionarios();
         }
-
-        function gerarCracha(nome, cargo) {
-            const win = window.open('', '_blank');
-            win.document.write(`<html><body onload="window.print()"><div style="border:2px solid #000;width:220px;height:340px;margin:50px auto;text-align:center;font-family:sans-serif;padding:20px;border-radius:8px;"><h3>${nome.toUpperCase()}</h3><p>${cargo}</p><small>Gabinete Local</small></div></body></html>`);
-            win.document.close();
-        }
-
-        // =====================================
-        // AGENDA
-        // =====================================
         async function carregarAgenda() {
-            try {
-                const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_agenda_gestor', gestor_id: dadosGestorLogado.id }) });
-                const d = await res.json(); const tbody = document.getElementById('tabela-agenda');
-                tbody.innerHTML = '';
-                if (!d.agenda || !d.agenda.length) { tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-slate-400 italic text-center">Sem compromissos.</td></tr>'; return; }
-
-                d.agenda.forEach(a => {
-                    const statusCor = a.status === 'Cancelado' ? 'text-rose-500 bg-rose-50 border-rose-100' : (a.status === 'Remarcado' ? 'text-amber-600 bg-amber-50 border-amber-100' : 'text-emerald-600 bg-emerald-50 border-emerald-100');
-                    const justificativaHtml = a.justificativa ? `<div class="text-[10px] text-slate-500 font-normal mt-1"><i class="fa-solid fa-quote-left text-slate-300 mr-1"></i>${a.justificativa}</div>` : '';
-                    const dataFormatada = a.data_evento ? new Date(a.data_evento + 'T00:00:00').toLocaleDateString('pt-BR') : '';
-                    const horaFormatada = a.hora_evento ? a.hora_evento.substring(0, 5) : '--:--';
-
-                    tbody.innerHTML += `<tr class="hover:bg-slate-50 text-xs">
-                        <td class="py-3 px-6 font-semibold">${dataFormatada} às ${horaFormatada}</td>
-                        <td class="py-3 px-6"><div class="font-bold text-slate-700">${a.titulo || '---'}</div>${justificativaHtml}</td>
-                        <td class="py-3 px-6 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold border ${statusCor}">${a.status || 'Confirmado'}</span></td>
-                        <td class="py-3 px-6 flex justify-center gap-1.5 no-print">
-                            <button onclick="abrirModalStatusAgenda(${a.id}, 'Remarcado', '${a.data_evento || ''}', '${a.hora_evento || ''}')" class="border bg-white text-amber-600 hover:bg-amber-50 px-2 py-0.5 rounded text-[10px] font-medium transition">Remarcar</button>
-                            <button onclick="abrirModalStatusAgenda(${a.id}, 'Cancelado')" class="border bg-white text-rose-600 hover:bg-rose-50 px-2 py-0.5 rounded text-[10px] font-medium transition">Cancelar</button>
-                            <button onclick="excluirAgenda(${a.id})" class="text-slate-400 hover:text-rose-600 px-1 ml-1"><i class="fa-regular fa-trash-can"></i></button>
-                        </td>
-                    </tr>`;
-                });
-            } catch (err) { document.getElementById('tabela-agenda').innerHTML = `<tr><td colspan="4" class="p-4 text-rose-500 font-bold text-center">Erro ao carregar dados.</td></tr>`; }
+            const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_agenda_gestor', gestor_id: dadosGestorLogado.id }) });
+            const d = await res.json(); const tbody = document.getElementById('tabela-agenda'); tbody.innerHTML = '';
+            if (!d.agenda || !d.agenda.length) { tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-slate-400 italic text-center">Sem compromissos.</td></tr>'; return; }
+            d.agenda.forEach(a => {
+                const statusCor = a.status === 'Cancelado' ? 'text-rose-500 bg-rose-50 border-rose-100' : (a.status === 'Remarcado' ? 'text-amber-600 bg-amber-50 border-amber-100' : 'text-emerald-600 bg-emerald-50 border-emerald-100');
+                const justificativaHtml = a.justificativa ? `<div class="text-[10px] text-slate-500 font-normal mt-1"><i class="fa-solid fa-quote-left text-slate-300 mr-1"></i>${a.justificativa}</div>` : '';
+                const dataFormatada = a.data_evento ? new Date(a.data_evento + 'T00:00:00').toLocaleDateString('pt-BR') : ''; const horaFormatada = a.hora_evento ? a.hora_evento.substring(0, 5) : '--:--';
+                tbody.innerHTML += `<tr class="hover:bg-slate-50 text-xs"><td class="py-3 px-6 font-semibold">${dataFormatada} às ${horaFormatada}</td><td class="py-3 px-6"><div class="font-bold text-slate-700">${a.titulo || '---'}</div>${justificativaHtml}</td><td class="py-3 px-6 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold border ${statusCor}">${a.status || 'Confirmado'}</span></td><td class="py-3 px-6 flex justify-center gap-1.5 no-print"><button onclick="abrirModalStatusAgenda(${a.id}, 'Remarcado', '${a.data_evento || ''}', '${a.hora_evento || ''}')" class="border bg-white text-amber-600 hover:bg-amber-50 px-2 py-0.5 rounded text-[10px] font-medium transition">Remarcar</button><button onclick="abrirModalStatusAgenda(${a.id}, 'Cancelado')" class="border bg-white text-rose-600 hover:bg-rose-50 px-2 py-0.5 rounded text-[10px] font-medium transition">Cancelar</button><button onclick="excluirAgenda(${a.id})" class="text-slate-400 hover:text-rose-600 px-1 ml-1"><i class="fa-regular fa-trash-can"></i></button></td></tr>`;
+            });
         }
-
         async function cadastrarCompromisso(e) {
-            e.preventDefault();
-            const req = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'cadastrar_agenda', titulo: document.getElementById('age-titulo').value, data: document.getElementById('age-data').value, hora: document.getElementById('age-hora').value, gestor_id: dadosGestorLogado.id }) });
-            const res = await req.json(); if(res.erro) { alert("Erro: " + res.erro); } else { e.target.reset(); carregarAgenda(); }
+            e.preventDefault(); const req = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'cadastrar_agenda', titulo: document.getElementById('age-titulo').value, data: document.getElementById('age-data').value, hora: document.getElementById('age-hora').value, gestor_id: dadosGestorLogado.id }) });
+            const res = await req.json(); if(res.erro) alert("Erro: " + res.erro); else { e.target.reset(); carregarAgenda(); }
         }
-
         function abrirModalStatusAgenda(id, acao, dataAtual = '', horaAtual = '') {
-            document.getElementById('status-agenda-id').value = id;
-            document.getElementById('status-agenda-acao').value = acao;
-            document.getElementById('status-agenda-justificativa').value = '';
-            
-            const containerDataHora = document.getElementById('container-data-hora-remarcar');
-            const inputData = document.getElementById('status-agenda-data');
-            const inputHora = document.getElementById('status-agenda-hora');
-
-            if (acao === 'Remarcado') {
-                document.getElementById('titulo-modal-agenda').innerHTML = '<i class="fa-solid fa-clock-rotate-left mr-2 text-amber-500"></i>Remarcar Evento';
-                containerDataHora.classList.remove('hidden');
-                inputData.required = true;
-                inputHora.required = true;
-                inputData.value = dataAtual;
-                inputHora.value = horaAtual ? horaAtual.substring(0, 5) : '';
-            } else {
-                document.getElementById('titulo-modal-agenda').innerHTML = '<i class="fa-solid fa-ban mr-2 text-rose-500"></i>Cancelar Evento';
-                containerDataHora.classList.add('hidden');
-                inputData.required = false;
-                inputHora.required = false;
-            }
-            
+            document.getElementById('status-agenda-id').value = id; document.getElementById('status-agenda-acao').value = acao; document.getElementById('status-agenda-justificativa').value = '';
+            const containerDataHora = document.getElementById('container-data-hora-remarcar'); const inputData = document.getElementById('status-agenda-data'); const inputHora = document.getElementById('status-agenda-hora');
+            if (acao === 'Remarcado') { document.getElementById('titulo-modal-agenda').innerHTML = '<i class="fa-solid fa-clock-rotate-left mr-2 text-amber-500"></i>Remarcar Evento'; containerDataHora.classList.remove('hidden'); inputData.required = true; inputHora.required = true; inputData.value = dataAtual; inputHora.value = horaAtual ? horaAtual.substring(0, 5) : ''; } else { document.getElementById('titulo-modal-agenda').innerHTML = '<i class="fa-solid fa-ban mr-2 text-rose-500"></i>Cancelar Evento'; containerDataHora.classList.add('hidden'); inputData.required = false; inputHora.required = false; }
             document.getElementById('modal-status-agenda').classList.remove('hidden');
         }
-
         async function salvarStatusAgenda(e) {
-            e.preventDefault();
-            const btn = document.getElementById('btn-salvar-status-agenda');
-            btn.innerText = "Salvando..."; btn.disabled = true;
-            
+            e.preventDefault(); const btn = document.getElementById('btn-salvar-status-agenda'); btn.innerText = "Salvando..."; btn.disabled = true;
             try {
-                const id = document.getElementById('status-agenda-id').value;
-                const status = document.getElementById('status-agenda-acao').value;
-                const justificativa = document.getElementById('status-agenda-justificativa').value;
-                
+                const id = document.getElementById('status-agenda-id').value; const status = document.getElementById('status-agenda-acao').value; const justificativa = document.getElementById('status-agenda-justificativa').value;
                 let payload = { action: 'alterar_status_agenda', id: id, status: status, justificativa: justificativa };
-                
-                if (status === 'Remarcado') {
-                    payload.data = document.getElementById('status-agenda-data').value;
-                    payload.hora = document.getElementById('status-agenda-hora').value;
-                }
-
+                if (status === 'Remarcado') { payload.data = document.getElementById('status-agenda-data').value; payload.hora = document.getElementById('status-agenda-hora').value; }
                 const req = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
-                const res = await req.json();
-                
-                if (res.erro) { alert("Erro ao salvar: " + res.erro); } 
-                else { document.getElementById('modal-status-agenda').classList.add('hidden'); carregarAgenda(); }
-            } catch (error) { alert("Falha na comunicação."); } 
-            finally { btn.innerText = "Confirmar Alteração"; btn.disabled = false; }
+                const res = await req.json(); if (res.erro) alert("Erro ao salvar: " + res.erro); else { document.getElementById('modal-status-agenda').classList.add('hidden'); carregarAgenda(); }
+            } catch (error) {} finally { btn.innerText = "Confirmar Alteração"; btn.disabled = false; }
         }
-
-        async function excluirAgenda(id) {
-            if(!confirm("Remover evento definitivamente?")) return;
-            await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'excluir_agenda', id: id }) }); carregarAgenda();
-        }
-
-        // =====================================
-        // ELEITORES & DOCUMENTOS
-        // =====================================
+        async function excluirAgenda(id) { if(!confirm("Remover evento definitivamente?")) return; await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'excluir_agenda', id: id }) }); carregarAgenda(); }
         async function carregarEleitores() {
-            try {
-                const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_eleitores_gestor', gestor_id: dadosGestorLogado.id }) });
-                const d = await res.json(); cacheEleitores = d.eleitores || [];
-                const tbody = document.getElementById('tabela-eleitores');
-                tbody.innerHTML = '';
-                if (!cacheEleitores.length) { tbody.innerHTML = '<tr><td colspan="5" class="p-6 text-slate-400 italic text-center">Nenhum eleitor.</td></tr>'; return; }
-
-                cacheEleitores.forEach(e => {
-                    const statusBadge = e.status === 'Bloqueado' ? '<span class="bg-rose-50 text-rose-600 border border-rose-100 px-2 py-0.5 rounded text-[10px] font-bold">Bloqueado</span>' : '<span class="bg-emerald-50 text-emerald-500 border border-emerald-100 px-2 py-0.5 rounded text-[10px] font-bold">Ativo</span>';
-                    const btnStatus = e.status === 'Bloqueado' ? `<button onclick="mudarStatusEleitor(${e.id}, 'Ativo')" class="border bg-white text-emerald-600 px-2 py-0.5 rounded text-[10px] font-semibold">Desbloquear</button>` : `<button onclick="mudarStatusEleitor(${e.id}, 'Bloqueado')" class="border bg-white text-rose-600 px-2 py-0.5 rounded text-[10px] font-semibold">Bloquear</button>`;
-
-                    tbody.innerHTML += `<tr class="hover:bg-slate-50 text-xs">
-                        <td class="py-2 px-6 font-semibold">${e.nome ? e.nome.toUpperCase() : '---'}</td>
-                        <td class="py-2 px-6">${e.bairro || '---'}</td>
-                        <td class="py-2 px-6 font-mono">${e.whatsapp || '---'}</td>
-                        <td class="py-2 px-6 text-center">${statusBadge}</td>
-                        <td class="py-2 px-6 flex justify-center gap-1.5 no-print">
-                            <button onclick="abrirModalEleitor(${e.id})" class="border bg-white px-2 py-0.5 rounded text-[10px] font-semibold"><i class="fa-regular fa-eye mr-1"></i> Dados</button>
-                            ${btnStatus}
-                            <button onclick="excluirEleitor(${e.id})" class="text-slate-400 hover:text-rose-500 px-1"><i class="fa-solid fa-trash"></i></button>
-                        </td>
-                    </tr>`;
-                });
-            } catch (err) { document.getElementById('tabela-eleitores').innerHTML = `<tr><td colspan="5" class="p-4 text-rose-500 font-bold text-center">Erro ao carregar dados.</td></tr>`; }
+            const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_eleitores_gestor', gestor_id: dadosGestorLogado.id }) });
+            const d = await res.json(); cacheEleitores = d.eleitores || []; const tbody = document.getElementById('tabela-eleitores'); tbody.innerHTML = '';
+            if (!cacheEleitores.length) { tbody.innerHTML = '<tr><td colspan="5" class="p-6 text-slate-400 italic text-center">Nenhum eleitor.</td></tr>'; return; }
+            cacheEleitores.forEach(e => {
+                const statusBadge = e.status === 'Bloqueado' ? '<span class="bg-rose-50 text-rose-600 border border-rose-100 px-2 py-0.5 rounded text-[10px] font-bold">Bloqueado</span>' : '<span class="bg-emerald-50 text-emerald-500 border border-emerald-100 px-2 py-0.5 rounded text-[10px] font-bold">Ativo</span>';
+                const btnStatus = e.status === 'Bloqueado' ? `<button onclick="mudarStatusEleitor(${e.id}, 'Ativo')" class="border bg-white text-emerald-600 px-2 py-0.5 rounded text-[10px] font-semibold">Desbloquear</button>` : `<button onclick="mudarStatusEleitor(${e.id}, 'Bloqueado')" class="border bg-white text-rose-600 px-2 py-0.5 rounded text-[10px] font-semibold">Bloquear</button>`;
+                tbody.innerHTML += `<tr class="hover:bg-slate-50 text-xs"><td class="py-2 px-6 font-semibold">${e.nome ? e.nome.toUpperCase() : '---'}</td><td class="py-2 px-6">${e.bairro || '---'}</td><td class="py-2 px-6 font-mono">${e.whatsapp || '---'}</td><td class="py-2 px-6 text-center">${statusBadge}</td><td class="py-2 px-6 flex justify-center gap-1.5 no-print"><button onclick="abrirModalEleitor(${e.id})" class="border bg-white px-2 py-0.5 rounded text-[10px] font-semibold"><i class="fa-regular fa-eye mr-1"></i> Dados</button>${btnStatus}<button onclick="excluirEleitor(${e.id})" class="text-slate-400 hover:text-rose-500 px-1"><i class="fa-solid fa-trash"></i></button></td></tr>`;
+            });
         }
-
-        function abrirModalEleitor(id) {
-            const e = cacheEleitores.find(el => el.id === id); if(!e) return;
-            document.getElementById('conteudo-modal-eleitor').innerHTML = `<div class="grid grid-cols-2 gap-2"><p><strong>Nome:</strong> ${e.nome || ''}</p><p><strong>WhatsApp:</strong> ${e.whatsapp || ''}</p><p><strong>Bairro:</strong> ${e.bairro || ''}</p><p><strong>Título Eleitoral:</strong> ${e.titulo || '---'}</p><p><strong>Status:</strong> ${e.status || 'Ativo'}</p></div><hr class="my-2"><p class="font-bold">Demanda Solicitada:</p><div class="bg-slate-50 p-2 rounded border mt-1 text-slate-600">${e.demanda || 'Nenhuma registrada.'}</div>`;
-            document.getElementById('modal-eleitor').classList.remove('hidden');
-        }
-
-        async function mudarStatusEleitor(id, novoStatus) {
-            await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'alterar_status_eleitor', id: id, status: novoStatus }) }); carregarEleitores();
-        }
-
-        async function excluirEleitor(id) {
-            if(!confirm("Remover eleitor?")) return;
-            await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'excluir_eleitor', id: id }) });
-            document.getElementById('modal-eleitor').classList.add('hidden'); carregarEleitores();
-        }
-
-        const toBase64 = file => new Promise((resolve, reject) => {
-            const reader = new FileReader(); reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result); reader.onerror = error => reject(error);
-        });
-
+        function abrirModalEleitor(id) { const e = cacheEleitores.find(el => el.id === id); if(!e) return; document.getElementById('conteudo-modal-eleitor').innerHTML = `<div class="grid grid-cols-2 gap-2"><p><strong>Nome:</strong> ${e.nome || ''}</p><p><strong>WhatsApp:</strong> ${e.whatsapp || ''}</p><p><strong>Bairro:</strong> ${e.bairro || ''}</p><p><strong>Título Eleitoral:</strong> ${e.titulo || '---'}</p><p><strong>Status:</strong> ${e.status || 'Ativo'}</p></div><hr class="my-2"><p class="font-bold">Demanda Solicitada:</p><div class="bg-slate-50 p-2 rounded border mt-1 text-slate-600">${e.demanda || 'Nenhuma registrada.'}</div>`; document.getElementById('modal-eleitor').classList.remove('hidden'); }
+        async function mudarStatusEleitor(id, novoStatus) { await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'alterar_status_eleitor', id: id, status: novoStatus }) }); carregarEleitores(); }
+        async function excluirEleitor(id) { if(!confirm("Remover eleitor?")) return; await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'excluir_eleitor', id: id }) }); document.getElementById('modal-eleitor').classList.add('hidden'); carregarEleitores(); }
+        const toBase64 = file => new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = () => resolve(reader.result); reader.onerror = error => reject(error); });
         async function carregarDocs() {
-            try {
-                const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_documentos_gestor', gestor_id: dadosGestorLogado.id }) });
-                const d = await res.json(); const tbody = document.getElementById('tabela-documentos');
-                tbody.innerHTML = '';
-                if (!d.documentos || !d.documentos.length) { tbody.innerHTML = '<tr><td colspan="3" class="p-4 text-slate-400 italic text-center">Sem documentos.</td></tr>'; return; }
-
-                d.documentos.forEach(doc => {
-                    const btn = doc.url_arquivo ? `<button onclick="window.open('${doc.url_arquivo}', '_blank')" class="text-emerald-600 font-semibold"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>` : '';
-                    tbody.innerHTML += `<tr class="hover:bg-slate-50 text-xs"><td class="py-3 px-6 font-bold">${doc.titulo || '---'}</td><td class="py-3 px-6">${doc.categoria || '---'}</td><td class="py-3 px-6 flex justify-center gap-4">${btn} <button onclick="excluirDoc(${doc.id})" class="text-rose-500"><i class="fa-solid fa-trash"></i></button></td></tr>`;
-                });
-            } catch (err) { document.getElementById('tabela-documentos').innerHTML = `<tr><td colspan="3" class="p-4 text-rose-500 font-bold text-center">Erro ao carregar dados.</td></tr>`; }
+            const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_documentos_gestor', gestor_id: dadosGestorLogado.id }) });
+            const d = await res.json(); const tbody = document.getElementById('tabela-documentos'); tbody.innerHTML = '';
+            if (!d.documentos || !d.documentos.length) { tbody.innerHTML = '<tr><td colspan="3" class="p-4 text-slate-400 italic text-center">Sem documentos.</td></tr>'; return; }
+            d.documentos.forEach(doc => { const btn = doc.url_arquivo ? `<button onclick="window.open('${doc.url_arquivo}', '_blank')" class="text-emerald-600 font-semibold"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>` : ''; tbody.innerHTML += `<tr class="hover:bg-slate-50 text-xs"><td class="py-3 px-6 font-bold">${doc.titulo || '---'}</td><td class="py-3 px-6">${doc.categoria || '---'}</td><td class="py-3 px-6 flex justify-center gap-4">${btn} <button onclick="excluirDoc(${doc.id})" class="text-rose-500"><i class="fa-solid fa-trash"></i></button></td></tr>`; });
         }
-
         async function cadastrarDoc(e) {
-            e.preventDefault(); const btn = document.getElementById('btn-salvar-doc'); btn.innerText = "Enviando..."; btn.disabled = true;
-            let urlFinalDoc = ""; const fileInput = document.getElementById('doc-file');
+            e.preventDefault(); const btn = document.getElementById('btn-salvar-doc'); btn.innerText = "Enviando..."; btn.disabled = true; let urlFinalDoc = ""; const fileInput = document.getElementById('doc-file');
             try {
-                if(fileInput.files.length > 0) {
-                    const file = fileInput.files[0];
-                    if(file.size > 4 * 1024 * 1024) { alert("O arquivo excede limite de 4MB."); btn.innerText = "Arquivar"; btn.disabled = false; return; }
-                    const base64Str = await toBase64(file);
-                    const uploadRes = await fetch('/api', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'upload_documento', file_base64: base64Str, filename: Date.now() + "_" + file.name.replace(/\s+/g, '_') }) });
-                    const uploadData = await uploadRes.json(); if(uploadData.url_arquivo) urlFinalDoc = uploadData.url_arquivo;
-                }
+                if(fileInput.files.length > 0) { const file = fileInput.files[0]; if(file.size > 4 * 1024 * 1024) { alert("O arquivo excede limite de 4MB."); btn.innerText = "Arquivar"; btn.disabled = false; return; } const base64Str = await toBase64(file); const uploadRes = await fetch('/api', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'upload_documento', file_base64: base64Str, filename: Date.now() + "_" + file.name.replace(/\s+/g, '_') }) }); const uploadData = await uploadRes.json(); if(uploadData.url_arquivo) urlFinalDoc = uploadData.url_arquivo; }
                 const req = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'cadastrar_documento', titulo: document.getElementById('doc-titulo').value, categoria: document.getElementById('doc-cat').value, url_arquivo: urlFinalDoc, gestor_id: dadosGestorLogado.id }) });
-                const res = await req.json(); if(res.erro) { alert("Erro: " + res.erro); } else { e.target.reset(); carregarDocs(); }
-            } catch (error) { alert("Erro de upload."); } finally { btn.innerText = "Arquivar"; btn.disabled = false; }
+                const res = await req.json(); if(res.erro) alert("Erro: " + res.erro); else { e.target.reset(); carregarDocs(); }
+            } catch (error) {} finally { btn.innerText = "Arquivar"; btn.disabled = false; }
         }
-
-        async function excluirDoc(id) {
-            if(!confirm("Remover documento?")) return;
-            await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'excluir_documento', id: id }) }); carregarDocs();
-        }
+        async function excluirDoc(id) { if(!confirm("Remover documento?")) return; await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'excluir_documento', id: id }) }); carregarDocs(); }
         
-
         window.onload = autenticarGestor;
-    
-    function gerarRelatorioWhatsApp() {
-            if (!dadosGestorLogado || !dadosGestorLogado.whatsapp) {
-                alert("Número de WhatsApp da Gestora não encontrado no cadastro.");
-                return;
-            }
-
-            // Pega estritamente o número da GESTORA
-            const numeroMaster = dadosGestorLogado.whatsapp.replace(/\D/g, ''); 
-            const hoje = new Date();
-            
-            let texto = `*RESUMO DIÁRIO - GABINETE* 🏢\n_Data: ${hoje.toLocaleDateString('pt-BR')}_\n\n`;
-
-            // Adiciona Agenda
-            texto += `*📅 SEUS PRÓXIMOS COMPROMISSOS:*\n`;
-            let temAgenda = false;
-            const limiteAgenda = new Date(); limiteAgenda.setDate(limiteAgenda.getDate() + 7);
-            
-            cacheAgenda.filter(a => a.status === 'Confirmado' || a.status === 'Remarcado').forEach(a => {
-                if(!a.data_evento) return;
-                const dataEv = new Date(a.data_evento + 'T00:00:00');
-                if(dataEv >= hoje.setHours(0,0,0,0) && dataEv <= limiteAgenda) {
-                    temAgenda = true;
-                    texto += `• ${a.titulo}\n  ↳ ${dataEv.toLocaleDateString('pt-BR')} às ${a.hora_evento.substring(0,5)}\n`;
-                }
-            });
-            if(!temAgenda) texto += `Nenhum compromisso marcado para os próximos 7 dias.\n`;
-
-            texto += `\n`;
-
-            // Adiciona Aniversários (Focado em lembrar a Gestora)
-            texto += `*🎂 LEMBRETE DE ANIVERSÁRIOS:*\n_Não esqueça de parabenizar sua equipe este mês!_\n\n`;
-            let temNiver = false;
-            const mesAtual = (new Date()).getMonth() + 1;
-            
-            cacheFuncionarios.filter(f => f.status !== 'Inativo').forEach(f => {
-                if(!f.data_nascimento) return;
-                const parts = f.data_nascimento.split('-');
-                if(parts.length === 3 && parseInt(parts[1], 10) === mesAtual) {
-                    temNiver = true;
-                    texto += `🎉 Dia ${parts[2]} - ${f.nome.toUpperCase()} (${f.cargo})\n`;
-                }
-            });
-            if(!temNiver) texto += `Nenhum colaborador faz aniversário este mês.\n`;
-
-            texto += `\n_Mensagem gerada pelo seu Assistente Virtual._`;
-
-            // Abre o WhatsApp enviando o lembrete para a própria GESTORA
-            const url = `https://wa.me/55${numeroMaster}?text=${encodeURIComponent(texto)}`;
-            window.open(url, '_blank');
-        }
     </script>
 </body>
 </html>

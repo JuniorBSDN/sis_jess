@@ -13,7 +13,6 @@
             body { display: block !important; background: white !important; }
             .print-area { display: block !important; width: 100% !important; border: none !important; box-shadow: none !important; margin: 0 !important; padding: 0 !important; }
         }
-        /* Barra de rolagem suave para as tabelas no celular */
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
@@ -27,7 +26,6 @@
     <aside id="sidebar" class="fixed md:relative top-0 left-0 h-full w-[260px] min-w-[260px] bg-[#0f1e36] text-slate-300 flex flex-col justify-between flex-shrink-0 z-30 shadow-2xl md:shadow-xl no-print transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
         <div>
             <div class="p-6 flex items-center gap-3 border-b border-slate-800/50 relative">
-                <!-- Botão de fechar no celular -->
                 <button onclick="toggleMenu()" class="md:hidden absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
                 
                 <div id="container-logo" class="w-12 h-12 rounded-lg bg-emerald-500 flex items-center justify-center shadow-lg text-white font-bold text-2xl flex-shrink-0 overflow-hidden">
@@ -73,7 +71,6 @@
         <!-- HEADER Responsivo -->
         <header class="h-16 md:h-20 bg-white border-b border-slate-200 px-4 md:px-10 flex items-center justify-between flex-shrink-0 z-10 no-print">
             <div class="flex items-center gap-3">
-                <!-- Menu Hambúrguer -->
                 <button onclick="toggleMenu()" class="md:hidden text-slate-600 hover:text-emerald-500 text-xl p-1 focus:outline-none">
                     <i class="fa-solid fa-bars"></i>
                 </button>
@@ -114,14 +111,21 @@
                 <div class="bg-white border border-slate-200 rounded-xl p-4 md:p-6 shadow-sm no-print">
                     <h3 class="text-sm font-bold text-slate-700 uppercase mb-4 border-b pb-2"><i class="fa-solid fa-user-plus mr-2 text-emerald-500"></i>Novo Colaborador</h3>
                     <form onsubmit="cadastrarAssessor(event)" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+                        
+                        <!-- NOVO CAMPO: FOTO -->
+                        <div class="sm:col-span-2 md:col-span-3 lg:col-span-1">
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Foto 3x4 (Crachá)</label>
+                            <input type="file" id="func-foto" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-slate-100 file:text-slate-700 focus:outline-none transition">
+                        </div>
+
                         <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Nome Completo *</label><input type="text" id="func-nome" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
                         <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">CPF ou CNPJ *</label><input type="text" id="func-doc" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
                         <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Data de Nascimento</label><input type="date" id="func-nasc" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
                         <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Cargo / Setor *</label><input type="text" id="func-cargo" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
                         <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Telefone / WhatsApp *</label><input type="text" id="func-whats" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
                         <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">E-mail *</label><input type="email" id="func-email" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
-                        <div class="sm:col-span-2 md:col-span-1"><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Conta Bancária (Pix/Ag/Cc) *</label><input type="text" id="func-bank" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
-                        <div class="sm:col-span-2 md:col-span-2"><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Endereço Residencial Completo *</label><input type="text" id="func-end" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
+                        <div class="sm:col-span-2 md:col-span-1"><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Conta Bancária (Pix/Ag) *</label><input type="text" id="func-bank" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
+                        <div class="sm:col-span-2 md:col-span-2"><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Endereço Residencial *</label><input type="text" id="func-end" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 transition"></div>
                         <div class="sm:col-span-2 md:col-span-3 flex justify-end mt-2"><button type="submit" class="btn-dinamico w-full sm:w-auto text-white px-8 py-2.5 rounded-lg text-xs font-bold transition">Cadastrar Colaborador</button></div>
                     </form>
                 </div>
@@ -183,7 +187,7 @@
 
             <!-- ABA ELEITORES -->
             <div id="aba-eleitores" class="tab-op hidden space-y-4 md:space-y-6">
-                <!-- FORMULÁRIO DE NOVO APOIADOR (INSERIDO AQUI) -->
+                <!-- FORMULÁRIO DE NOVO APOIADOR -->
                 <div class="bg-white border border-slate-200 rounded-xl p-4 md:p-6 shadow-sm no-print">
                     <h3 class="text-sm font-bold text-slate-700 uppercase mb-4 border-b pb-2"><i class="fa-solid fa-user-plus mr-2 text-emerald-500"></i>Novo Apoiador / Eleitor</h3>
                     <form onsubmit="cadastrarApoiadorAdmin(event)" class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
@@ -230,7 +234,7 @@
         </main>
     </div>
 
-    <!-- MODAL DE ALERTA AUTOMÁTICO (Responsivo) -->
+    <!-- MODAL DE ALERTA AUTOMÁTICO -->
     <div id="modal-alerta-login" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl w-full max-w-md border shadow-2xl overflow-hidden transform transition-all flex flex-col max-h-[90vh]">
             <div class="bg-emerald-500 p-5 text-center relative flex-shrink-0">
@@ -258,6 +262,12 @@
             <div class="overflow-y-auto p-4 md:p-5">
                 <form onsubmit="salvarEdicaoFunc(event)" class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                     <input type="hidden" id="edit-func-id">
+                    
+                    <div class="sm:col-span-2">
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Atualizar Foto 3x4 (Crachá)</label>
+                        <input type="file" id="edit-func-foto" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-slate-100 file:text-slate-700 focus:outline-none transition">
+                    </div>
+
                     <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Nome</label><input type="text" id="edit-func-nome" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs bg-slate-50 focus:outline-none"></div>
                     <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">CPF/CNPJ</label><input type="text" id="edit-func-doc" required class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs bg-slate-50 focus:outline-none"></div>
                     <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Data Nasc.</label><input type="date" id="edit-func-nasc" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs bg-slate-50 focus:outline-none"></div>
@@ -441,6 +451,9 @@
             } catch (err) {}
         }
 
+        const toBase64 = file => new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = () => resolve(reader.result); reader.onerror = error => reject(error); });
+
+        // ---- RH & CRACHÁ (AGORA COM FOTO) ----
         async function carregarFuncionarios() {
             const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_funcionarios', gestor_id: dadosGestorLogado.id }) });
             const d = await res.json(); cacheFuncionarios = d.funcionarios || [];
@@ -450,32 +463,94 @@
                 const isAtivo = (f.status !== 'Inativo');
                 const statusBadge = isAtivo ? '<span class="bg-emerald-50 text-emerald-500 border border-emerald-100 px-2 py-0.5 rounded text-[10px] font-bold whitespace-nowrap">Ativa</span>' : '<span class="bg-rose-50 text-rose-600 border border-rose-100 px-2 py-0.5 rounded text-[10px] font-bold whitespace-nowrap">Bloqueada</span>';
                 const btnStatus = isAtivo ? `<button onclick="mudarStatusFuncionario(${f.id}, 'Ativo')" class="border bg-white text-slate-600 px-2 py-1 rounded hover:bg-slate-50"><i class="fa-solid fa-ban text-rose-400 text-[10px]"></i></button>` : `<button onclick="mudarStatusFuncionario(${f.id}, 'Inativo')" class="border bg-emerald-50 text-emerald-700 px-2 py-1 rounded hover:bg-emerald-100"><i class="fa-solid fa-check text-[10px]"></i></button>`;
-                tbody.innerHTML += `<tr class="hover:bg-slate-50 transition-colors text-xs border-b border-slate-50"><td class="py-3 px-4 md:px-6 font-semibold whitespace-nowrap">${f.nome ? f.nome.toUpperCase() : '---'}</td><td class="py-3 px-4 md:px-6 font-mono whitespace-nowrap">${f.documento || '---'}</td><td class="py-3 px-4 md:px-6 whitespace-nowrap">${f.cargo || '---'}</td><td class="py-3 px-4 md:px-6 font-mono whitespace-nowrap">${f.whatsapp || '---'}</td><td class="py-3 px-4 md:px-6 text-center">${statusBadge}</td><td class="py-3 px-4 md:px-6 flex justify-center gap-1.5 no-print"><button onclick="abrirModalEdicaoFunc(${f.id})" class="border bg-white px-2 py-1 rounded text-[10px]"><i class="fa-regular fa-pen-to-square"></i></button>${btnStatus}<button onclick="excluirFuncionario(${f.id})" class="border bg-white text-rose-500 px-2 py-1 rounded text-[10px]"><i class="fa-solid fa-trash"></i></button></td></tr>`;
+                
+                const miniaturaFoto = f.url_foto 
+                    ? `<img src="${f.url_foto}" class="w-8 h-8 rounded-full object-cover border border-slate-200 shadow-sm flex-shrink-0">` 
+                    : `<div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 text-xs font-bold border border-slate-300 shadow-sm flex-shrink-0">${f.nome.charAt(0).toUpperCase()}</div>`;
+                
+                tbody.innerHTML += `<tr class="hover:bg-slate-50 transition-colors text-xs border-b border-slate-50">
+                    <td class="py-3 px-4 md:px-6 font-semibold whitespace-nowrap flex items-center gap-3">${miniaturaFoto} <span>${f.nome ? f.nome.toUpperCase() : '---'}</span></td>
+                    <td class="py-3 px-4 md:px-6 font-mono whitespace-nowrap">${f.documento || '---'}</td>
+                    <td class="py-3 px-4 md:px-6 whitespace-nowrap">${f.cargo || '---'}</td>
+                    <td class="py-3 px-4 md:px-6 font-mono whitespace-nowrap">${f.whatsapp || '---'}</td>
+                    <td class="py-3 px-4 md:px-6 text-center">${statusBadge}</td>
+                    <td class="py-3 px-4 md:px-6 flex justify-center gap-1.5 no-print">
+                        <button onclick="abrirModalEdicaoFunc(${f.id})" class="border bg-white px-2 py-1 rounded text-[10px]"><i class="fa-regular fa-pen-to-square"></i></button>
+                        ${btnStatus}
+                        <button onclick="excluirFuncionario(${f.id})" class="border bg-white text-rose-500 px-2 py-1 rounded text-[10px]"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="gerarCracha('${f.nome}', '${f.cargo}', '${f.url_foto || ''}')" title="Imprimir Crachá" class="border bg-white text-emerald-600 px-2 py-1 rounded text-[10px] font-bold"><i class="fa-regular fa-id-badge"></i></button>
+                    </td>
+                </tr>`;
             });
         }
+        
         async function cadastrarAssessor(e) {
             e.preventDefault(); const btn = e.target.querySelector('button[type="submit"]'); btn.innerText = "Salvando..."; btn.disabled = true;
+            let urlFinalFoto = ""; const fileInput = document.getElementById('func-foto');
+            
             try {
-                const req = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'cadastrar_funcionario', nome: document.getElementById('func-nome').value, cargo: document.getElementById('func-cargo').value, whatsapp: document.getElementById('func-whats').value, email: document.getElementById('func-email').value, documento: document.getElementById('func-doc').value, endereco: document.getElementById('func-end').value, conta_bancaria: document.getElementById('func-bank').value, data_nascimento: document.getElementById('func-nasc').value, gestor_id: dadosGestorLogado.id }) });
+                if(fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    if(file.size > 2 * 1024 * 1024) { alert("A foto deve ter no máximo 2MB."); btn.innerText = "Cadastrar Colaborador"; btn.disabled = false; return; }
+                    const base64Str = await toBase64(file);
+                    const uploadRes = await fetch('/api', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'upload_foto', file_base64: base64Str, filename: "foto_" + Date.now() + "_" + file.name.replace(/\s+/g, '_') }) });
+                    const uploadData = await uploadRes.json();
+                    if(uploadData.url_foto) urlFinalFoto = uploadData.url_foto;
+                    else if (uploadData.erro) { alert(uploadData.erro); btn.innerText = "Cadastrar Colaborador"; btn.disabled = false; return; }
+                }
+
+                const req = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ 
+                    action: 'cadastrar_funcionario', nome: document.getElementById('func-nome').value, cargo: document.getElementById('func-cargo').value, whatsapp: document.getElementById('func-whats').value, email: document.getElementById('func-email').value, documento: document.getElementById('func-doc').value, endereco: document.getElementById('func-end').value, conta_bancaria: document.getElementById('func-bank').value, data_nascimento: document.getElementById('func-nasc').value, url_foto: urlFinalFoto, gestor_id: dadosGestorLogado.id 
+                }) });
                 const res = await req.json(); if(res.erro) alert("Erro: " + res.erro); else { e.target.reset(); carregarFuncionarios(); }
             } catch (error) {} finally { btn.innerText = "Cadastrar Colaborador"; btn.disabled = false; }
         }
+
         function abrirModalEdicaoFunc(id) {
             const f = cacheFuncionarios.find(func => func.id === id); if(!f) return;
             document.getElementById('edit-func-id').value = f.id; document.getElementById('edit-func-nome').value = f.nome || ''; document.getElementById('edit-func-doc').value = f.documento || ''; document.getElementById('edit-func-nasc').value = f.data_nascimento || ''; document.getElementById('edit-func-cargo').value = f.cargo || ''; document.getElementById('edit-func-whats').value = f.whatsapp || ''; document.getElementById('edit-func-email').value = f.email || ''; document.getElementById('edit-func-bank').value = f.conta_bancaria || ''; document.getElementById('edit-func-end').value = f.endereco || '';
             document.getElementById('modal-edicao-func').classList.remove('hidden');
         }
+
         async function salvarEdicaoFunc(e) {
-            e.preventDefault(); const req = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'editar_funcionario', id: document.getElementById('edit-func-id').value, nome: document.getElementById('edit-func-nome').value, documento: document.getElementById('edit-func-doc').value, data_nascimento: document.getElementById('edit-func-nasc').value, cargo: document.getElementById('edit-func-cargo').value, whatsapp: document.getElementById('edit-func-whats').value, email: document.getElementById('edit-func-email').value, conta_bancaria: document.getElementById('edit-func-bank').value, endereco: document.getElementById('edit-func-end').value }) });
-            const res = await req.json(); if(res.erro) alert("Erro: " + res.erro); else { document.getElementById('modal-edicao-func').classList.add('hidden'); carregarFuncionarios(); }
+            e.preventDefault(); const btn = e.target.querySelector('button[type="submit"]'); btn.innerText = "Salvando..."; btn.disabled = true;
+            let urlFinalFoto = ""; const fileInput = document.getElementById('edit-func-foto');
+            
+            try {
+                if(fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    if(file.size > 2 * 1024 * 1024) { alert("A foto deve ter no máximo 2MB."); btn.innerText = "Salvar Dados"; btn.disabled = false; return; }
+                    const base64Str = await toBase64(file);
+                    const uploadRes = await fetch('/api', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'upload_foto', file_base64: base64Str, filename: "foto_edit_" + Date.now() + "_" + file.name.replace(/\s+/g, '_') }) });
+                    const uploadData = await uploadRes.json();
+                    if(uploadData.url_foto) urlFinalFoto = uploadData.url_foto;
+                }
+
+                let payloadData = { action: 'editar_funcionario', id: document.getElementById('edit-func-id').value, nome: document.getElementById('edit-func-nome').value, documento: document.getElementById('edit-func-doc').value, data_nascimento: document.getElementById('edit-func-nasc').value, cargo: document.getElementById('edit-func-cargo').value, whatsapp: document.getElementById('edit-func-whats').value, email: document.getElementById('edit-func-email').value, conta_bancaria: document.getElementById('edit-func-bank').value, endereco: document.getElementById('edit-func-end').value };
+                if (urlFinalFoto !== "") { payloadData.url_foto = urlFinalFoto; }
+
+                const req = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payloadData) });
+                const res = await req.json(); if(res.erro) alert("Erro: " + res.erro); else { document.getElementById('modal-edicao-func').classList.add('hidden'); carregarFuncionarios(); }
+            } catch (error) {} finally { btn.innerText = "Salvar Dados"; btn.disabled = false; }
         }
+
         function imprimirFichaFunc() {
             const id = document.getElementById('edit-func-id').value; const f = cacheFuncionarios.find(func => func.id == id); if(!f) return;
             const nasc = f.data_nascimento ? new Date(f.data_nascimento + 'T00:00:00').toLocaleDateString('pt-BR') : 'Não informada';
+            const imgHtml = f.url_foto ? `<div style="text-align:right;"><img src="${f.url_foto}" style="width:100px;height:130px;object-fit:cover;border:1px solid #ccc;border-radius:8px;"></div>` : '';
             const w = window.open('', '_blank');
-            w.document.write(`<html><head><title>Ficha - ${f.nome}</title><style>body{font-family:sans-serif;padding:30px;line-height:1.6;} h2{border-bottom:2px solid #333;pb:5px;}</style></head><body onload="window.print()"><h2>FICHA DE COLABORADOR</h2><p><strong>Nome:</strong> ${f.nome}</p><p><strong>CPF/CNPJ:</strong> ${f.documento}</p><p><strong>Data de Nascimento:</strong> ${nasc}</p><p><strong>Cargo:</strong> ${f.cargo}</p><p><strong>Contato:</strong> ${f.whatsapp}</p><p><strong>E-mail:</strong> ${f.email}</p><p><strong>Dados Bancários:</strong> ${f.conta_bancaria}</p><p><strong>Endereço:</strong> ${f.endereco}</p><p><strong>Gabinete Vínculo:</strong> ${dadosGestorLogado.nome_campanha_gabinete}</p></body></html>`);
+            w.document.write(`<html><head><title>Ficha - ${f.nome}</title><style>body{font-family:sans-serif;padding:30px;line-height:1.6;} h2{border-bottom:2px solid #333;pb:5px;}</style></head><body onload="window.print()"><div style="display:flex;justify-content:space-between;align-items:start;"><div><h2>FICHA DE COLABORADOR</h2><p><strong>Nome:</strong> ${f.nome}</p><p><strong>CPF/CNPJ:</strong> ${f.documento}</p><p><strong>Data de Nascimento:</strong> ${nasc}</p><p><strong>Cargo:</strong> ${f.cargo}</p><p><strong>Contato:</strong> ${f.whatsapp}</p><p><strong>E-mail:</strong> ${f.email}</p><p><strong>Dados Bancários:</strong> ${f.conta_bancaria}</p><p><strong>Endereço:</strong> ${f.endereco}</p><p><strong>Gabinete Vínculo:</strong> ${dadosGestorLogado.nome_campanha_gabinete}</p></div>${imgHtml}</div></body></html>`);
             w.document.close();
         }
+
+        function gerarCracha(nome, cargo, fotoUrl) {
+            const imgHtml = fotoUrl ? `<img src="${fotoUrl}" style="width:110px;height:140px;object-fit:cover;margin:15px auto;border:2px solid #ddd;border-radius:8px;box-shadow: 0 4px 6px rgba(0,0,0,0.1);">` : `<div style="width:110px;height:140px;margin:15px auto;border:2px dashed #ccc;border-radius:8px;background:#f9f9f9;display:flex;align-items:center;justify-content:center;color:#999;font-size:12px;font-weight:bold;">SEM FOTO</div>`;
+            const corLogo = dadosGestorLogado.cor_layout || '#10b981';
+            const win = window.open('', '_blank');
+            win.document.write(`<html><body onload="window.print()"><div style="border:1px solid #ccc;width:240px;height:380px;margin:50px auto;text-align:center;font-family:sans-serif;border-radius:12px;overflow:hidden;box-shadow:0 10px 15px rgba(0,0,0,0.1);"><div style="background-color:${corLogo};color:white;padding:12px 0;font-weight:bold;font-size:14px;letter-spacing:1px;text-transform:uppercase;">${dadosGestorLogado.nome_campanha_gabinete}</div>${imgHtml}<h3 style="margin:10px 0 5px 0;font-size:18px;color:#333;">${nome.toUpperCase()}</h3><p style="margin:0;color:${corLogo};font-weight:bold;font-size:14px;">${cargo}</p><div style="margin-top:20px;font-size:10px;color:#888;border-top:1px solid #eee;padding-top:10px;">Acesso Liberado</div></div></body></html>`);
+            win.document.close();
+        }
+
         async function mudarStatusFuncionario(id, statusBR) {
             const novo = statusBR === 'Ativo' ? 'Inativo' : 'Ativo';
             await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'alterar_status_funcionario', id: id, status: novo }) }); carregarFuncionarios();
@@ -484,6 +559,8 @@
             if(!confirm("Apagar permanentemente?")) return;
             await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'excluir_funcionario', id: id }) }); carregarFuncionarios();
         }
+
+        // ---- AGENDA ----
         async function carregarAgenda() {
             const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_agenda_gestor', gestor_id: dadosGestorLogado.id }) });
             const d = await res.json(); const tbody = document.getElementById('tabela-agenda'); tbody.innerHTML = '';
@@ -528,49 +605,18 @@
                 tbody.innerHTML += `<tr class="hover:bg-slate-50 text-xs border-b border-slate-50"><td class="py-3 px-4 md:px-6 font-semibold whitespace-nowrap">${e.nome ? e.nome.toUpperCase() : '---'}</td><td class="py-3 px-4 md:px-6 whitespace-nowrap">${e.bairro || '---'}</td><td class="py-3 px-4 md:px-6 font-mono whitespace-nowrap">${e.whatsapp || '---'}</td><td class="py-3 px-4 md:px-6 text-center">${statusBadge}</td><td class="py-3 px-4 md:px-6 flex justify-center gap-1.5 no-print"><button onclick="abrirModalEleitor(${e.id})" class="border bg-white px-2 py-1 rounded text-[10px] font-semibold flex items-center whitespace-nowrap"><i class="fa-regular fa-eye mr-1"></i> Dados</button>${btnStatus}<button onclick="excluirEleitor(${e.id})" class="text-slate-400 hover:text-rose-500 px-1"><i class="fa-solid fa-trash"></i></button></td></tr>`;
             });
         }
-
-        // NOVO: Cadastrar Apoiador pelo Admin
         async function cadastrarApoiadorAdmin(e) {
-            e.preventDefault(); 
-            const btn = e.target.querySelector('button[type="submit"]'); 
-            const txtOriginal = btn.innerText; 
-            btn.innerText = "Salvando..."; btn.disabled = true;
-
+            e.preventDefault(); const btn = e.target.querySelector('button[type="submit"]'); const txtOriginal = btn.innerText; btn.innerText = "Salvando..."; btn.disabled = true;
             try {
-                const req = await fetch('/api', { 
-                    method: 'POST', 
-                    headers: {'Content-Type': 'application/json'}, 
-                    body: JSON.stringify({ 
-                        action: 'salvar_apoiador', 
-                        nome: document.getElementById('eleitor-nome').value, 
-                        whatsapp: document.getElementById('eleitor-whatsapp').value, 
-                        bairro: document.getElementById('eleitor-bairro').value, 
-                        titulo: document.getElementById('eleitor-titulo').value, 
-                        demanda: document.getElementById('eleitor-demanda').value, 
-                        gestor_id: dadosGestorLogado.id 
-                    }) 
-                });
-                const res = await req.json(); 
-                if(res.erro) {
-                    alert("Erro: " + res.erro); 
-                } else { 
-                    e.target.reset(); 
-                    carregarEleitores(); 
-                }
-            } catch (error) {
-                alert("Falha de rede.");
-            } finally { 
-                btn.innerText = txtOriginal; 
-                btn.disabled = false; 
-            }
+                const req = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'salvar_apoiador', nome: document.getElementById('eleitor-nome').value, whatsapp: document.getElementById('eleitor-whatsapp').value, bairro: document.getElementById('eleitor-bairro').value, titulo: document.getElementById('eleitor-titulo').value, demanda: document.getElementById('eleitor-demanda').value, gestor_id: dadosGestorLogado.id }) });
+                const res = await req.json(); if(res.erro) { alert("Erro: " + res.erro); } else { e.target.reset(); carregarEleitores(); }
+            } catch (error) { alert("Falha de rede."); } finally { btn.innerText = txtOriginal; btn.disabled = false; }
         }
-
         function abrirModalEleitor(id) { const e = cacheEleitores.find(el => el.id === id); if(!e) return; document.getElementById('conteudo-modal-eleitor').innerHTML = `<div class="grid grid-cols-2 gap-2"><p><strong>Nome:</strong> ${e.nome || ''}</p><p><strong>WhatsApp:</strong> ${e.whatsapp || ''}</p><p><strong>Bairro:</strong> ${e.bairro || ''}</p><p><strong>Título Eleitoral:</strong> ${e.titulo || '---'}</p><p><strong>Status:</strong> ${e.status || 'Ativo'}</p></div><hr class="my-2"><p class="font-bold">Demanda Solicitada:</p><div class="bg-slate-50 p-3 rounded-lg border mt-1 text-slate-600 break-words">${e.demanda || 'Nenhuma registrada.'}</div>`; document.getElementById('modal-eleitor').classList.remove('hidden'); }
         async function mudarStatusEleitor(id, novoStatus) { await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'alterar_status_eleitor', id: id, status: novoStatus }) }); carregarEleitores(); }
         async function excluirEleitor(id) { if(!confirm("Remover eleitor?")) return; await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'excluir_eleitor', id: id }) }); document.getElementById('modal-eleitor').classList.add('hidden'); carregarEleitores(); }
         
         // ---- DOCUMENTOS ----
-        const toBase64 = file => new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = () => resolve(reader.result); reader.onerror = error => reject(error); });
         async function carregarDocs() {
             const res = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_documentos_gestor', gestor_id: dadosGestorLogado.id }) });
             const d = await res.json(); const tbody = document.getElementById('tabela-documentos'); tbody.innerHTML = '';

@@ -2,6 +2,7 @@ from http.server import BaseHTTPRequestHandler
 import json
 import os
 import urllib.request
+import urllib.parse
 import urllib.error
 import mimetypes
 import base64
@@ -138,7 +139,7 @@ class handler(BaseHTTPRequestHandler):
 
             elif action == 'upload_logo':
                 file_base64 = dados.get('file_base64')
-                filename = dados.get('filename')
+                filename = urllib.parse.quote(dados.get('filename'))
                 file_bytes = base64.b64decode(file_base64.split(",")[-1])
                 url_storage = f"{sb_url}/storage/v1/object/logos/{filename}"
                 content_type = mimetypes.guess_type(filename)[0] or 'application/octet-stream'
@@ -147,12 +148,10 @@ class handler(BaseHTTPRequestHandler):
                 try:
                     with urllib.request.urlopen(req): pass
                 except urllib.error.HTTPError as e:
-                    if e.code == 404:
-                        self.wfile.write(json.dumps({"erro": "A pasta 'logos' não existe no Storage do Supabase."}).encode('utf-8'))
-                        return
-                    else:
-                        self.wfile.write(json.dumps({"erro": f"Erro Storage Logos: {e.code}"}).encode('utf-8'))
-                        return
+                    try: erro_msg = json.loads(e.read().decode('utf-8')).get('message', str(e.code))
+                    except: erro_msg = str(e.code)
+                    self.wfile.write(json.dumps({"erro": f"A pasta 'logos' falhou: {erro_msg}. Verifique se existe no Supabase."}).encode('utf-8'))
+                    return
 
                 url_publica = f"{sb_url}/storage/v1/object/public/logos/{filename}"
                 self.wfile.write(json.dumps({"sucesso": True, "url_logo": url_publica}).encode('utf-8'))
@@ -240,10 +239,11 @@ class handler(BaseHTTPRequestHandler):
 
             # --- FUNCIONÁRIOS (RH) COM FOTO ---
             
-            # Rota Nova: Upload de Foto 3x4
+            # Rota de Upload de Foto com Tratamento de Erro Melhorado
             elif action == 'upload_foto':
                 file_base64 = dados.get('file_base64')
-                filename = dados.get('filename')
+                # Codifica o nome do arquivo para garantir que não haja caracteres bloqueados pela web
+                filename = urllib.parse.quote(dados.get('filename'))
                 file_bytes = base64.b64decode(file_base64.split(",")[-1])
                 url_storage = f"{sb_url}/storage/v1/object/fotos/{filename}"
                 content_type = mimetypes.guess_type(filename)[0] or 'image/jpeg'
@@ -252,12 +252,12 @@ class handler(BaseHTTPRequestHandler):
                 try:
                     with urllib.request.urlopen(req): pass
                 except urllib.error.HTTPError as e:
-                    if e.code == 404:
-                        self.wfile.write(json.dumps({"erro": "A pasta 'fotos' não existe no Supabase. Crie-a no painel do Supabase."}).encode('utf-8'))
-                        return
-                    else:
-                        self.wfile.write(json.dumps({"erro": f"Erro Storage Fotos: {e.code}"}).encode('utf-8'))
-                        return
+                    # Captura o erro real do banco de dados para te avisar na tela
+                    try: erro_msg = json.loads(e.read().decode('utf-8')).get('message', str(e.code))
+                    except: erro_msg = str(e.code)
+                    
+                    self.wfile.write(json.dumps({"erro": f"O Supabase bloqueou o envio da foto. Verifique se a pasta 'fotos' existe e está com letras minúsculas. Detalhe técnico: {erro_msg}"}).encode('utf-8'))
+                    return
 
                 url_publica = f"{sb_url}/storage/v1/object/public/fotos/{filename}"
                 self.wfile.write(json.dumps({"sucesso": True, "url_foto": url_publica}).encode('utf-8'))
@@ -437,7 +437,7 @@ class handler(BaseHTTPRequestHandler):
             # --- DOCUMENTOS MÍDIA ---
             elif action == 'upload_documento':
                 file_base64 = dados.get('file_base64')
-                filename = dados.get('filename')
+                filename = urllib.parse.quote(dados.get('filename'))
                 file_bytes = base64.b64decode(file_base64.split(",")[-1])
                 url_storage = f"{sb_url}/storage/v1/object/documentos/{filename}"
                 content_type = mimetypes.guess_type(filename)[0] or 'application/octet-stream'
@@ -446,12 +446,10 @@ class handler(BaseHTTPRequestHandler):
                 try:
                     with urllib.request.urlopen(req): pass
                 except urllib.error.HTTPError as e:
-                    if e.code == 404:
-                        self.wfile.write(json.dumps({"erro": "A pasta (Bucket) 'documentos' não existe no Supabase. Crie-a no painel do Supabase."}).encode('utf-8'))
-                        return
-                    else:
-                        self.wfile.write(json.dumps({"erro": f"Erro Storage Documentos: {e.code}"}).encode('utf-8'))
-                        return
+                    try: erro_msg = json.loads(e.read().decode('utf-8')).get('message', str(e.code))
+                    except: erro_msg = str(e.code)
+                    self.wfile.write(json.dumps({"erro": f"A pasta 'documentos' falhou: {erro_msg}. Verifique no Supabase."}).encode('utf-8'))
+                    return
 
                 url_publica = f"{sb_url}/storage/v1/object/public/documentos/{filename}"
                 self.wfile.write(json.dumps({"sucesso": True, "url_arquivo": url_publica}).encode('utf-8'))

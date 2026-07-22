@@ -3,220 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GabineteDigital - Plataforma de Gestão Eleitoral</title>
+    <title>sis Jess - Portal de Acesso</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-pink-500 selection:text-white">
+<body class="bg-slate-100 flex items-center justify-center min-h-screen p-4 md:p-8 font-sans">
 
-    <!-- NAVBAR -->
-    <nav class="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 p-4 sticky top-0 z-50">
-        <div class="container mx-auto flex justify-between items-center max-w-6xl">
-            <div class="flex items-center gap-2">
-                <i class="fa-solid fa-square-poll-vertical text-pink-500 text-2xl"></i>
-                <span class="font-bold text-lg text-white tracking-wide">Gabinete<span class="text-pink-500">Digital</span></span>
-            </div>
-            <div class="flex items-center gap-6">
-                <a href="#beneficios" class="text-xs text-slate-400 hover:text-white transition">Benefícios</a>
-                <a href="#modulos" class="text-xs text-slate-400 hover:text-white transition">Módulos</a>
-                <a href="#cadastro" class="text-xs text-slate-400 hover:text-white transition">Faça Parte</a>
-                <a href="admin.html" class="bg-slate-800 hover:bg-slate-700 text-xs text-white font-bold px-4 py-2 rounded-xl border border-slate-700 transition">
-                    <i class="fa-solid fa-right-to-bracket mr-1"></i> Área do Gestor
-                </a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- HERO SECTION -->
-    <header class="container mx-auto text-center py-20 px-4 max-w-4xl">
-        <span class="bg-pink-500/10 text-pink-400 text-xs font-bold px-3 py-1.5 rounded-full border border-pink-500/20 uppercase tracking-widest mb-4 inline-block">Tecnologia Eleitoral Avançada</span>
-        <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-6 leading-tight">
-            Organize milhares de eleitores por bairro, gerencie assessores e preste contas de forma automática.
-        </h1>
-        <p class="text-slate-400 text-base max-w-2xl mx-auto mb-8">
-            Uma aplicação prática construída milimetricamente para trazer transparência, produtividade e segurança total para gabinetes parlamentares e campanhas modernas.
-        </p>
-        <a href="#cadastro" class="bg-pink-600 hover:bg-pink-700 text-white font-bold text-sm px-8 py-4 rounded-xl transition shadow-lg shadow-pink-600/20">
-            Cadastre-se como Apoiador
-        </a>
-    </header>
-
-    <!-- SEÇÃO BENEFÍCIOS -->
-    <section id="beneficios" class="bg-slate-900/50 border-y border-slate-800 py-16 px-4">
-        <div class="container mx-auto max-w-6xl">
-            <h2 class="text-center font-bold text-white text-2xl mb-12">Benefícios Estratégicos da Plataforma</h2>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl hover:border-pink-500/40 transition">
-                    <div class="w-10 h-10 rounded-xl bg-pink-500/10 text-pink-500 flex items-center justify-center text-lg mb-4"><i class="fa-solid fa-circle-nodes"></i></div>
-                    <h3 class="font-bold text-white text-sm uppercase mb-2">Centralizado</h3>
-                    <p class="text-xs text-slate-400 leading-relaxed">Todas as funções operacionais e gerenciais em um único sistema integrado.</p>
+    <!-- Container Principal Responsivo -->
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col transform transition-all">
+        
+        <!-- HEADER AZUL (sis Jess) -->
+        <div class="bg-blue-600 p-10 text-center relative overflow-hidden">
+            <!-- Efeitos visuais de fundo -->
+            <div class="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-blue-500 rounded-full mix-blend-multiply filter blur-2xl opacity-70"></div>
+            <div class="absolute bottom-0 left-0 -mb-4 -ml-4 w-24 h-24 bg-blue-800 rounded-full mix-blend-multiply filter blur-xl opacity-50"></div>
+            
+            <div class="relative z-10 flex flex-col items-center">
+                <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-lg mb-4 text-blue-600">
+                    <!-- Inicial do sistema -->
+                    <span class="text-3xl font-black tracking-tighter">sJ</span>
                 </div>
-                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl hover:border-pink-500/40 transition">
-                    <div class="w-10 h-10 rounded-xl bg-pink-500/10 text-pink-500 flex items-center justify-center text-lg mb-4"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-                    <h3 class="font-bold text-white text-sm uppercase mb-2">Intuitivo</h3>
-                    <p class="text-xs text-slate-400 leading-relaxed">Interface amigável desenhada especificamente para velocidade e agilidade no dia a dia.</p>
-                </div>
-                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl hover:border-pink-500/40 transition">
-                    <div class="w-10 h-10 rounded-xl bg-pink-500/10 text-pink-500 flex items-center justify-center text-lg mb-4"><i class="fa-solid fa-shield-halved"></i></div>
-                    <h3 class="font-bold text-white text-sm uppercase mb-2">Seguro</h3>
-                    <p class="text-xs text-slate-400 leading-relaxed">Níveis de acesso totalmente personalizados e criptografados por função na equipe.</p>
-                </div>
-                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl hover:border-pink-500/40 transition">
-                    <div class="w-10 h-10 rounded-xl bg-pink-500/10 text-pink-500 flex items-center justify-center text-lg mb-4"><i class="fa-solid fa-scale-balanced"></i></div>
-                    <h3 class="font-bold text-white text-sm uppercase mb-2">Legal</h3>
-                    <p class="text-xs text-slate-400 leading-relaxed">Adequado de forma estrita para todos os requisitos de transparência e prestação eleitoral.</p>
-                </div>
+                <h1 class="text-4xl font-extrabold text-white tracking-tight drop-shadow-md">sis Jess</h1>
+                <p class="text-blue-100 text-sm mt-2 font-medium tracking-wide uppercase">Sistema de Gestão</p>
             </div>
         </div>
-    </section>
 
-    <!-- SEÇÃO MÓDULOS -->
-    <section id="modulos" class="py-20 px-4">
-        <div class="container mx-auto max-w-6xl space-y-12">
-            <div class="text-center">
-                <h2 class="font-bold text-white text-2xl">Módulos Completos da Aplicação</h2>
-                <p class="text-slate-400 text-xs mt-2">Tudo o que um parlamentar necessita para gerir com alta produtividade.</p>
+        <!-- ÁREA DE BOTÕES E NAVEGAÇÃO -->
+        <div class="p-6 md:p-8 space-y-6 bg-white flex-1">
+            <div class="text-center mb-2">
+                <h2 class="text-slate-700 font-bold text-lg">Selecione o seu perfil</h2>
+                <p class="text-slate-500 text-xs mt-1">Escolha abaixo para qual painel deseja ir</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl">
-                    <div class="text-pink-500 text-lg font-bold mb-3 flex items-center gap-2"><i class="fa-solid fa-calendar-days"></i> 02. Agenda</div>
-                    <ul class="text-xs text-slate-400 space-y-2">
-                        <li><i class="fa-solid fa-check text-pink-500 mr-2"></i>Calendário Interativo</li>
-                        <li><i class="fa-solid fa-check text-pink-500 mr-2"></i>Adição ágil de eventos</li>
-                    </ul>
-                </div>
-                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl">
-                    <div class="text-pink-500 text-lg font-bold mb-3 flex items-center gap-2"><i class="fa-solid fa-folder"></i> 03. Documentos</div>
-                    <ul class="text-xs text-slate-400 space-y-2">
-                        <li><i class="fa-solid fa-check text-pink-500 mr-2"></i>Filtros por categoria</li>
-                        <li><i class="fa-solid fa-check text-pink-500 mr-2"></i>Upload de mídia integrado</li>
-                    </ul>
-                </div>
-                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl">
-                    <div class="text-pink-500 text-lg font-bold mb-3 flex items-center gap-2"><i class="fa-solid fa-users"></i> 04. Eleitores</div>
-                    <ul class="text-xs text-slate-400 space-y-2">
-                        <li><i class="fa-solid fa-check text-pink-500 mr-2"></i>Segmentação por bairro</li>
-                        <li><i class="fa-solid fa-check text-pink-500 mr-2"></i>Mailing operacional ágil</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- SEÇÃO FORMULÁRIO -->
-    <section id="cadastro" class="bg-slate-900 border-t border-slate-800 py-20 px-4">
-        <div class="container mx-auto max-w-3xl bg-slate-950 border border-slate-800 p-8 rounded-3xl shadow-2xl">
-            <div class="text-center mb-8">
-                <h2 class="text-xl font-bold text-white flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-user-plus text-pink-500"></i> Faça Parte do Nosso Projeto
-                </h2>
-                <p class="text-xs text-slate-400 mt-1">Inscreva-se informando a sua região para receber atualizações.</p>
-            </div>
-
-            <form id="form-eleitor" class="space-y-4" onsubmit="salvarApoiador(event)">
-                <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Selecione o Gabinete / Campanha *</label>
-                    <select id="select-gestor" required class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-pink-500 cursor-pointer">
-                        <option value="" disabled selected>Carregando gabinetes...</option>
-                    </select>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Nome Completo *</label>
-                        <input type="text" id="nome" required class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-pink-500">
+            <div class="space-y-4">
+                <!-- Botão: Acesso Master -->
+                <!-- Obs: Se o arquivo do seu master tiver outro nome (ex: painel_master.html), basta ajustar no window.location.href abaixo -->
+                <button onclick="window.location.href='master.html'" class="w-full flex items-center justify-between bg-white hover:bg-blue-50 border-2 border-slate-100 hover:border-blue-200 p-4 rounded-2xl transition duration-300 group shadow-sm hover:shadow-md">
+                    <div class="flex items-center gap-4">
+                        <div class="bg-slate-100 group-hover:bg-blue-100 text-slate-500 group-hover:text-blue-600 w-12 h-12 rounded-xl flex items-center justify-center transition duration-300 flex-shrink-0">
+                            <i class="fa-solid fa-crown text-lg"></i>
+                        </div>
+                        <div class="text-left">
+                            <span class="block font-bold text-slate-800 group-hover:text-blue-700 transition">Acesso Master</span>
+                            <span class="block text-[11px] text-slate-400 mt-0.5">Gestão global e configurações</span>
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-400 uppercase mb-1">WhatsApp / Contato *</label>
-                        <input type="tel" id="whatsapp" required placeholder="(91) 99999-9999" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-pink-500">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Bairro Regional *</label>
-                        <input type="text" id="bairro" required class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-pink-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Título de Eleitor (Opcional)</label>
-                        <input type="text" id="titulo" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-pink-500">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Deixe sua demanda ou sugestão</label>
-                    <textarea id="demanda" rows="3" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-pink-500"></textarea>
-                </div>
-
-                <div class="flex items-start gap-2 pt-2">
-                    <input type="checkbox" id="lgpd" required class="mt-1 accent-pink-500 cursor-pointer">
-                    <label for="lgpd" class="text-[10px] text-slate-500 select-none">Autorizo o armazenamento seguro das minhas informações em conformidade com a LGPD.</label>
-                </div>
-
-                <button type="submit" id="btn-enviar" class="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold text-xs py-3.5 rounded-xl transition uppercase tracking-wider">
-                    Confirmar Envio e Cadastro
+                    <i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-blue-500 transition-transform group-hover:translate-x-1"></i>
                 </button>
-            </form>
+
+                <!-- Botão: Acesso Operacional -->
+                <button onclick="window.location.href='admin.html'" class="w-full flex items-center justify-between bg-white hover:bg-blue-50 border-2 border-slate-100 hover:border-blue-200 p-4 rounded-2xl transition duration-300 group shadow-sm hover:shadow-md">
+                    <div class="flex items-center gap-4">
+                        <div class="bg-slate-100 group-hover:bg-blue-100 text-slate-500 group-hover:text-blue-600 w-12 h-12 rounded-xl flex items-center justify-center transition duration-300 flex-shrink-0">
+                            <i class="fa-solid fa-users-gear text-lg"></i>
+                        </div>
+                        <div class="text-left">
+                            <span class="block font-bold text-slate-800 group-hover:text-blue-700 transition">Acesso Operacional</span>
+                            <span class="block text-[11px] text-slate-400 mt-0.5">Painel do gabinete e rotina</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-blue-500 transition-transform group-hover:translate-x-1"></i>
+                </button>
+            </div>
         </div>
-    </section>
 
-    <footer class="p-6 text-center text-[11px] text-slate-600 border-t border-slate-900">
-        GabineteDigital SaaS & Gestão Eleitoral Multi-Empresas © 2026.
-    </footer>
+        <!-- RODAPÉ -->
+        <div class="bg-slate-50 p-5 text-center border-t border-slate-100">
+            <p class="text-[11px] text-slate-400 font-semibold uppercase tracking-wider">sis Jess &copy; 2026</p>
+        </div>
+        
+    </div>
 
-    <script>
-        let listaGabinetesLocais = [];
-
-        async function carregarGabinetesAtivos() {
-            try {
-                const res = await fetch('/api', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'dados_dashboard_master' }) });
-                const data = await res.json(); listaGabinetesLocais = data.gestores || [];
-                const select = document.getElementById('select-gestor');
-                select.innerHTML = '<option value="" disabled selected>-- Escolha um Gabinete/Parlamentar --</option>';
-
-                const ativos = listaGabinetesLocais.filter(g => g.status === 'Ativo');
-                if (ativos.length === 0) { select.innerHTML = '<option value="" disabled>Nenhum gabinete ativo</option>'; return; }
-
-                ativos.forEach(g => { select.innerHTML += `<option value="${g.id}">${g.nome_campanha_gabinete} (${g.nome_gestor})</option>`; });
-
-                select.addEventListener('change', function() {
-                    const gabEscolhido = listaGabinetesLocais.find(g => g.id == this.value);
-                    const btnEnviar = document.getElementById('btn-enviar');
-                    if(gabEscolhido && gabEscolhido.cor_layout) {
-                        btnEnviar.style.backgroundColor = gabEscolhido.cor_layout;
-                        btnEnviar.style.borderColor = gabEscolhido.cor_layout;
-                    }
-                });
-            } catch (e) { document.getElementById('select-gestor').innerHTML = '<option value="" disabled>Erro ao carregar</option>'; }
-        }
-
-        async function salvarApoiador(event) {
-            event.preventDefault();
-            const btn = document.getElementById('btn-enviar'); const textoOriginal = btn.innerText;
-            btn.innerText = "Processando Cadastro..."; btn.disabled = true;
-
-            try {
-                const res = await fetch('/api', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'salvar_apoiador',
-                        nome: document.getElementById('nome').value,
-                        whatsapp: document.getElementById('whatsapp').value,
-                        bairro: document.getElementById('bairro').value,
-                        titulo: document.getElementById('titulo').value,
-                        demanda: document.getElementById('demanda').value,
-                        gestor_id: document.getElementById('select-gestor').value
-                    })
-                });
-                const d = await res.json();
-                if(d.erro) { alert("Erro: " + d.erro); } 
-                else if(d.sucesso) { alert("Cadastro realizado com sucesso!"); document.getElementById('form-eleitor').reset(); btn.style.backgroundColor = ""; }
-            } catch (err) { alert("Falha na rede."); } finally { btn.innerText = textoOriginal; btn.disabled = false; }
-        }
-
-        window.onload = carregarGabinetesAtivos;
-    </script>
 </body>
 </html>

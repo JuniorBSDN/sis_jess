@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>sis Jess v.1 - Plataforma de Gestão</title>
+    <title>sis Jess - Plataforma de Gestão</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -39,7 +39,7 @@
 
             <nav class="p-4 flex flex-col gap-1.5 mt-2 overflow-y-auto">
                 <button onclick="navegarOperacional('aba-dashboard')" id="btn-aba-dashboard" class="btn-menu w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition">
-                    <i class="fa-solid fa-house w-5 text-center"></i> Início / Avisos
+                    <i class="fa-solid fa-chart-pie w-5 text-center"></i> Dashboard & Visão
                 </button>
                 <button onclick="navegarOperacional('aba-agenda')" id="btn-aba-agenda" class="btn-menu w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition">
                     <i class="fa-solid fa-calendar-days w-5 text-center"></i> Agenda
@@ -85,22 +85,79 @@
         <main class="flex-1 overflow-y-auto p-4 md:p-10 w-full">
 
             <!-- ABA: DASHBOARD -->
-            <div id="aba-dashboard" class="tab-op hidden space-y-4 md:space-y-6 no-print">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+            <div id="aba-dashboard" class="tab-op hidden space-y-4 md:space-y-6">
+                
+                <!-- CABEÇALHO DO DASHBOARD E BOTÕES DE AÇÃO -->
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-200 pb-4 no-print">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-800">Visão Geral Estratégica</h2>
+                        <p class="text-sm text-slate-500 mt-1">Indicadores de desempenho e resumo de operações.</p>
+                    </div>
+                    <div class="flex gap-2 w-full md:w-auto">
+                        <button onclick="window.print()" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-4 py-2.5 rounded-xl text-sm font-bold shadow-sm transition w-full md:w-auto flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-file-pdf text-rose-500"></i> Relatório Geral
+                        </button>
+                        <button onclick="acionarSuporte()" class="bg-slate-800 text-white hover:bg-slate-700 px-4 py-2.5 rounded-xl text-sm font-bold shadow-sm transition w-full md:w-auto flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-headset text-blue-400"></i> Suporte Técnico
+                        </button>
+                    </div>
+                </div>
+
+                <!-- CARDS DE INDICADORES (KPIs) -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 print-area">
+                    <div class="bg-white border border-slate-200 rounded-xl p-4 md:p-5 shadow-sm flex items-center gap-4 relative overflow-hidden">
+                        <div class="absolute -right-4 -top-4 text-blue-50 opacity-50"><i class="fa-solid fa-users text-8xl"></i></div>
+                        <div class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 text-xl z-10"><i class="fa-solid fa-users"></i></div>
+                        <div class="z-10">
+                            <p class="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-wide">Apoiadores</p>
+                            <h3 id="kpi-eleitores" class="text-2xl md:text-3xl font-bold text-slate-800 mt-1">0</h3>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white border border-slate-200 rounded-xl p-4 md:p-5 shadow-sm flex items-center gap-4 relative overflow-hidden">
+                        <div class="absolute -right-4 -top-4 text-emerald-50 opacity-50"><i class="fa-solid fa-id-badge text-8xl"></i></div>
+                        <div class="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 text-xl z-10"><i class="fa-solid fa-id-badge"></i></div>
+                        <div class="z-10">
+                            <p class="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-wide">Equipe (Ativa)</p>
+                            <h3 id="kpi-equipe" class="text-2xl md:text-3xl font-bold text-slate-800 mt-1">0</h3>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white border border-slate-200 rounded-xl p-4 md:p-5 shadow-sm flex items-center gap-4 relative overflow-hidden">
+                        <div class="absolute -right-4 -top-4 text-amber-50 opacity-50"><i class="fa-solid fa-calendar-check text-8xl"></i></div>
+                        <div class="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center text-amber-600 text-xl z-10"><i class="fa-solid fa-calendar-check"></i></div>
+                        <div class="z-10">
+                            <p class="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-wide">Eventos Marcados</p>
+                            <h3 id="kpi-eventos" class="text-2xl md:text-3xl font-bold text-slate-800 mt-1">0</h3>
+                        </div>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 rounded-xl p-4 md:p-5 shadow-sm flex items-center gap-4 relative overflow-hidden">
+                        <div class="absolute -right-4 -top-4 text-purple-50 opacity-50"><i class="fa-solid fa-folder-open text-8xl"></i></div>
+                        <div class="w-12 h-12 rounded-full bg-purple-50 flex items-center justify-center text-purple-600 text-xl z-10"><i class="fa-solid fa-folder-open"></i></div>
+                        <div class="z-10">
+                            <p class="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-wide">Documentos</p>
+                            <h3 id="kpi-docs" class="text-2xl md:text-3xl font-bold text-slate-800 mt-1">0</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BLOCOS DE ALERTAS E RESUMOS -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 print-area mt-2">
                     <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 md:p-6">
                         <h3 class="text-sm font-bold text-slate-700 uppercase mb-4 border-b pb-2 flex items-center">
-                            <i class="fa-solid fa-bell text-amber-500 mr-2"></i>Avisos de Agenda (7 dias)
+                            <i class="fa-solid fa-bell text-amber-500 mr-2"></i>Avisos de Agenda (Próx. 7 dias)
                         </h3>
                         <div id="lista-avisos-agenda" class="space-y-3">
-                            <p class="text-xs text-slate-400">Analisando calendário...</p>
+                            <p class="text-xs text-slate-400 text-center py-4"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Analisando calendário...</p>
                         </div>
                     </div>
                     <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 md:p-6">
                         <h3 class="text-sm font-bold text-slate-700 uppercase mb-4 border-b pb-2 flex items-center">
-                            <i class="fa-solid fa-cake-candles text-rose-500 mr-2"></i>Aniversariantes
+                            <i class="fa-solid fa-cake-candles text-rose-500 mr-2"></i>Aniversariantes do Mês
                         </h3>
                         <div id="lista-avisos-niver" class="space-y-3">
-                            <p class="text-xs text-slate-400">Analisando equipe...</p>
+                            <p class="text-xs text-slate-400 text-center py-4"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Analisando equipe...</p>
                         </div>
                     </div>
                 </div>
@@ -354,39 +411,37 @@
         let cacheFuncionarios = [];
         let cacheAgenda = [];
 
-        // ===== NOVA FUNÇÃO DE FILTRO / BUSCA =====
+        // FUNÇÃO DE BUSCA E FILTRO 
         function filtrarTabela(inputId, tabelaId) {
             const input = document.getElementById(inputId);
-            // Função para remover acentos (normaliza a string)
             const removerAcentos = (str) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-            
             const filter = removerAcentos(input.value);
             const tbody = document.getElementById(tabelaId);
             const trs = tbody.getElementsByTagName('tr');
 
             for (let i = 0; i < trs.length; i++) {
-                // Ignorar a linha de "Nenhum registro" (que só tem 1 coluna)
                 if (trs[i].cells.length === 1 && trs[i].innerText.includes("Nenhum")) continue;
-                
                 const textoLinha = removerAcentos(trs[i].innerText);
-                if (textoLinha.indexOf(filter) > -1) {
-                    trs[i].style.display = "";
-                } else {
-                    trs[i].style.display = "none";
-                }
+                if (textoLinha.indexOf(filter) > -1) { trs[i].style.display = ""; } else { trs[i].style.display = "none"; }
             }
         }
-        // ==========================================
+
+        // FUNÇÃO DE ACIONAR SUPORTE
+        function acionarSuporte() {
+            const nomeGestor = dadosGestorLogado && dadosGestorLogado.nome_campanha_gabinete ? dadosGestorLogado.nome_campanha_gabinete : "Não Identificado";
+            const mensagem = encodeURIComponent(`Olá, preciso de suporte com a plataforma sis Jess. Sou do setor/gabinete: ${nomeGestor}`);
+            // Aqui você pode colocar o SEU número de WhatsApp de suporte, exemplo: 5511999999999
+            const numeroSuporte = "5591900000000"; // INSIRA SEU NÚMERO DE SUPORTE AQUI!
+            window.open(`https://wa.me/${numeroSuporte}?text=${mensagem}`, '_blank');
+        }
 
         function toggleMenu() {
             const sidebar = document.getElementById('sidebar');
             const backdrop = document.getElementById('menu-backdrop');
             if (sidebar.classList.contains('-translate-x-full')) {
-                sidebar.classList.remove('-translate-x-full');
-                backdrop.classList.remove('hidden');
+                sidebar.classList.remove('-translate-x-full'); backdrop.classList.remove('hidden');
             } else {
-                sidebar.classList.add('-translate-x-full');
-                backdrop.classList.add('hidden');
+                sidebar.classList.add('-translate-x-full'); backdrop.classList.add('hidden');
             }
         }
 
@@ -431,18 +486,16 @@
         function navegarOperacional(idAba) {
             document.querySelectorAll('.tab-op').forEach(el => el.classList.add('hidden'));
             document.getElementById(idAba).classList.remove('hidden');
-            const titulos = { 'aba-dashboard': 'Início e Avisos do Sistema', 'aba-agenda': 'Agenda Geral e Eventos', 'aba-documentos': 'Documentos & Arquivos', 'aba-eleitores': 'Base de Eleitores', 'aba-rh': 'Equipe & Crachás' };
+            const titulos = { 'aba-dashboard': 'Painel de Controle e Indicadores', 'aba-agenda': 'Agenda Geral e Eventos', 'aba-documentos': 'Documentos & Arquivos', 'aba-eleitores': 'Base de Eleitores', 'aba-rh': 'Equipe & Crachás' };
             document.getElementById('titulo-pagina-op').innerText = titulos[idAba];
             document.querySelectorAll('.btn-menu').forEach(b => { b.className = "btn-menu w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition"; b.style.backgroundColor = "transparent"; });
             const btnAtivo = document.getElementById('btn-' + idAba);
             if(btnAtivo && dadosGestorLogado) { btnAtivo.className = "btn-menu w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-white rounded-xl transition shadow-sm"; btnAtivo.style.backgroundColor = "#1e293b"; }
 
             if (window.innerWidth < 768) {
-                document.getElementById('sidebar').classList.add('-translate-x-full');
-                document.getElementById('menu-backdrop').classList.add('hidden');
+                document.getElementById('sidebar').classList.add('-translate-x-full'); document.getElementById('menu-backdrop').classList.add('hidden');
             }
 
-            // Sempre que trocar de aba, limpamos os campos de busca
             document.querySelectorAll('input[id^="busca-"]').forEach(input => {
                 input.value = '';
                 filtrarTabela(input.id, input.id.replace('busca-', 'tabela-').replace('docs', 'documentos').replace('rh', 'funcionarios'));
@@ -455,15 +508,33 @@
             if(idAba === 'aba-rh') carregarFuncionarios();
         }
 
+        // ============================================
+        // NOVO CARREGAMENTO DO DASHBOARD (COM KPIs)
+        // ============================================
         async function carregarAvisosDashboard() {
             try {
-                const [resA, resF] = await Promise.all([
+                // Buscamos TUDO em paralelo para gerar os indicadores em tempo real
+                const [resA, resF, resE, resD] = await Promise.all([
                     fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_agenda_gestor', gestor_id: dadosGestorLogado.id }) }),
-                    fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_funcionarios', gestor_id: dadosGestorLogado.id }) })
+                    fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_funcionarios', gestor_id: dadosGestorLogado.id }) }),
+                    fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_eleitores_gestor', gestor_id: dadosGestorLogado.id }) }),
+                    fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ action: 'listar_documentos_gestor', gestor_id: dadosGestorLogado.id }) })
                 ]);
+                
                 const dataA = await resA.json(); const dataF = await resF.json();
-                cacheAgenda = dataA.agenda || []; cacheFuncionarios = dataF.funcionarios || [];
+                const dataE = await resE.json(); const dataD = await resD.json();
 
+                cacheAgenda = dataA.agenda || []; 
+                cacheFuncionarios = dataF.funcionarios || [];
+                cacheEleitores = dataE.eleitores || [];
+
+                // ATUALIZANDO OS CARDS DE KPI NA TELA
+                document.getElementById('kpi-eleitores').innerText = cacheEleitores.length;
+                document.getElementById('kpi-equipe').innerText = cacheFuncionarios.filter(f => f.status !== 'Inativo').length;
+                document.getElementById('kpi-eventos').innerText = cacheAgenda.length;
+                document.getElementById('kpi-docs').innerText = (dataD.documentos || []).length;
+
+                // ATUALIZANDO OS AVISOS DA AGENDA
                 const hoje = new Date(); hoje.setHours(0,0,0,0);
                 const limiteAgenda = new Date(hoje); limiteAgenda.setDate(limiteAgenda.getDate() + 7);
                 
@@ -483,6 +554,7 @@
                 if(htmlAgenda === '') htmlAgenda = '<div class="p-4 bg-slate-50 rounded-lg text-center text-xs text-slate-500 border border-slate-100">Nenhum compromisso para os próximos 7 dias.</div>';
                 document.getElementById('lista-avisos-agenda').innerHTML = htmlAgenda;
 
+                // ATUALIZANDO OS AVISOS DE ANIVERSÁRIO
                 const mesAtual = hoje.getMonth() + 1;
                 let htmlNiver = '';
                 
@@ -503,7 +575,7 @@
                     document.getElementById('modal-alerta-login').classList.remove('hidden');
                 }
 
-            } catch (err) {}
+            } catch (err) { console.error("Erro ao carregar Dashboard:", err); }
         }
 
         const toBase64 = file => new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = () => resolve(reader.result); reader.onerror = error => reject(error); });
@@ -537,14 +609,12 @@
                     </td>
                 </tr>`;
             });
-            // Refiltra caso o usuário tenha deixado algo digitado na barra de busca
             filtrarTabela('busca-rh', 'tabela-funcionarios');
         }
         
         async function cadastrarAssessor(e) {
             e.preventDefault(); const btn = e.target.querySelector('button[type="submit"]'); btn.innerText = "Salvando..."; btn.disabled = true;
             let urlFinalFoto = ""; const fileInput = document.getElementById('func-foto');
-            
             try {
                 if(fileInput.files.length > 0) {
                     const file = fileInput.files[0];
@@ -555,7 +625,6 @@
                     if(uploadData.url_foto) urlFinalFoto = uploadData.url_foto;
                     else if (uploadData.erro) { alert(uploadData.erro); btn.innerText = "Cadastrar Colaborador"; btn.disabled = false; return; }
                 }
-
                 const req = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ 
                     action: 'cadastrar_funcionario', nome: document.getElementById('func-nome').value, cargo: document.getElementById('func-cargo').value, whatsapp: document.getElementById('func-whats').value, email: document.getElementById('func-email').value, documento: document.getElementById('func-doc').value, endereco: document.getElementById('func-end').value, conta_bancaria: document.getElementById('func-bank').value, data_nascimento: document.getElementById('func-nasc').value, url_foto: urlFinalFoto, gestor_id: dadosGestorLogado.id 
                 }) });
@@ -572,7 +641,6 @@
         async function salvarEdicaoFunc(e) {
             e.preventDefault(); const btn = e.target.querySelector('button[type="submit"]'); btn.innerText = "Salvando..."; btn.disabled = true;
             let urlFinalFoto = ""; const fileInput = document.getElementById('edit-func-foto');
-            
             try {
                 if(fileInput.files.length > 0) {
                     const file = fileInput.files[0];
@@ -582,10 +650,8 @@
                     const uploadData = await uploadRes.json();
                     if(uploadData.url_foto) urlFinalFoto = uploadData.url_foto;
                 }
-
                 let payloadData = { action: 'editar_funcionario', id: document.getElementById('edit-func-id').value, nome: document.getElementById('edit-func-nome').value, documento: document.getElementById('edit-func-doc').value, data_nascimento: document.getElementById('edit-func-nasc').value, cargo: document.getElementById('edit-func-cargo').value, whatsapp: document.getElementById('edit-func-whats').value, email: document.getElementById('edit-func-email').value, conta_bancaria: document.getElementById('edit-func-bank').value, endereco: document.getElementById('edit-func-end').value };
                 if (urlFinalFoto !== "") { payloadData.url_foto = urlFinalFoto; }
-
                 const req = await fetch('/api', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payloadData) });
                 const res = await req.json(); if(res.erro) alert("Erro: " + res.erro); else { document.getElementById('modal-edicao-func').classList.add('hidden'); carregarFuncionarios(); }
             } catch (error) {} finally { btn.innerText = "Salvar Dados"; btn.disabled = false; }
